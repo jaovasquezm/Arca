@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arca — App Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --w:#fff;--off:#f7f6f4;--stn:#e8e4de;--sm:#d4cfc8;
+  --mid:#9e9890;--dim:#7a756e;--ink:#2a2825;--i2:#4a4742;
+  --grn:#2d7a4f;--gbg:#eaf4ee;--red:#b83232;--rbg:#faeae9;
+  --gld:#7a5f28;--gbg2:#f5f0e6;--blu:#1a5fa8;--bbg:#e8f0fa;
+  --fd:'Instrument Serif',Georgia,serif;--fb:'Geist',-apple-system,sans-serif;
+}
+html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--fb);font-size:13.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--stn);border-radius:99px}
+.app{display:flex;height:100vh;overflow:hidden}
+.sb{width:210px;flex-shrink:0;background:var(--w);border-right:1px solid var(--stn);display:flex;flex-direction:column;padding:20px 0;overflow-y:auto}
+.logo{font-family:var(--fd);font-size:21px;font-style:italic;padding:0 18px 20px;border-bottom:1px solid var(--stn);margin-bottom:10px}
+.logo small{display:block;font-family:var(--fb);font-style:normal;font-size:11.5px;font-weight:300;color:var(--mid);margin-top:2px}
+.grp{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sm);padding:10px 18px 3px}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 18px;color:var(--dim);font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--fb);transition:all .12s;border-right:2.5px solid transparent}
+.ni:hover{color:var(--ink);background:var(--off)}
+.ni.on{color:var(--ink);background:var(--off);border-right-color:var(--ink);font-weight:500}
+.main{flex:1;overflow-y:auto;padding:38px 42px 80px;background:var(--off)}
+.pg{display:none}
+.pg.on{display:block;animation:fu .22s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ey{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);margin-bottom:5px}
+.pt{font-family:var(--fd);font-style:italic;font-size:31px;letter-spacing:-.4px;line-height:1.15;margin-bottom:4px}
+.ps{font-size:13px;color:var(--dim);font-weight:300;margin-bottom:34px}
+.card{background:var(--w);border:1px solid var(--stn);border-radius:10px;padding:20px}
+.coff{background:var(--off);border:1px solid var(--stn);border-radius:6px;padding:14px 16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.mb4{margin-bottom:16px}.mb6{margin-bottom:24px}.mb8{margin-bottom:32px}
+.sl{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:8px}
+.sv{font-family:var(--fd);font-style:italic;font-size:28px;letter-spacing:-.4px;line-height:1.1;margin-bottom:3px}
+.sv.g{color:var(--grn)}.sv.r{color:var(--red)}.sv.go{color:var(--gld)}.sv.b{color:var(--blu)}
+.ss{font-size:11.5px;color:var(--mid)}
+.sth{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;border:1px solid transparent;white-space:nowrap}
+.bp{background:var(--ink);color:#fff;border-color:var(--ink)}.bp:hover{background:var(--i2)}
+.bg{background:var(--w);color:var(--i2);border-color:var(--stn)}.bg:hover{background:var(--off)}
+.sm{padding:5px 10px;font-size:11.5px}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;padding:9px 13px;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.09em;color:var(--mid);border-bottom:1px solid var(--stn)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.04);transition:background .1s}
+tbody tr:hover{background:var(--off)}
+tbody td{padding:10px 13px;font-size:13.5px}
+tbody tr:last-child{border-bottom:none}
+.tr{text-align:right}
+.pos{color:var(--grn);font-weight:500}.neg{color:var(--red)}.gt{color:var(--gld);font-weight:500}
+.bd{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.bg2{background:var(--gbg);color:var(--grn)}.br{background:var(--rbg);color:var(--red)}
+.by{background:var(--gbg2);color:var(--gld)}.bb{background:var(--bbg);color:var(--blu)}
+.bs{background:var(--off);color:var(--dim);border:1px solid var(--stn)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:11.5px;background:var(--off);border:1px solid var(--stn);color:var(--i2)}
+.tabs{display:flex;gap:2px;background:var(--stn);padding:3px;border-radius:7px;width:fit-content;margin-bottom:22px}
+.tab{padding:6px 15px;border-radius:5px;font-size:12.5px;cursor:pointer;color:var(--dim);border:none;background:none;font-family:var(--fb);transition:all .12s}
+.tab.on{background:var(--w);color:var(--ink);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.pb{height:4px;background:var(--stn);border-radius:99px;overflow:hidden;margin-top:7px}
+.pf{height:100%;border-radius:99px}
+.row{display:flex;align-items:center;gap:9px}
+.jb{display:flex;justify-content:space-between;align-items:center}
+.barchart{display:flex;align-items:flex-end;gap:5px;height:110px}
+.barpair{display:flex;gap:2px;align-items:flex-end;flex:1}
+.bar{flex:1;border-radius:3px 3px 0 0}
+.blbl{text-align:center;font-size:10px;color:var(--mid);margin-top:6px}
+.wfr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:13.5px}
+.wft{display:flex;justify-content:space-between;padding:11px 0;border-top:1.5px solid var(--stn);font-weight:500;font-size:14px;margin-top:4px}
+.chatbox{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding-bottom:8px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.u{flex-direction:row-reverse}
+.ava{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:var(--fd);font-style:italic}
+.ava.u{background:var(--sm);color:var(--i2);font-family:var(--fb);font-style:normal}
+.bub{padding:11px 15px;font-size:13.5px;line-height:1.62;max-width:78%}
+.bub.a{background:var(--w);border:1px solid var(--stn);border-radius:11px 11px 11px 4px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.bub.u{background:var(--ink);color:#fff;border-radius:11px 11px 4px 11px}
+.scnote{margin-top:10px;padding:11px 14px;background:var(--gbg);border:1px solid #b3d9c2;border-radius:7px;font-size:12.5px;color:var(--grn)}
+.chatrow{display:flex;gap:9px;align-items:flex-end;padding-top:12px;border-top:1px solid var(--stn);margin-top:14px}
+.chatinp{flex:1;padding:10px 13px;border:1px solid var(--stn);border-radius:10px;font-family:var(--fb);font-size:13.5px;outline:none;resize:none;background:var(--w);height:46px}
+.chatinp:focus{border-color:var(--ink)}
+.rok{background:var(--gbg);color:var(--grn);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500}
+.rgap{background:var(--rbg);color:var(--red);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500}
+.lcard{background:var(--w);border:1px solid var(--stn);border-radius:10px;padding:20px;margin-bottom:12px}
+.lgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:14px}
+.scc{border:1px solid var(--stn);border-radius:10px;padding:18px;background:var(--w)}
+.scc.sel{border-color:var(--ink);background:var(--off)}
+.adjrow{display:flex;justify-content:space-between;padding:5px 9px;background:var(--w);border:1px solid var(--stn);border-radius:5px;font-size:12.5px;margin-bottom:4px}
+.dz{border:1.5px dashed var(--sm);border-radius:10px;padding:44px 28px;text-align:center;cursor:pointer}
+.dz:hover{border-color:var(--ink);background:var(--w)}
+.inp{background:var(--w);border:1px solid var(--stn);border-radius:6px;color:var(--ink);font-family:var(--fb);font-size:13.5px;padding:8px 11px;outline:none}
+.inp:focus{border-color:var(--ink)}
+.lbl{display:block;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:5px}
+@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sb">
+  <div class="logo">Arca <small>Jorge García</small></div>
+  <div class="grp">Overview</div>
+  <button class="ni on" onclick="go('dashboard',this)">◈ Dashboard</button>
+  <button class="ni" onclick="go('networth',this)">◎ Net Worth</button>
+  <div class="grp">Money In / Out</div>
+  <button class="ni" onclick="go('upload',this)">↑ Upload CSV</button>
+  <button class="ni" onclick="go('cash',this)">💵 Cash Transactions</button>
+  <button class="ni" onclick="go('txns',this)">≡ Transactions</button>
+  <div class="grp">Planning</div>
+  <button class="ni" onclick="go('forecast',this)">◉ Forecast</button>
+  <button class="ni" onclick="go('scenarios',this)">⊕ Scenarios</button>
+  <button class="ni" onclick="go('loans',this)">🏦 Loans</button>
+  <div class="grp">Assets</div>
+  <button class="ni" onclick="go('investments',this)">📈 Investments</button>
+  <div class="grp">Control</div>
+  <button class="ni" onclick="go('recon',this)">⚖ Reconciliation</button>
+  <button class="ni" onclick="go('reports',this)">📋 Annual Report</button>
+  <div class="grp">Settings</div>
+  <button class="ni" onclick="go('cats',this)">◧ Categories</button>
+  <button class="ni" onclick="go('auth',this)">⎋ Login Screen</button>
+</nav>
+<main class="main">
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="pg on">
+  <div class="ey">Monday, February 23</div>
+  <div class="pt">Good morning, Jorge.</div>
+  <div class="ps">Here's where your finances stand today.</div>
+  <div class="g4 mb6">
+    <div class="card"><div class="sl">Year-End Projection</div><div class="sv go">$18,240</div><div class="ss">Cumulative net balance</div></div>
+    <div class="card"><div class="sl">This Month — Expenses</div><div class="sv r">$4,182</div><div class="ss">Actual · Feb 2026</div></div>
+    <div class="card"><div class="sl">This Month — Income</div><div class="sv g">$7,500</div><div class="ss">Scheduled income</div></div>
+    <div class="card"><div class="sl">Net This Month</div><div class="sv g">+$3,318</div><div class="ss">After all expenses</div></div>
+  </div>
+  <div class="g2 mb6">
+    <div class="card">
+      <div class="sth">Monthly Income vs Expenses — 2026</div>
+      <div class="barchart">
+        <div style="flex:1"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:60px;background:#f0d4d1"></div></div><div class="blbl">Jan</div></div>
+        <div style="flex:1"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:50px;background:#f0d4d1"></div></div><div class="blbl">Feb</div></div>
+        <div style="flex:1;opacity:.42"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:62px;background:#f0d4d1"></div></div><div class="blbl">Mar</div></div>
+        <div style="flex:1;opacity:.38"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:55px;background:#f0d4d1"></div></div><div class="blbl">Apr</div></div>
+        <div style="flex:1;opacity:.35"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:58px;background:#f0d4d1"></div></div><div class="blbl">May</div></div>
+        <div style="flex:1;opacity:.35"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:65px;background:#f0d4d1"></div></div><div class="blbl">Jun</div></div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:10px">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#d4e9db;margin-right:5px"></span><span style="font-size:11px;color:var(--dim)">Income</span></span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#f0d4d1;margin-right:5px"></span><span style="font-size:11px;color:var(--dim)">Expenses</span></span>
+        <span style="font-size:11px;color:var(--mid)">Faded = projected</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sth">Cumulative Balance Trajectory</div>
+      <div style="position:relative;height:72px;margin-bottom:10px">
+        <svg width="100%" height="72" viewBox="0 0 400 72" preserveAspectRatio="none" style="position:absolute;inset:0">
+          <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#2d7a4f" stop-opacity=".12"/><stop offset="95%" stop-color="#2d7a4f" stop-opacity="0"/></linearGradient></defs>
+          <polygon points="0,52 32,47 64,55 100,38 132,42 164,28 200,33 232,22 264,28 300,14 332,18 364,10 400,12 400,72 0,72" fill="url(#sg)"/>
+          <polyline points="0,52 32,47 64,55 100,38 132,42 164,28 200,33 232,22 264,28 300,14 332,18 364,10 400,12" fill="none" stroke="#2d7a4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="364" cy="10" r="3.5" fill="#2d7a4f"/>
+        </svg>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--mid)"><span>Jan</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Dec</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sth">Top Spending Categories — Feb 2026</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.04)"><span style="font-size:17px">🏠</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Housing</span><span style="font-weight:500">$2,400</span></div><div class="pb"><div class="pf" style="width:100%;background:#1a5fa8"></div></div></div></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.04);border-left:1px solid rgba(0,0,0,.04)"><span style="font-size:17px">👶</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Childcare</span><span style="font-weight:500">$1,200</span></div><div class="pb"><div class="pf" style="width:50%;background:#7a5f28"></div></div></div></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.04)"><span style="font-size:17px">🍽️</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Dining Out</span><span style="font-weight:500">$680</span></div><div class="pb"><div class="pf" style="width:28%;background:#b83232"></div></div></div></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.04);border-left:1px solid rgba(0,0,0,.04)"><span style="font-size:17px">🛒</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Groceries</span><span style="font-weight:500">$520</span></div><div class="pb"><div class="pf" style="width:22%;background:#2d7a4f"></div></div></div></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px"><span style="font-size:17px">📈</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Investments</span><span style="font-weight:500">$500</span></div><div class="pb"><div class="pf" style="width:21%;background:#6b3fa8"></div></div></div></div>
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 14px;border-left:1px solid rgba(0,0,0,.04)"><span style="font-size:17px">🚗</span><div style="flex:1"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Transport</span><span style="font-weight:500">$340</span></div><div class="pb"><div class="pf" style="width:14%;background:#6b6560"></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NET WORTH -->
+<div id="networth" class="pg">
+  <div class="ey">Overview</div><div class="pt">Net Worth</div><div class="ps">Your full financial picture — assets minus liabilities, tracked over time.</div>
+  <div class="g4 mb6">
+    <div class="card"><div class="sl">Net Worth</div><div class="sv go">$142,580</div><div class="ss">Assets − Liabilities</div></div>
+    <div class="card"><div class="sl">Total Assets</div><div class="sv g">$394,780</div><div class="ss">Cash + Investments + Other</div></div>
+    <div class="card"><div class="sl">Total Debt</div><div class="sv r">$252,200</div><div class="ss">All active loans</div></div>
+    <div class="card"><div class="sl">MoM Change</div><div class="sv g">+$2,140</div><div class="ss">vs January 2026</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="sth">Net Worth Over Time</div>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:130px;padding:0 4px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$118k</div><div style="flex:1;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0;height:91px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Aug</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$122k</div><div style="flex:1;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0;height:94px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Sep</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$128k</div><div style="flex:1;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0;height:98px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Oct</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$133k</div><div style="flex:1;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0;height:102px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Nov</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$138k</div><div style="flex:1;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0;height:106px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Dec</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$140k</div><div style="flex:1;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0;height:108px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Jan</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9.5px;color:var(--mid);margin-bottom:4px">$143k</div><div style="flex:1;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0;height:110px"></div><div style="font-size:10px;color:var(--mid);margin-top:5px">Feb</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sth">Breakdown</div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span style="color:var(--i2)">Cash (Bank)</span><span style="font-weight:500;color:var(--grn)">$9,508</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span style="color:var(--i2)">Investment Portfolio</span><span style="font-weight:500;color:var(--blu)">$31,280</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span style="color:var(--i2)">Real Estate Equity</span><span style="font-weight:500;color:var(--gld)">$354,000</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span style="color:var(--i2)">Home Mortgage</span><span style="font-weight:500;color:var(--red)">−$248,200</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:var(--i2)">Car Loan</span><span style="font-weight:500;color:var(--red)">−$4,000</span></div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;font-weight:600;font-size:14px;border-top:1.5px solid var(--stn);margin-top:4px"><span>Net Worth</span><span style="color:var(--gld)">$142,580</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD -->
+<div id="upload" class="pg">
+  <div class="ey">Import</div><div class="pt">Upload Statement</div><div class="ps">Drop a CSV or Excel file from any bank — Chase, AmEx, Citi, BofA, Capital One and more.</div>
+  <div style="max-width:560px">
+    <div class="dz mb6" style="margin-bottom:20px"><div style="font-size:28px;margin-bottom:11px">↑</div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Drag &amp; drop your statement here</div><div style="font-size:12.5px;color:var(--dim)">Supports CSV, XLSX · Auto-detects bank format</div></div>
+    <div class="coff">
+      <div class="sth" style="margin-bottom:12px">How it works</div>
+      <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">1</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Auto-detect columns</div><div style="font-size:12px;color:var(--dim)">Date, Description and Amount found automatically regardless of bank</div></div></div>
+      <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">2</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Instant rule matching</div><div style="font-size:12px;color:var(--dim)">Known merchants get categories immediately — no manual work</div></div></div>
+      <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:22px;height:22px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">3</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Claude for ambiguous ones</div><div style="font-size:12px;color:var(--dim)">Unclear transactions go to AI for smart categorization</div></div></div>
+      <div style="display:flex;gap:11px"><div style="width:22px;height:22px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">4</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Duplicate protection</div><div style="font-size:12px;color:var(--dim)">Re-uploading is safe — duplicates silently skipped</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CASH TRANSACTIONS -->
+<div id="cash" class="pg">
+  <div class="jb mb8"><div><div class="ey">Manual Entry</div><div class="pt">Cash Transactions</div><div class="ps" style="margin-bottom:0">Log cash, Venmo, and anything not on your bank statement.</div></div><div style="display:flex;gap:8px"><button class="btn bg sm">Bulk Import</button><button class="btn bp sm">+ Add Entry</button></div></div>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th class="tr">Amount</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 22</td><td>Farmer's Market</td><td><span class="pill">🛒 Groceries</span></td><td><span class="bd bs">Cash</span></td><td class="tr neg">−$45.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 20</td><td>Babysitter — Saturday</td><td><span class="pill">👶 Childcare</span></td><td><span class="bd bs">Cash</span></td><td class="tr neg">−$80.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 18</td><td>Venmo — split dinner</td><td><span class="pill">🍽️ Dining Out</span></td><td><span class="bd bs">Venmo</span></td><td class="tr neg">−$34.50</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 15</td><td>Birthday gift — nephew</td><td><span class="pill">🎁 Gifts</span></td><td><span class="bd bs">Cash</span></td><td class="tr neg">−$50.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 12</td><td>Garage sale earnings</td><td><span class="pill">💰 Other Income</span></td><td><span class="bd bs">Cash</span></td><td class="tr pos">+$120.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TRANSACTIONS -->
+<div id="txns" class="pg">
+  <div class="ey">Ledger</div><div class="pt">Transactions</div><div class="ps">142 transactions · February 2026</div>
+  <div class="card mb6" style="padding:14px 16px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+    <div><div class="lbl">Year</div><select class="inp" style="width:86px"><option>2026</option></select></div>
+    <div><div class="lbl">Month</div><select class="inp" style="width:110px"><option>February</option></select></div>
+    <div><div class="lbl">Category</div><select class="inp" style="width:150px"><option>All categories</option></select></div>
+    <div style="margin-left:auto;display:flex;gap:20px">
+      <div style="text-align:right"><div class="sl">Income</div><div style="color:var(--grn);font-weight:500;font-size:15px">$7,500</div></div>
+      <div style="text-align:right"><div class="sl">Expenses</div><div style="color:var(--red);font-weight:500;font-size:15px">$4,182</div></div>
+    </div>
+  </div>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Source</th><th class="tr">Amount</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 22</td><td>Whole Foods Market</td><td><span class="pill">🛒 Groceries</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$94.30</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 21</td><td>Salary Deposit</td><td><span class="pill">💰 Income</span></td><td><span class="bd bs">CSV</span></td><td class="tr pos">+$3,750.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 20</td><td>Little Stars Daycare</td><td><span class="pill">👶 Childcare</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$600.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 18</td><td>Netflix</td><td><span class="pill">🎬 Entertainment</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$15.99</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 17</td><td>Robinhood — AAPL Buy</td><td><span class="pill">📈 Investments</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$500.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 15</td><td>Mortgage Payment</td><td><span class="pill">🏠 Housing</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$1,850.00</td></tr>
+        <tr><td style="color:var(--mid);font-size:12px">Feb 14</td><td>SHELL GAS STATION 447</td><td><span class="pill">🚗 Transport</span></td><td><span class="bd bs">CSV</span></td><td class="tr neg">−$62.40</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FORECAST -->
+<div id="forecast" class="pg">
+  <div class="ey">Projections</div><div class="pt">Cash Flow Forecast</div><div class="ps">Actuals through today · projected forward from your spending patterns.</div>
+  <div class="g4 mb6">
+    <div class="card"><div class="sl">Year-End Balance</div><div class="sv g">$18,240</div></div>
+    <div class="card"><div class="sl">Total Income</div><div class="sv g">$90,000</div></div>
+    <div class="card"><div class="sl">Total Expenses</div><div class="sv r">$71,760</div></div>
+    <div class="card"><div class="sl">Avg Monthly Net</div><div class="sv go">$1,520</div></div>
+  </div>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Month</th><th>Status</th><th class="tr">Income</th><th class="tr">Expenses</th><th class="tr">Net</th><th class="tr">Cumulative</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:500">January</td><td><span class="bd bg2">Actual</span></td><td class="tr pos">$7,500</td><td class="tr neg">$5,820</td><td class="tr pos">+$1,680</td><td class="tr gt">$1,680</td></tr>
+        <tr><td style="font-weight:500">February</td><td><span class="bd by">Current</span></td><td class="tr pos">$7,500</td><td class="tr neg">$4,182</td><td class="tr pos">+$3,318</td><td class="tr gt">$4,998</td></tr>
+        <tr><td style="font-weight:500">March</td><td><span style="color:var(--mid);font-size:12.5px">Projected</span></td><td class="tr pos">$7,500</td><td class="tr neg">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gt">$6,538</td></tr>
+        <tr><td style="font-weight:500">April</td><td><span style="color:var(--mid);font-size:12.5px">Projected</span></td><td class="tr pos">$7,500</td><td class="tr neg">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gt">$8,078</td></tr>
+        <tr><td style="font-weight:500">June</td><td><span style="color:var(--mid);font-size:12.5px">Projected</span></td><td class="tr pos">$7,500</td><td class="tr neg">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gt">$11,158</td></tr>
+        <tr><td style="font-weight:500">December</td><td><span style="color:var(--mid);font-size:12.5px">Projected</span></td><td class="tr pos">$7,500</td><td class="tr neg">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gt">$18,240</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div id="scenarios" class="pg" style="display:flex;flex-direction:column;height:calc(100vh - 100px)">
+  <div class="jb mb4"><div><div class="ey">Planning</div><div class="pt">Scenarios</div><div class="ps" style="margin-bottom:0">Describe any financial change — Arca models the numbers and saves a scenario.</div></div></div>
+  <div class="tabs">
+    <button class="tab on" onclick="scTab('chat',this)">Chat with Arca</button>
+    <button class="tab" onclick="scTab('saved',this)">Saved Scenarios <span style="margin-left:4px;font-size:10px;background:var(--stn);color:var(--dim);padding:1px 6px;border-radius:99px">3</span></button>
+    <button class="tab" onclick="scTab('compare',this)">Compare</button>
+  </div>
+  <div id="sc-chat" style="flex:1;display:flex;flex-direction:column;min-height:0">
+    <div class="chatbox" id="chatbox">
+      <div class="msg"><div class="ava">A</div><div class="bub a">Hi! I'm your Arca planning assistant.<br><br>Describe any financial change — a new loan, a raise, cutting a category, early payoff — and I'll model the exact impact using your real numbers and save a scenario you can compare.<br><br>What would you like to explore?</div></div>
+      <div class="msg u"><div class="ava u">JG</div><div class="bub u">What if I cut dining out by 50% and put that toward the mortgage?</div></div>
+      <div class="msg"><div class="ava">A</div><div class="bub a">
+        Great question. Here's what that looks like with your numbers:<br><br>
+        Your dining spend averages <strong>$680/month</strong>. Cutting it 50% frees up <strong>$340/month</strong>.<br><br>
+        Putting that as extra mortgage principal:<br>
+        · Payoff moves <strong>Nov 2046 → Oct 2042</strong> — 4 years earlier<br>
+        · You save <strong>$38,400 in interest</strong> over the life of the loan<br>
+        · Year-end impact this year: <strong>+$4,080</strong><br><br>
+        One of the highest-return moves you can make.
+        <div class="scnote">✓ <strong>Scenario saved:</strong> Cut Dining + Mortgage Extra · +$4,080/yr impact</div>
+      </div></div>
+    </div>
+    <div class="chatrow">
+      <textarea class="chatinp" id="chatinp" rows="1" placeholder='e.g. "What if I take a $35k car loan at 7%?" or "Show me a $800/mo raise"'></textarea>
+      <button class="btn bp" onclick="sendMsg()" style="height:46px;padding:10px 20px;border-radius:10px;flex-shrink:0">↑ Send</button>
+    </div>
+    <div style="font-size:11px;color:var(--mid);margin-top:5px">Enter to send · Based on your real spending data</div>
+  </div>
+  <div id="sc-saved" style="display:none">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div class="scc sel"><div class="jb mb4"><div style="font-weight:600;font-size:14px">Cut Dining + Mortgage</div><button class="btn sm" style="color:var(--mid);border:none">✕</button></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:11px">Cut dining 50% · redirect to mortgage principal</div><div class="adjrow"><span style="color:var(--dim)">Cut Dining Out</span><span style="color:var(--grn);font-weight:500">−$340/mo</span></div><div class="adjrow"><span style="color:var(--dim)">Extra Mortgage Principal</span><span style="color:var(--grn);font-weight:500">+$340/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--grn)">+$4,080/yr</div></div><button class="btn sm bp">✓ Comparing</button></div></div>
+      <div class="scc"><div class="jb mb4"><div style="font-weight:600;font-size:14px">Baby Year 2</div><button class="btn sm" style="color:var(--mid);border:none">✕</button></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:11px">Model increased childcare + healthcare costs</div><div class="adjrow"><span style="color:var(--dim)">Childcare increase</span><span style="color:var(--red);font-weight:500">+$400/mo</span></div><div class="adjrow"><span style="color:var(--dim)">Healthcare increase</span><span style="color:var(--red);font-weight:500">+$150/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--red)">−$6,600/yr</div></div><button class="btn sm bg">Compare</button></div></div>
+      <div class="scc"><div class="jb mb4"><div style="font-weight:600;font-size:14px">Side Income Boost</div><button class="btn sm" style="color:var(--mid);border:none">✕</button></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:11px">Add $1,500/month consulting income</div><div class="adjrow"><span style="color:var(--dim)">Consulting Income</span><span style="color:var(--grn);font-weight:500">+$1,500/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--grn)">+$18,000/yr</div></div><button class="btn sm bg">Compare</button></div></div>
+    </div>
+  </div>
+  <div id="sc-compare" style="display:none">
+    <div class="g3 mb6">
+      <div class="card"><div class="sl">Base Reality</div><div class="sv go">$1,520<span style="font-size:15px">/mo</span></div><div class="ss">Current monthly net</div></div>
+      <div class="card" style="border-color:#2d7a4f;border-width:1.5px"><div class="sl">Cut Dining + Mortgage</div><div class="sv g">$1,860<span style="font-size:15px">/mo</span></div><div class="ss" style="color:var(--grn)">+$340/mo vs base</div></div>
+      <div class="card" style="border-color:#1a5fa8;border-width:1.5px"><div class="sl">Side Income Boost</div><div class="sv b">$3,020<span style="font-size:15px">/mo</span></div><div class="ss" style="color:var(--blu)">+$1,500/mo vs base</div></div>
+    </div>
+    <div class="card" style="padding:0"><div style="padding:14px 18px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">Annual Impact Summary</div></div>
+      <table><thead><tr><th>Scenario</th><th class="tr">Monthly</th><th class="tr">Annual</th><th class="tr">5-Year</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:500">Cut Dining + Mortgage</td><td class="tr pos">+$340/mo</td><td class="tr pos">+$4,080/yr</td><td class="tr pos">+$20,400</td></tr>
+        <tr><td style="font-weight:500">Side Income Boost</td><td class="tr pos">+$1,500/mo</td><td class="tr pos">+$18,000/yr</td><td class="tr pos">+$90,000</td></tr>
+        <tr><td style="font-weight:500">Baby Year 2</td><td class="tr neg">−$550/mo</td><td class="tr neg">−$6,600/yr</td><td class="tr neg">−$33,000</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- LOANS -->
+<div id="loans" class="pg">
+  <div class="jb mb8"><div><div class="ey">Debt</div><div class="pt">Loans</div><div class="ps" style="margin-bottom:0">Track every loan, amortization schedule, interest cost, and payoff date.</div></div><button class="btn bp">+ Add Loan</button></div>
+  <div class="g3 mb6">
+    <div class="card"><div class="sl">Total Outstanding Debt</div><div class="sv r">$252,200</div><div class="ss">2 active loans</div></div>
+    <div class="card"><div class="sl">Monthly Debt Payments</div><div class="sv go">$2,063</div><div class="ss">Recurring obligation</div></div>
+    <div class="card"><div class="sl">Total Interest Remaining</div><div class="sv" style="color:var(--dim)">$186,440</div><div class="ss">Cost of borrowing</div></div>
+  </div>
+  <div class="lcard">
+    <div class="jb" style="margin-bottom:16px"><div class="row"><div style="width:36px;height:36px;border-radius:8px;background:#1a5fa818;display:flex;align-items:center;justify-content:center;font-size:19px">🏠</div><div><div style="font-weight:500;font-size:15px">Home Mortgage</div><div style="font-size:12px;color:var(--mid)">mortgage · 6.25% APR · 360 months</div></div></div><button class="btn bg sm">View Schedule →</button></div>
+    <div class="lgrid">
+      <div><div class="sl">Balance</div><div style="font-size:15px;font-weight:500;color:var(--red)">$248,200</div></div>
+      <div><div class="sl">Monthly</div><div style="font-size:15px;font-weight:500">$1,850</div></div>
+      <div><div class="sl">Original</div><div style="font-size:15px;color:var(--dim)">$320,000</div></div>
+      <div><div class="sl">Total Interest</div><div style="font-size:15px;color:var(--dim)">$182,000</div></div>
+      <div><div class="sl">Payoff Date</div><div style="font-size:15px;font-weight:500;color:var(--gld)">Nov 2046</div></div>
+    </div>
+    <div style="font-size:11.5px;color:var(--mid);display:flex;justify-content:space-between;margin-bottom:5px"><span>22% paid off</span><span>248 months remaining</span></div>
+    <div class="pb"><div class="pf" style="width:22%;background:#1a5fa8"></div></div>
+  </div>
+  <div class="lcard">
+    <div class="jb" style="margin-bottom:16px"><div class="row"><div style="width:36px;height:36px;border-radius:8px;background:#2d7a4f18;display:flex;align-items:center;justify-content:center;font-size:19px">🚗</div><div><div style="font-weight:500;font-size:15px">Honda CR-V</div><div style="font-size:12px;color:var(--mid)">car · 5.9% APR · 60 months</div></div></div><button class="btn bg sm">View Schedule →</button></div>
+    <div class="lgrid">
+      <div><div class="sl">Balance</div><div style="font-size:15px;font-weight:500;color:var(--red)">$4,000</div></div>
+      <div><div class="sl">Monthly</div><div style="font-size:15px;font-weight:500">$213</div></div>
+      <div><div class="sl">Original</div><div style="font-size:15px;color:var(--dim)">$22,000</div></div>
+      <div><div class="sl">Total Interest</div><div style="font-size:15px;color:var(--dim)">$3,440</div></div>
+      <div><div class="sl">Payoff Date</div><div style="font-size:15px;font-weight:500;color:var(--gld)">Mar 2027</div></div>
+    </div>
+    <div style="font-size:11.5px;color:var(--mid);display:flex;justify-content:space-between;margin-bottom:5px"><span>82% paid off</span><span>13 months remaining</span></div>
+    <div class="pb"><div class="pf" style="width:82%;background:#2d7a4f"></div></div>
+  </div>
+</div>
+
+<!-- INVESTMENTS -->
+<div id="investments" class="pg">
+  <div class="jb mb8"><div><div class="ey">Portfolio</div><div class="pt">Investments</div><div class="ps" style="margin-bottom:0">Capital deployed, live prices, and Schwab account sync.</div></div><div style="display:flex;gap:8px"><button class="btn bg sm">📸 Update Value</button><button class="btn bp sm">+ Log Transaction</button></div></div>
+  <div class="card mb6" style="background:var(--gbg);border-color:#b3d9c2">
+    <div class="jb"><div class="row"><div style="width:36px;height:36px;border-radius:8px;background:var(--w);display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid var(--stn)">📊</div><div><div style="font-weight:500;font-size:14px">Schwab Account Sync <span class="bd bg2" style="margin-left:7px">Connected</span></div><div style="font-size:12px;color:var(--dim);margin-top:2px">Read-only · Cannot trade or move money · Synced 4 min ago</div></div></div><div style="display:flex;gap:8px"><button class="btn bg sm">↻ Sync</button><button class="btn sm" style="color:var(--red);border:1px solid var(--stn);background:var(--w)">Disconnect</button></div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="invTab('ov',this)">Overview</button>
+    <button class="tab" onclick="invTab('schw',this)">Schwab Live <span style="margin-left:4px;font-size:10px;background:var(--gbg);color:var(--grn);padding:1px 6px;border-radius:99px">4</span></button>
+    <button class="tab" onclick="invTab('log',this)">Transaction Log</button>
+  </div>
+  <div id="inv-ov">
+    <div class="g4 mb6">
+      <div class="card"><div class="sl">Net Invested</div><div class="sv go">$24,500</div><div class="ss">Cash deployed</div></div>
+      <div class="card"><div class="sl">Portfolio Value</div><div class="sv b">$31,280</div><div class="ss">As of Feb 22, 2026</div></div>
+      <div class="card"><div class="sl">Unrealized P&amp;L</div><div class="sv g">+$6,780</div><div class="ss">+27.7%</div></div>
+      <div class="card"><div class="sl">Recovered (Sells)</div><div class="sv g">$3,200</div><div class="ss">Total realized</div></div>
+    </div>
+    <div class="card" style="padding:0">
+      <div style="padding:13px 18px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">Holdings — Live Prices</div></div>
+      <table>
+        <thead><tr><th>Asset</th><th>Ticker</th><th>Type</th><th class="tr">Invested</th><th class="tr">Current Price</th><th class="tr">Today</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:500">Apple Inc.</td><td style="color:var(--mid);font-size:12px">AAPL</td><td><span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--bbg);color:var(--blu)">stock</span></td><td class="tr neg">−$8,750</td><td class="tr" style="font-weight:500">$218.24</td><td class="tr" style="color:var(--grn);font-size:12.5px">▲ +1.2%</td></tr>
+          <tr><td style="font-weight:500">Bitcoin</td><td style="color:var(--mid);font-size:12px">BTC</td><td><span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#fef3e2;color:#c27c0e">crypto</span></td><td class="tr neg">−$4,600</td><td class="tr" style="font-weight:500">$96,420</td><td class="tr" style="color:var(--grn);font-size:12.5px">▲ +0.8%</td></tr>
+          <tr><td style="font-weight:500">Vanguard Total Market</td><td style="color:var(--mid);font-size:12px">VTSAX</td><td><span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--gbg);color:var(--grn)">etf</span></td><td class="tr neg">−$7,200</td><td class="tr" style="font-weight:500">$138.44</td><td class="tr" style="color:var(--red);font-size:12.5px">▼ −0.3%</td></tr>
+          <tr><td style="font-weight:500">S&amp;P 500 ETF</td><td style="color:var(--mid);font-size:12px">VOO</td><td><span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--gbg);color:var(--grn)">etf</span></td><td class="tr neg">−$3,950</td><td class="tr" style="font-weight:500">$543.21</td><td class="tr" style="color:var(--red);font-size:12.5px">▼ −0.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="inv-schw" style="display:none">
+    <div class="g3 mb6">
+      <div class="card"><div class="sl">Total Account Value</div><div class="sv b">$31,280</div><div class="ss">1 account · ...4821</div></div>
+      <div class="card"><div class="sl">Cash Balance</div><div class="sv g">$1,840</div><div class="ss">Available cash</div></div>
+      <div class="card"><div class="sl">Unrealized P&amp;L</div><div class="sv g">+$6,780</div><div class="ss">All positions</div></div>
+    </div>
+    <div class="card" style="padding:0">
+      <div style="padding:13px 18px;border-bottom:1px solid var(--stn);display:flex;justify-content:space-between;align-items:center"><div class="sth" style="margin-bottom:0">Live Positions — 4 holdings</div><button class="btn bg sm">↻ Refresh</button></div>
+      <table>
+        <thead><tr><th>Symbol</th><th>Description</th><th>Qty</th><th class="tr">Avg Cost</th><th class="tr">Market Value</th><th class="tr">Unrealized P&amp;L</th><th class="tr">Live Price</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600">AAPL</td><td style="color:var(--dim);font-size:12px">Apple Inc.</td><td>50</td><td class="tr" style="color:var(--dim)">$154.20</td><td class="tr" style="font-weight:500">$10,912</td><td class="tr"><div class="pos">+$2,202</div><div style="font-size:11px;color:var(--grn)">+25.3%</div></td><td class="tr"><div style="font-weight:500">$218.24</div><div style="font-size:11px;color:var(--grn)">▲ +1.2%</div></td></tr>
+          <tr><td style="font-weight:600">BTC</td><td style="color:var(--dim);font-size:12px">Bitcoin</td><td>0.05</td><td class="tr" style="color:var(--dim)">$72,400</td><td class="tr" style="font-weight:500">$4,821</td><td class="tr"><div class="pos">+$421</div><div style="font-size:11px;color:var(--grn)">+9.6%</div></td><td class="tr"><div style="font-weight:500">$96,420</div><div style="font-size:11px;color:var(--grn)">▲ +0.8%</div></td></tr>
+          <tr><td style="font-weight:600">VTSAX</td><td style="color:var(--dim);font-size:12px">Vanguard Total Market</td><td>100</td><td class="tr" style="color:var(--dim)">$124.18</td><td class="tr" style="font-weight:500">$13,844</td><td class="tr"><div class="pos">+$1,626</div><div style="font-size:11px;color:var(--grn)">+13.3%</div></td><td class="tr"><div style="font-weight:500">$138.44</div><div style="font-size:11px;color:var(--red)">▼ −0.3%</div></td></tr>
+          <tr><td style="font-weight:600">VOO</td><td style="color:var(--dim);font-size:12px">S&amp;P 500 ETF</td><td>8</td><td class="tr" style="color:var(--dim)">$467.40</td><td class="tr" style="font-weight:500">$4,346</td><td class="tr"><div class="pos">+$608</div><div style="font-size:11px;color:var(--grn)">+16.3%</div></td><td class="tr"><div style="font-weight:500">$543.21</div><div style="font-size:11px;color:var(--red)">▼ −0.2%</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="inv-log" style="display:none">
+    <div class="card" style="padding:0">
+      <table>
+        <thead><tr><th>Date</th><th>Asset</th><th>Type</th><th>Action</th><th>Qty</th><th class="tr">Amount</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--mid);font-size:12px">Feb 17</td><td><div style="font-weight:500">Apple Inc. · AAPL</div></td><td><span style="font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bbg);color:var(--blu)">stock</span></td><td><span class="bd bg2">Buy</span></td><td style="color:var(--dim)">10</td><td class="tr neg">−$1,750</td></tr>
+          <tr><td style="color:var(--mid);font-size:12px">Feb 10</td><td><div style="font-weight:500">Bitcoin · BTC</div></td><td><span style="font-size:11px;padding:2px 7px;border-radius:4px;background:#fef3e2;color:#c27c0e">crypto</span></td><td><span class="bd bg2">Buy</span></td><td style="color:var(--dim)">0.05</td><td class="tr neg">−$2,300</td></tr>
+          <tr><td style="color:var(--mid);font-size:12px">Jan 28</td><td><div style="font-weight:500">Vanguard Total Market · VTSAX</div></td><td><span style="font-size:11px;padding:2px 7px;border-radius:4px;background:var(--gbg);color:var(--grn)">etf</span></td><td><span class="bd bg2">Buy</span></td><td style="color:var(--dim)">20</td><td class="tr neg">−$3,800</td></tr>
+          <tr><td style="color:var(--mid);font-size:12px">Jan 15</td><td><div style="font-weight:500">Tesla Inc. · TSLA</div></td><td><span style="font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bbg);color:var(--blu)">stock</span></td><td><span class="bd br">Sell</span></td><td style="color:var(--dim)">5</td><td class="tr pos">+$1,200</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RECONCILIATION -->
+<div id="recon" class="pg">
+  <div class="ey">Cross-check</div><div class="pt">Reconciliation</div><div class="ps">Verify your BoP → EoP cash matches what's actually in the bank.</div>
+  <div class="g3 mb6">
+    <div class="card"><div class="sl">Periods Tracked</div><div class="sv go">3</div></div>
+    <div class="card"><div class="sl">Reconciled</div><div class="sv g">2</div></div>
+    <div class="card"><div class="sl">Gaps Found</div><div class="sv r">1</div></div>
+  </div>
+  <div class="card mb6" style="border-left:2.5px solid var(--grn)">
+    <div class="jb" style="margin-bottom:16px"><div><div style="font-size:15px;font-weight:500;margin-bottom:3px">January 2026</div><div style="font-size:12px;color:var(--dim)">Jan 1 – Jan 31 · 87 transactions</div></div><span class="rok">✓ Reconciled</span></div>
+    <div class="coff" style="margin-bottom:13px">
+      <div class="sth mb4">Cash Flow Waterfall</div>
+      <div class="wfr"><span style="color:var(--i2)">Beginning of Period Cash</span><span style="font-weight:600">$12,400.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">+ Inflows (income, credits)</span><span class="pos">+$7,500.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">− Outflows (expenses)</span><span class="neg">−$5,420.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">− Investment cash out</span><span class="neg">−$3,800.00</span></div>
+      <div class="wft"><span>= Expected End of Period Cash</span><span class="gt">$10,680.00</span></div>
+    </div>
+    <div class="coff" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;color:var(--dim);margin-bottom:3px">Actual bank balance (Jan 31)</div><div style="font-size:17px;font-weight:500">$10,680.00</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--dim);margin-bottom:2px">Difference</div><div style="font-size:22px;font-weight:600;color:var(--grn)">$0.00</div><div style="font-size:11px;color:var(--grn)">Perfect match</div></div></div>
+  </div>
+  <div class="card" style="border-left:2.5px solid var(--red)">
+    <div class="jb" style="margin-bottom:16px"><div><div style="font-size:15px;font-weight:500;margin-bottom:3px">February 2026</div><div style="font-size:12px;color:var(--dim)">Feb 1 – Feb 22 · 54 transactions</div></div><span class="rgap">⚠ −$240 gap</span></div>
+    <div class="coff" style="margin-bottom:13px">
+      <div class="sth mb4">Cash Flow Waterfall</div>
+      <div class="wfr"><span style="color:var(--i2)">Beginning of Period Cash</span><span style="font-weight:600">$10,680.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">+ Inflows</span><span class="pos">+$3,750.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">− Outflows</span><span class="neg">−$4,182.00</span></div>
+      <div class="wfr"><span style="color:var(--dim)">− Investment cash out</span><span class="neg">−$500.00</span></div>
+      <div class="wft"><span>= Expected End of Period Cash</span><span class="gt">$9,748.00</span></div>
+    </div>
+    <div class="coff" style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12px;color:var(--dim);margin-bottom:3px">Actual bank balance (Feb 22)</div><div style="font-size:17px;font-weight:500">$9,508.00</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--dim);margin-bottom:2px">Difference</div><div style="font-size:22px;font-weight:600;color:var(--red)">−$240.00</div><div style="font-size:11px;color:var(--dim)">Missing expenses likely</div></div></div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div id="reports" class="pg">
+  <div class="jb mb8"><div><div class="ey">Annual Summary</div><div class="pt">2025 Year in Review</div><div class="ps" style="margin-bottom:0">Full-year breakdown · exportable for tax prep.</div></div><div style="display:flex;gap:8px"><select class="inp" style="width:100px"><option>2025</option><option>2024</option></select><button class="btn bp sm">⬇ Export CSV</button></div></div>
+  <div class="g3 mb6">
+    <div class="card"><div class="sl">Total Income</div><div class="sv g">$90,000</div></div>
+    <div class="card"><div class="sl">Total Expenses</div><div class="sv r">$71,760</div></div>
+    <div class="card"><div class="sl">Net Saved</div><div class="sv go">$18,240</div><div class="ss">20.3% savings rate</div></div>
+  </div>
+  <div class="g2">
+    <div class="card" style="padding:0">
+      <div style="padding:13px 18px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">Spending by Category</div></div>
+      <table><thead><tr><th>Category</th><th class="tr">Total</th><th class="tr">% of Expenses</th></tr></thead>
+      <tbody>
+        <tr><td>🏠 Housing</td><td class="tr" style="font-weight:500">$22,200</td><td class="tr" style="color:var(--mid)">30.9%</td></tr>
+        <tr><td>👶 Childcare</td><td class="tr" style="font-weight:500">$14,400</td><td class="tr" style="color:var(--mid)">20.1%</td></tr>
+        <tr><td>🍽️ Dining Out</td><td class="tr" style="font-weight:500">$8,160</td><td class="tr" style="color:var(--mid)">11.4%</td></tr>
+        <tr><td>🛒 Groceries</td><td class="tr" style="font-weight:500">$6,240</td><td class="tr" style="color:var(--mid)">8.7%</td></tr>
+        <tr><td>📈 Investments</td><td class="tr" style="font-weight:500">$6,000</td><td class="tr" style="color:var(--mid)">8.4%</td></tr>
+        <tr><td>🚗 Transport</td><td class="tr" style="font-weight:500">$4,080</td><td class="tr" style="color:var(--mid)">5.7%</td></tr>
+        <tr><td>🎬 Entertainment</td><td class="tr" style="font-weight:500">$1,920</td><td class="tr" style="color:var(--mid)">2.7%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card" style="padding:0">
+      <div style="padding:13px 18px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">Month by Month</div></div>
+      <table><thead><tr><th>Month</th><th class="tr">Income</th><th class="tr">Expenses</th><th class="tr">Net</th></tr></thead>
+      <tbody>
+        <tr><td>January</td><td class="tr pos">$7,500</td><td class="tr neg">$5,820</td><td class="tr gt">+$1,680</td></tr>
+        <tr><td>February</td><td class="tr pos">$7,500</td><td class="tr neg">$4,182</td><td class="tr gt">+$3,318</td></tr>
+        <tr><td>March</td><td class="tr pos">$7,500</td><td class="tr neg">$6,120</td><td class="tr gt">+$1,380</td></tr>
+        <tr><td>April</td><td class="tr pos">$7,500</td><td class="tr neg">$5,980</td><td class="tr gt">+$1,520</td></tr>
+        <tr><td>May</td><td class="tr pos">$7,500</td><td class="tr neg">$6,200</td><td class="tr gt">+$1,300</td></tr>
+        <tr><td>June</td><td class="tr pos">$7,500</td><td class="tr neg">$5,800</td><td class="tr gt">+$1,700</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div id="cats" class="pg">
+  <div class="jb mb8"><div><div class="ey">Settings</div><div class="pt">Categories</div><div class="ps" style="margin-bottom:0">Set monthly budgets · Arca alerts you when you're over.</div></div><button class="btn bp sm">+ Add Category</button></div>
+  <div class="card" style="padding:0">
+    <table>
+      <thead><tr><th>Category</th><th>Color</th><th class="tr">Monthly Budget</th><th class="tr">Feb Spent</th><th class="tr">Status</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:22px;height:22px;border-radius:5px;background:#1a5fa822;display:flex;align-items:center;justify-content:center">🏠</div><span style="font-weight:500">Housing</span></div></td><td><div style="width:14px;height:14px;border-radius:3px;background:#1a5fa8;display:inline-block"></div></td><td class="tr">$2,000</td><td class="tr" style="font-weight:500">$2,400</td><td class="tr"><span class="bd br">Over by $400</span></td><td><button class="btn sm bg">Edit</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:22px;height:22px;border-radius:5px;background:#b8323222;display:flex;align-items:center;justify-content:center">🍽️</div><span style="font-weight:500">Dining Out</span></div></td><td><div style="width:14px;height:14px;border-radius:3px;background:#b83232;display:inline-block"></div></td><td class="tr">$500</td><td class="tr" style="font-weight:500">$680</td><td class="tr"><span class="bd br">Over by $180</span></td><td><button class="btn sm bg">Edit</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:22px;height:22px;border-radius:5px;background:#2d7a4f22;display:flex;align-items:center;justify-content:center">🛒</div><span style="font-weight:500">Groceries</span></div></td><td><div style="width:14px;height:14px;border-radius:3px;background:#2d7a4f;display:inline-block"></div></td><td class="tr">$600</td><td class="tr" style="font-weight:500">$520</td><td class="tr"><span class="bd bg2">$80 remaining</span></td><td><button class="btn sm bg">Edit</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:22px;height:22px;border-radius:5px;background:#7a5f2822;display:flex;align-items:center;justify-content:center">👶</div><span style="font-weight:500">Childcare</span></div></td><td><div style="width:14px;height:14px;border-radius:3px;background:#7a5f28;display:inline-block"></div></td><td class="tr">$1,200</td><td class="tr" style="font-weight:500">$1,200</td><td class="tr"><span class="bd bg2">On budget</span></td><td><button class="btn sm bg">Edit</button></td></tr>
+        <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:22px;height:22px;border-radius:5px;background:#6b3fa822;display:flex;align-items:center;justify-content:center">🎬</div><span style="font-weight:500">Entertainment</span></div></td><td><div style="width:14px;height:14px;border-radius:3px;background:#6b3fa8;display:inline-block"></div></td><td class="tr">$200</td><td class="tr" style="font-weight:500">$120</td><td class="tr"><span class="bd bg2">$80 remaining</span></td><td><button class="btn sm bg">Edit</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div id="auth" class="pg">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:80vh">
+    <div style="width:100%;max-width:390px;padding:40px;background:var(--w);border:1px solid var(--stn);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.09)">
+      <div style="font-family:var(--fd);font-style:italic;font-size:28px;text-align:center;margin-bottom:5px">Arca</div>
+      <div style="text-align:center;color:var(--mid);font-size:12.5px;margin-bottom:26px">Personal finance, finally intelligent</div>
+      <div class="tabs" style="margin:0 auto 22px"><button class="tab on">Sign In</button><button class="tab">Create Account</button></div>
+      <div style="margin-bottom:14px"><div class="lbl">Email</div><input class="inp" style="width:100%" value="jorge@example.com"></div>
+      <div style="margin-bottom:20px">
+        <div class="lbl">Password</div>
+        <div style="position:relative"><input class="inp" type="password" style="width:100%;padding-right:38px" value="mysecret!"><span style="position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--mid)">👁</span></div>
+        <div style="display:flex;gap:3px;margin-top:7px"><div style="flex:1;height:2.5px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:2.5px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:2.5px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:2.5px;border-radius:99px;background:var(--grn)"></div></div>
+        <div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap"><span style="font-size:10px;color:var(--grn)">✓ 8+ chars</span><span style="font-size:10px;color:var(--grn)">✓ Number</span><span style="font-size:10px;color:var(--grn)">✓ Uppercase</span><span style="font-size:10px;color:var(--grn)">✓ Symbol</span><span style="font-size:10px;font-weight:600;color:var(--grn);margin-left:auto">Strong</span></div>
+      </div>
+      <button class="btn bp" style="width:100%;justify-content:center;padding:10px">Sign In</button>
+      <div style="text-align:center;margin-top:12px;font-size:11.5px;color:var(--mid)">5 failed attempts = 15 min lockout · Invite code to register</div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function go(id,el){
+  document.querySelectorAll('.pg').forEach(function(p){p.style.display='none';p.classList.remove('on');});
+  document.querySelectorAll('.ni').forEach(function(b){b.classList.remove('on');});
+  var s=document.getElementById(id);
+  s.style.display=(id==='scenarios')?'flex':'block';
+  s.classList.add('on');
+  if(el)el.classList.add('on');
+}
+function scTab(id,el){
+  ['sc-chat','sc-saved','sc-compare'].forEach(function(x){document.getElementById(x).style.display='none';});
+  document.getElementById('sc-'+id).style.display=(id==='chat')?'flex':'block';
+  document.querySelectorAll('#scenarios .tab').forEach(function(t){t.classList.remove('on');});
+  if(el)el.classList.add('on');
+}
+function invTab(id,el){
+  ['inv-ov','inv-schw','inv-log'].forEach(function(x){document.getElementById(x).style.display='none';});
+  document.getElementById('inv-'+id).style.display='block';
+  document.querySelectorAll('#investments .tab').forEach(function(t){t.classList.remove('on');});
+  if(el)el.classList.add('on');
+}
+var replies=[
+  "Based on your numbers:<br><br>Your dining spend averages <strong>$680/month</strong>. Making this change would shift your year-end balance by <strong>+$4,080</strong>. I've saved this as a scenario you can compare.",
+  "With your mortgage at <strong>$248,200 and 6.25% APR</strong>, an extra $300/month in principal saves <strong>$41,200 in interest</strong> and moves payoff from <strong>Nov 2046 to Feb 2042</strong>. That's 4 years earlier.",
+  "Modeling a $1,500/month income boost: your monthly net goes from <strong>$1,520 to $3,020</strong>. Over 5 years that's an extra <strong>$90,000</strong> in savings potential. Scenario saved."
+];
+var ri=0;
+function sendMsg(){
+  var inp=document.getElementById('chatinp');
+  var box=document.getElementById('chatbox');
+  var txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  var u=document.createElement('div');u.className='msg u';
+  u.innerHTML='<div class="ava u">JG</div><div class="bub u">'+txt+'</div>';
+  box.appendChild(u);
+  var t=document.createElement('div');t.className='msg';
+  t.innerHTML='<div class="ava">A</div><div class="bub a" style="padding:14px 16px"><div style="display:flex;gap:5px"><div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease-in-out infinite;animation-delay:0s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease-in-out infinite;animation-delay:.22s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease-in-out infinite;animation-delay:.44s"></div></div></div>';
+  box.appendChild(t);box.scrollTop=box.scrollHeight;
+  setTimeout(function(){
+    box.removeChild(t);
+    var r=replies[ri%replies.length];ri++;
+    var a=document.createElement('div');a.className='msg';
+    a.innerHTML='<div class="ava">A</div><div class="bub a">'+r+'<div class="scnote" style="margin-top:10px">✓ <strong>Scenario saved</strong> — see it in the Saved Scenarios tab</div></div>';
+    box.appendChild(a);box.scrollTop=box.scrollHeight;
+  },1500);
+}
+document.addEventListener('keydown',function(e){
+  if(e.target.id==='chatinp'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
+});
+document.getElementById('scenarios').style.display='none';
+</script>
+</body>
+</html>
