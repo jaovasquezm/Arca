@@ -3,539 +3,780 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Arca — App Preview</title>
+<title>ARCA — Financial Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --w:#fff;--off:#f7f6f4;--stn:#e8e4de;--sm:#d4cfc8;
-  --mid:#9e9890;--dim:#7a756e;--ink:#2a2825;--i2:#4a4742;
-  --grn:#2d7a4f;--gbg:#eaf4ee;--red:#b83232;--rbg:#faeae9;
-  --gld:#7a5f28;--gbg2:#f5f0e6;--blu:#1a5fa8;--bbg:#e8f0fa;
-  --fd:'Instrument Serif',Georgia,serif;--fb:'Geist',-apple-system,sans-serif;
-  --nav-h:64px;
+  --bg:#0a0a0b;
+  --s1:#111113;
+  --s2:#18181b;
+  --s3:#222226;
+  --s4:#2e2e34;
+  --ln:#3a3a42;
+  --mid:#6b6b78;
+  --dim:#4a4a54;
+  --txt:#e8e8f0;
+  --txt2:#b4b4c4;
+  --acc:#c8f542;       /* acid green — the single accent */
+  --accD:#9abf2e;
+  --pos:#4ade80;
+  --neg:#f87171;
+  --gld:#fbbf24;
+  --blu:#60a5fa;
+  --ff:'Syne',sans-serif;
+  --fm:'DM Mono',monospace;
+  --nav-h:60px;
 }
-html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--fb);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--stn);border-radius:99px}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--s4)}
+::selection{background:var(--acc);color:#000}
+
+/* ═══ LAYOUT ═══ */
 .app{display:flex;height:100dvh;overflow:hidden}
-.sb{width:210px;flex-shrink:0;background:var(--w);border-right:1px solid var(--stn);display:flex;flex-direction:column;padding:20px 0;overflow-y:auto}
-.logo{font-family:var(--fd);font-size:21px;font-style:italic;padding:0 18px 20px;border-bottom:1px solid var(--stn);margin-bottom:10px}
-.logo small{display:block;font-family:var(--fb);font-style:normal;font-size:11.5px;font-weight:300;color:var(--mid);margin-top:2px}
-.grp{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--sm);padding:10px 18px 3px}
-.ni{display:flex;align-items:center;gap:9px;padding:7px 18px;color:var(--dim);font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--fb);transition:all .12s;border-right:2.5px solid transparent}
-.ni:hover{color:var(--ink);background:var(--off)}
-.ni.on{color:var(--ink);background:var(--off);border-right-color:var(--ink);font-weight:500}
-.main{flex:1;overflow-y:auto;padding:38px 42px 80px;background:var(--off)}
+
+/* ═══ SIDEBAR ═══ */
+.sb{width:200px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--ln);display:flex;flex-direction:column;overflow-y:auto}
+.sb-brand{padding:20px 20px 18px;border-bottom:1px solid var(--ln)}
+.sb-logo{font-family:var(--ff);font-size:18px;font-weight:800;letter-spacing:.12em;color:var(--txt);text-transform:uppercase}
+.sb-user{font-family:var(--fm);font-size:10px;color:var(--mid);margin-top:3px;letter-spacing:.06em}
+.sb-section{padding:16px 0 4px}
+.sb-label{font-family:var(--fm);font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;padding:0 18px 6px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 18px;font-family:var(--ff);font-size:12.5px;font-weight:500;color:var(--mid);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:color .1s;border-left:2px solid transparent;letter-spacing:.01em}
+.ni:hover{color:var(--txt)}
+.ni.on{color:var(--acc);border-left-color:var(--acc)}
+.ni-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5}
+.ni.on .ni-dot{opacity:1}
+
+/* ═══ MAIN ═══ */
+.main{flex:1;overflow-y:auto;background:var(--bg)}
 .pg{display:none}
-.pg.on{display:block;animation:fu .22s ease}
-@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.mob-header{display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:var(--w);border-bottom:1px solid var(--stn);padding:12px 18px;align-items:center;justify-content:space-between}
-.mob-logo{font-family:var(--fd);font-style:italic;font-size:22px}
-.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--w);border-top:1px solid var(--stn);height:var(--nav-h);padding:0 4px;align-items:stretch;justify-content:space-around}
-.mnb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 6px;border:none;background:none;cursor:pointer;flex:1;color:var(--mid);font-family:var(--fb);font-size:10px;font-weight:500;transition:color .12s;min-width:0;border-top:2px solid transparent}
-.mnb.on{color:var(--ink);border-top-color:var(--ink)}
-.mnb-ic{font-size:19px;line-height:1}
-.more-drawer{display:none;position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:99;background:var(--w);border-top:1px solid var(--stn);padding:16px 8px 8px;border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.1)}
-.more-drawer.open{display:block}
-.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-.mdb{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border:none;background:none;cursor:pointer;border-radius:10px;font-family:var(--fb);font-size:11px;color:var(--dim);transition:all .12s}
-.mdb:active,.mdb.on{background:var(--off);color:var(--ink);font-weight:500}
-.mdb-ic{font-size:22px}
-.drawer-overlay{display:none;position:fixed;inset:0;z-index:98;background:rgba(0,0,0,.2)}
-.drawer-overlay.open{display:block}
-.ey{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--mid);margin-bottom:5px}
-.pt{font-family:var(--fd);font-style:italic;font-size:31px;letter-spacing:-.4px;line-height:1.15;margin-bottom:4px}
-.ps{font-size:13px;color:var(--dim);font-weight:300;margin-bottom:34px}
-.sth{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:14px}
-.sl{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:8px}
-.sv{font-family:var(--fd);font-style:italic;font-size:28px;letter-spacing:-.4px;line-height:1.1;margin-bottom:3px}
-.sv.g{color:var(--grn)}.sv.r{color:var(--red)}.sv.go{color:var(--gld)}.sv.b{color:var(--blu)}
-.ss{font-size:11.5px;color:var(--mid)}
-.pos{color:var(--grn);font-weight:500}.neg{color:var(--red);font-weight:500}.gt{color:var(--gld);font-weight:500}
-.card{background:var(--w);border:1px solid var(--stn);border-radius:10px;padding:20px}
-.coff{background:var(--off);border:1px solid var(--stn);border-radius:6px;padding:14px 16px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.g2s{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.mb4{margin-bottom:16px}.mb6{margin-bottom:24px}.mb8{margin-bottom:32px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;border:1px solid transparent;white-space:nowrap}
-.bp{background:var(--ink);color:#fff;border-color:var(--ink)}.bp:hover{background:var(--i2)}
-.bg{background:var(--w);color:var(--i2);border-color:var(--stn)}.bg:hover{background:var(--off)}
-.bsm{padding:5px 10px;font-size:11.5px}
-.bd{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
-.bg2{background:var(--gbg);color:var(--grn)}.br{background:var(--rbg);color:var(--red)}
-.by{background:var(--gbg2);color:var(--gld)}.bb{background:var(--bbg);color:var(--blu)}
-.bs{background:var(--off);color:var(--dim);border:1px solid var(--stn)}
-.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:11.5px;background:var(--off);border:1px solid var(--stn);color:var(--i2)}
-.tabs{display:flex;gap:2px;background:var(--stn);padding:3px;border-radius:7px;width:fit-content;margin-bottom:22px}
-.tab{padding:6px 15px;border-radius:5px;font-size:12.5px;cursor:pointer;color:var(--dim);border:none;background:none;font-family:var(--fb);transition:all .12s}
-.tab.on{background:var(--w);color:var(--ink);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.07)}
-.pb{height:4px;background:var(--stn);border-radius:99px;overflow:hidden;margin-top:7px}
-.pf{height:100%;border-radius:99px}
-.row{display:flex;align-items:center;gap:9px}
-.jb{display:flex;justify-content:space-between;align-items:center}
-.wfr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:13.5px}
-.wft{display:flex;justify-content:space-between;padding:11px 0;border-top:1.5px solid var(--stn);font-weight:500;font-size:14px;margin-top:4px}
-.rok{background:var(--gbg);color:var(--grn);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500}
-.rgap{background:var(--rbg);color:var(--red);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500}
-.lcard{background:var(--w);border:1px solid var(--stn);border-radius:10px;padding:20px;margin-bottom:12px}
-.scc{border:1px solid var(--stn);border-radius:10px;padding:18px;background:var(--w)}
-.scc.sel{border-color:var(--ink);background:var(--off)}
-.adjrow{display:flex;justify-content:space-between;padding:5px 9px;background:var(--w);border:1px solid var(--stn);border-radius:5px;font-size:12.5px;margin-bottom:4px}
-.dz{border:1.5px dashed var(--sm);border-radius:10px;padding:44px 28px;text-align:center;cursor:pointer}
-.dz:hover{border-color:var(--ink);background:var(--w)}
-.chatbox{max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding-bottom:8px}
+.pg.on{display:block;animation:pgIn .18s ease}
+@keyframes pgIn{from{opacity:0}to{opacity:1}}
+
+/* ═══ PAGE HEADER ═══ */
+.ph{padding:28px 32px 0;border-bottom:1px solid var(--ln);display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:20px}
+.ph-left{}
+.ph-eyebrow{font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;color:var(--mid);text-transform:uppercase;margin-bottom:5px}
+.ph-title{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.ph-actions{display:flex;gap:8px;flex-shrink:0}
+.pc{padding:24px 32px 60px}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;transition:all .1s;white-space:nowrap}
+.btn-acc{background:var(--acc);color:#000;padding:8px 16px}
+.btn-acc:hover{background:var(--accD)}
+.btn-out{background:transparent;color:var(--txt2);padding:8px 14px;border:1px solid var(--ln)}
+.btn-out:hover{border-color:var(--txt2);color:var(--txt)}
+.btn-ghost{background:transparent;color:var(--mid);padding:6px 10px;border:1px solid var(--ln);font-size:11px}
+.btn-ghost:hover{color:var(--txt);border-color:var(--s4)}
+
+/* ═══ STAT CARDS ═══ */
+.grid{display:grid;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:24px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.stat{background:var(--s1);padding:18px 20px}
+.stat-label{font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+.stat-val{font-family:var(--fm);font-size:22px;font-weight:400;letter-spacing:-.02em;line-height:1}
+.stat-val.pos{color:var(--pos)}
+.stat-val.neg{color:var(--neg)}
+.stat-val.acc{color:var(--acc)}
+.stat-val.gld{color:var(--gld)}
+.stat-val.blu{color:var(--blu)}
+.stat-sub{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:6px}
+
+/* ═══ PANELS ═══ */
+.panel{background:var(--s1);border:1px solid var(--ln);margin-bottom:1px}
+.panel+.panel{border-top:none}
+.panel-hd{padding:14px 20px;border-bottom:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.panel-body{padding:20px}
+
+/* ═══ TABLE ═══ */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding:10px 16px;text-align:left;border-bottom:1px solid var(--ln);font-weight:400}
+.tbl td{padding:11px 16px;font-family:var(--fm);font-size:12.5px;border-bottom:1px solid var(--s3)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr{transition:background .1s}
+.tbl tbody tr:hover{background:var(--s2)}
+.tr{text-align:right}
+.tbl td.pos{color:var(--pos)}.tbl td.neg{color:var(--neg)}.tbl td.gld{color:var(--gld)}
+
+/* ═══ TAGS ═══ */
+.tag{display:inline-block;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border:1px solid}
+.tag-g{border-color:var(--pos);color:var(--pos)}
+.tag-r{border-color:var(--neg);color:var(--neg)}
+.tag-y{border-color:var(--gld);color:var(--gld)}
+.tag-b{border-color:var(--blu);color:var(--blu)}
+.tag-d{border-color:var(--dim);color:var(--mid)}
+
+/* ═══ BAR CHART ═══ */
+.barchart{display:flex;align-items:flex-end;gap:4px;height:90px}
+.barpair{display:flex;gap:1px;align-items:flex-end;flex:1}
+.bar{flex:1;min-width:4px}
+.blbl{font-family:var(--fm);font-size:9px;color:var(--dim);text-align:center;margin-top:5px;letter-spacing:.06em}
+
+/* ═══ LINE CHART ═══ */
+.linechart{height:70px;position:relative}
+
+/* ═══ PROGRESS ═══ */
+.prog{height:2px;background:var(--s3);overflow:hidden;margin-top:8px}
+.progf{height:100%}
+
+/* ═══ ROW LIST ═══ */
+.rlist{background:var(--s1);border:1px solid var(--ln)}
+.rrow{padding:12px 18px;border-bottom:1px solid var(--s3);display:flex;align-items:center;justify-content:space-between;transition:background .1s}
+.rrow:last-child{border-bottom:none}
+.rrow:hover{background:var(--s2)}
+.rrow-l{flex:1;min-width:0}
+.rrow-name{font-weight:600;font-size:13px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow-sub{font-family:var(--fm);font-size:10.5px;color:var(--mid);margin-top:2px}
+.rrow-r{text-align:right;flex-shrink:0;margin-left:16px}
+.rrow-amt{font-family:var(--fm);font-size:14px;font-weight:500}
+.rrow-sub2{font-family:var(--fm);font-size:10px;color:var(--dim);margin-top:2px}
+
+/* ═══ TABS ═══ */
+.tabs{display:flex;border-bottom:1px solid var(--ln);margin-bottom:20px}
+.tab{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;cursor:pointer;border:none;background:none;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .1s}
+.tab:hover{color:var(--txt2)}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* ═══ WATERFALL ═══ */
+.wfr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--s3);font-family:var(--fm);font-size:12px}
+.wft{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--ln);font-family:var(--fm);font-size:13px;font-weight:500}
+
+/* ═══ CHAT ═══ */
+.chatbox{height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:4px 0 8px}
 .msg{display:flex;gap:10px;align-items:flex-start}
 .msg.u{flex-direction:row-reverse}
-.ava{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:var(--fd);font-style:italic}
-.ava.u{background:var(--sm);color:var(--i2);font-family:var(--fb);font-style:normal}
-.bub{padding:11px 15px;font-size:13.5px;line-height:1.62;max-width:78%}
-.bub.a{background:var(--w);border:1px solid var(--stn);border-radius:11px 11px 11px 4px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.bub.u{background:var(--ink);color:#fff;border-radius:11px 11px 4px 11px}
-.scnote{margin-top:10px;padding:11px 14px;background:var(--gbg);border:1px solid #b3d9c2;border-radius:7px;font-size:12.5px;color:var(--grn)}
-.chatrow{display:flex;gap:9px;align-items:flex-end;padding-top:12px;border-top:1px solid var(--stn);margin-top:14px}
-.chatinp{flex:1;padding:10px 13px;border:1px solid var(--stn);border-radius:10px;font-family:var(--fb);font-size:14px;outline:none;resize:none;background:var(--w);height:46px}
-.chatinp:focus{border-color:var(--ink)}
-.barchart{display:flex;align-items:flex-end;gap:5px;height:110px}
-.barpair{display:flex;gap:2px;align-items:flex-end;flex:1}
-.bar{flex:1;border-radius:3px 3px 0 0}
-.blbl{text-align:center;font-size:10px;color:var(--mid);margin-top:6px}
-.inp{background:var(--w);border:1px solid var(--stn);border-radius:6px;color:var(--ink);font-family:var(--fb);font-size:14px;padding:9px 12px;outline:none;width:100%}
-.inp:focus{border-color:var(--ink)}
-.lbl{display:block;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:5px;margin-top:12px}
-.trow{background:var(--w);padding:12px 16px;border-bottom:1px solid rgba(0,0,0,.04)}
-.trow:last-child{border-bottom:none}
-.tlist{background:var(--w);border:1px solid var(--stn);border-radius:10px;overflow:hidden}
-@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.ava{width:26px;height:26px;background:var(--s4);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;flex-shrink:0;color:var(--mid)}
+.ava.acc{background:var(--acc);color:#000;border-color:var(--acc)}
+.bub{padding:10px 14px;font-family:var(--fm);font-size:12px;line-height:1.65;max-width:80%}
+.bub.a{background:var(--s2);border:1px solid var(--ln);color:var(--txt2)}
+.bub.u{background:var(--s3);color:var(--txt)}
+.scnote{margin-top:10px;padding:9px 12px;border-left:2px solid var(--acc);background:var(--s3);font-size:11px;color:var(--acc);font-family:var(--fm)}
+.chatrow{display:flex;gap:8px;align-items:stretch;padding-top:14px;border-top:1px solid var(--ln);margin-top:12px}
+.chatinp{flex:1;background:var(--s2);border:1px solid var(--ln);color:var(--txt);font-family:var(--fm);font-size:12px;padding:10px 14px;outline:none;resize:none;height:44px}
+.chatinp:focus{border-color:var(--acc)}
+.chatinp::placeholder{color:var(--dim)}
+.chatsend{background:var(--acc);color:#000;border:none;width:44px;font-size:16px;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--ff)}
+.chatsend:hover{background:var(--accD)}
 
-/* ── MODALS ── */
-.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
-.mo.open{display:flex;animation:fdbg .18s ease}
-@keyframes fdbg{from{background:rgba(0,0,0,0)}to{background:rgba(0,0,0,.5)}}
+/* ═══ FORM ═══ */
+.finp{background:var(--s2);border:1px solid var(--ln);color:var(--txt);font-family:var(--fm);font-size:12.5px;padding:10px 14px;outline:none;width:100%}
+.finp:focus{border-color:var(--acc)}
+.finp::placeholder{color:var(--dim)}
+.flbl{font-family:var(--fm);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);display:block;margin-bottom:6px}
+.fgrp{margin-bottom:16px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+
+/* ═══ MODALS ═══ */
+.mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);backdrop-filter:blur(2px);align-items:flex-end;justify-content:center}
+.mo.open{display:flex;animation:mofade .15s ease}
+@keyframes mofade{from{opacity:0}to{opacity:1}}
 @media(min-width:701px){.mo{align-items:center}}
-.mbox{background:var(--w);width:100%;max-width:500px;border-radius:18px 18px 0 0;padding:10px 22px 36px;max-height:90dvh;overflow-y:auto;animation:slideup .22s cubic-bezier(.22,1,.36,1)}
-@media(min-width:701px){.mbox{border-radius:14px;padding:28px}}
-@keyframes slideup{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mhandle{width:36px;height:3.5px;background:var(--stn);border-radius:99px;margin:8px auto 20px}
-@media(min-width:701px){.mhandle{display:none}}
-.mtitle{font-family:var(--fd);font-style:italic;font-size:23px;margin-bottom:3px}
-.msub{font-size:12.5px;color:var(--dim);margin-bottom:6px}
-.mrow2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mactions{display:flex;gap:10px;margin-top:22px}
-.mactions .btn{flex:1;justify-content:center;padding:11px 8px;font-size:14px}
-.flash{margin-top:14px;padding:12px 16px;background:var(--gbg);border:1px solid #b3d9c2;border-radius:8px;font-size:13px;color:var(--grn);display:none}
+.mbox{background:var(--s1);border:1px solid var(--ln);width:100%;max-width:520px;padding:0;max-height:90dvh;overflow-y:auto;animation:moSlide .18s ease}
+@media(min-width:701px){.mbox{border:1px solid var(--ln)}}
+@keyframes moSlide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhd{padding:20px 24px;border-bottom:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between}
+.mtitle{font-size:14px;font-weight:700;letter-spacing:.02em}
+.mclose{background:none;border:none;color:var(--mid);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1}
+.mclose:hover{color:var(--txt)}
+.mbody{padding:24px}
+.mactions{display:flex;gap:8px;padding:16px 24px;border-top:1px solid var(--ln)}
+.mactions .btn{flex:1;justify-content:center;padding:11px}
+.flash{margin-top:14px;padding:10px 14px;border-left:2px solid var(--acc);background:var(--s3);font-family:var(--fm);font-size:11.5px;color:var(--acc);display:none;letter-spacing:.04em}
 .flash.on{display:block}
-.preview-box{margin-top:8px;padding:11px 14px;background:var(--off);border:1px solid var(--stn);border-radius:8px;font-size:12.5px;color:var(--dim);display:none}
+.preview-box{margin-top:8px;padding:10px 14px;border-left:2px solid var(--blu);background:var(--s2);font-family:var(--fm);font-size:11px;color:var(--mid);display:none;letter-spacing:.03em}
 .preview-box.on{display:block}
-.clr-pick{width:28px;height:28px;border-radius:7px;cursor:pointer;transition:transform .1s;flex-shrink:0}
-.clr-pick.on{outline:3px solid var(--ink);outline-offset:2px;transform:scale(1.15)}
+.clr-opts{display:flex;gap:8px;padding-top:4px}
+.clr-swatch{width:22px;height:22px;cursor:pointer;border:2px solid transparent;transition:all .1s}
+.clr-swatch.on{border-color:var(--txt);transform:scale(1.2)}
 
-/* ── MOBILE ── */
+/* ═══ LOAN CARD ═══ */
+.lcard{background:var(--s1);border:1px solid var(--ln);margin-bottom:1px;padding:20px 24px}
+.lcard:last-of-type{margin-bottom:0}
+
+/* ═══ MOBILE HEADER ═══ */
+.mob-hd{display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:var(--s1);border-bottom:1px solid var(--ln);height:50px;padding:0 16px;align-items:center;justify-content:space-between}
+.mob-logo{font-weight:800;font-size:15px;letter-spacing:.14em}
+.mob-title{font-family:var(--fm);font-size:10px;letter-spacing:.14em;color:var(--mid);text-transform:uppercase}
+
+/* ═══ MOBILE NAV ═══ */
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--s1);border-top:1px solid var(--ln);height:var(--nav-h);align-items:stretch}
+.mnb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;border:none;background:none;cursor:pointer;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);border-top:2px solid transparent;transition:all .1s}
+.mnb.on{color:var(--acc);border-top-color:var(--acc)}
+.mnb-ic{font-size:15px;font-weight:700;font-family:var(--ff);line-height:1}
+
+/* ═══ MORE DRAWER ═══ */
+.drawer-ov{display:none;position:fixed;inset:0;z-index:98;background:rgba(0,0,0,.6)}
+.drawer-ov.open{display:block}
+.more-drawer{display:none;position:fixed;bottom:var(--nav-h);left:0;right:0;z-index:99;background:var(--s1);border-top:1px solid var(--ln);padding:16px}
+.more-drawer.open{display:block}
+.mdb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)}
+.mdb{display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 6px;border:none;background:var(--s1);cursor:pointer;font-family:var(--fm);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);transition:all .1s}
+.mdb:hover,.mdb.on{background:var(--s2);color:var(--txt)}
+.mdb-ic{font-family:var(--ff);font-size:11px;font-weight:700}
+
+/* ═══ UPLOAD DZ ═══ */
+.dz{border:1px solid var(--ln);padding:48px 32px;text-align:center;cursor:pointer;transition:all .15s}
+.dz:hover{border-color:var(--acc);background:var(--s2)}
+.dz-icon{font-family:var(--ff);font-size:28px;font-weight:800;color:var(--dim);margin-bottom:12px;letter-spacing:-.02em}
+.dz-title{font-weight:600;font-size:14px;margin-bottom:4px}
+.dz-sub{font-family:var(--fm);font-size:11px;color:var(--mid)}
+
+/* ═══ AUTH ═══ */
+.auth-wrap{display:flex;align-items:center;justify-content:center;min-height:80dvh;padding:24px}
+.auth-box{width:100%;max-width:380px;background:var(--s1);border:1px solid var(--ln)}
+.auth-hd{padding:32px 32px 24px;border-bottom:1px solid var(--ln)}
+.auth-body{padding:28px 32px 24px}
+.auth-ft{padding:16px 32px;border-top:1px solid var(--ln)}
+.auth-logo{font-size:20px;font-weight:800;letter-spacing:.14em;margin-bottom:4px}
+.auth-sub{font-family:var(--fm);font-size:10px;color:var(--mid);letter-spacing:.08em}
+.pwd-strength{display:flex;gap:3px;margin-top:8px}
+.pwd-bar{flex:1;height:2px}
+.pwd-label{font-family:var(--fm);font-size:9.5px;color:var(--pos);margin-top:5px;letter-spacing:.08em}
+.strengths{display:flex;gap:12px;margin-top:5px;flex-wrap:wrap}
+.stchk{font-family:var(--fm);font-size:10px;color:var(--pos)}
+
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:700px){
   .sb{display:none}
-  .mob-header{display:flex}
+  .mob-hd{display:flex}
   .mob-nav{display:flex}
-  .main{padding:76px 14px calc(var(--nav-h) + 20px);width:100%}
-  .g4{grid-template-columns:repeat(2,1fr);gap:10px}
-  .g3{grid-template-columns:repeat(2,1fr);gap:10px}
-  .g2{grid-template-columns:1fr;gap:12px}
-  .g2s{grid-template-columns:1fr 1fr;gap:8px}
-  .pt{font-size:26px}
-  .ps{margin-bottom:18px}
-  .card{padding:14px}
-  .tabs{width:100%}.tab{flex:1;text-align:center;font-size:12px;padding:7px 4px}
-  .bub{max-width:88%}
-  .chatbox{max-height:calc(100dvh - 400px);min-height:180px}
-  .mbox{padding:8px 18px 32px}
-  .mrow2{grid-template-columns:1fr}
+  .main{padding-top:50px;padding-bottom:var(--nav-h)}
+  .ph{padding:16px 16px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .pc{padding:16px 16px 40px}
+  .g4{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr}
+  .g2{grid-template-columns:1fr}
+  .tabs{overflow-x:auto;white-space:nowrap}
+  .chatbox{height:220px}
+  .bub{max-width:90%}
+  .fg2{grid-template-columns:1fr}
+  .lcard{padding:16px}
+  .tbl th:nth-child(3),.tbl td:nth-child(3){display:none}
+  .tbl th:nth-child(4),.tbl td:nth-child(4){display:none}
 }
+
+@keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+@keyframes tick{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- DESKTOP SIDEBAR -->
+<!-- ═══ SIDEBAR ═══ -->
 <nav class="sb">
-  <div class="logo">Arca <small>Jorge García</small></div>
-  <div class="grp">Overview</div>
-  <button class="ni on" onclick="go('dashboard',this,'Dashboard')">◈ Dashboard</button>
-  <button class="ni" onclick="go('networth',this,'Net Worth')">◎ Net Worth</button>
-  <div class="grp">Money In / Out</div>
-  <button class="ni" onclick="go('upload',this,'Upload CSV')">↑ Upload CSV</button>
-  <button class="ni" onclick="go('cash',this,'Cash')">💵 Cash Transactions</button>
-  <button class="ni" onclick="go('txns',this,'Transactions')">≡ Transactions</button>
-  <div class="grp">Planning</div>
-  <button class="ni" onclick="go('forecast',this,'Forecast')">◉ Forecast</button>
-  <button class="ni" onclick="go('scenarios',this,'Scenarios')">⊕ Scenarios</button>
-  <button class="ni" onclick="go('loans',this,'Loans')">🏦 Loans</button>
-  <div class="grp">Assets</div>
-  <button class="ni" onclick="go('investments',this,'Investments')">📈 Investments</button>
-  <div class="grp">Control</div>
-  <button class="ni" onclick="go('recon',this,'Reconciliation')">⚖ Reconciliation</button>
-  <button class="ni" onclick="go('reports',this,'Annual Report')">📋 Annual Report</button>
-  <div class="grp">Settings</div>
-  <button class="ni" onclick="go('cats',this,'Categories')">◧ Categories</button>
-  <button class="ni" onclick="go('auth',this,'Login')">⎋ Login Screen</button>
+  <div class="sb-brand">
+    <div class="sb-logo">ARCA</div>
+    <div class="sb-user">GARCIA, JORGE / PRV</div>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Overview</div>
+    <button class="ni on" onclick="go('dashboard',this,'Dashboard')"><span class="ni-dot"></span>Dashboard</button>
+    <button class="ni" onclick="go('networth',this,'Net Worth')"><span class="ni-dot"></span>Net Worth</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Flows</div>
+    <button class="ni" onclick="go('upload',this,'Import Statement')"><span class="ni-dot"></span>Import Statement</button>
+    <button class="ni" onclick="go('cash',this,'Cash Ledger')"><span class="ni-dot"></span>Cash Ledger</button>
+    <button class="ni" onclick="go('txns',this,'Transactions')"><span class="ni-dot"></span>Transactions</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Planning</div>
+    <button class="ni" onclick="go('forecast',this,'Forecast')"><span class="ni-dot"></span>Forecast</button>
+    <button class="ni" onclick="go('scenarios',this,'Scenario Modeling')"><span class="ni-dot"></span>Scenario Modeling</button>
+    <button class="ni" onclick="go('loans',this,'Liabilities')"><span class="ni-dot"></span>Liabilities</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Assets</div>
+    <button class="ni" onclick="go('investments',this,'Portfolio')"><span class="ni-dot"></span>Portfolio</button>
+  </div>
+
+  <div class="sb-section">
+    <div class="sb-label">Control</div>
+    <button class="ni" onclick="go('recon',this,'Reconciliation')"><span class="ni-dot"></span>Reconciliation</button>
+    <button class="ni" onclick="go('reports',this,'Annual Report')"><span class="ni-dot"></span>Annual Report</button>
+    <button class="ni" onclick="go('cats',this,'Categories')"><span class="ni-dot"></span>Categories</button>
+    <button class="ni" onclick="go('auth',this,'Access')"><span class="ni-dot"></span>Access</button>
+  </div>
 </nav>
 
-<!-- MOBILE HEADER -->
-<div class="mob-header">
-  <div class="mob-logo">Arca</div>
-  <div id="mob-title" style="font-size:13px;color:var(--mid)">Dashboard</div>
-  <div style="font-size:11px;color:var(--grn);font-weight:500">Jorge G.</div>
+<!-- ═══ MOBILE HEADER ═══ -->
+<div class="mob-hd">
+  <div class="mob-logo">ARCA</div>
+  <div class="mob-title" id="mob-title">Dashboard</div>
+  <div style="font-family:var(--fm);font-size:9.5px;color:var(--acc)">PRV</div>
 </div>
 
-<!-- MOBILE BOTTOM NAV -->
+<!-- ═══ MOBILE NAV ═══ -->
 <div class="mob-nav">
-  <button class="mnb on" onclick="go('dashboard',this,'Dashboard')"><span class="mnb-ic">◈</span>Home</button>
-  <button class="mnb" onclick="go('txns',this,'Transactions')"><span class="mnb-ic">≡</span>Txns</button>
-  <button class="mnb" onclick="go('scenarios',this,'Scenarios')"><span class="mnb-ic">⊕</span>Plan</button>
-  <button class="mnb" onclick="go('investments',this,'Investments')"><span class="mnb-ic">📈</span>Invest</button>
-  <button class="mnb" onclick="toggleMore()"><span class="mnb-ic">⋯</span>More</button>
+  <button class="mnb on" onclick="go('dashboard',this,'Dashboard')"><span class="mnb-ic">--</span>Home</button>
+  <button class="mnb" onclick="go('txns',this,'Transactions')"><span class="mnb-ic">::</span>Txns</button>
+  <button class="mnb" onclick="go('scenarios',this,'Scenarios')"><span class="mnb-ic">[]</span>Model</button>
+  <button class="mnb" onclick="go('investments',this,'Portfolio')"><span class="mnb-ic">/\</span>Port.</button>
+  <button class="mnb" onclick="toggleMore()"><span class="mnb-ic">...</span>More</button>
 </div>
-
-<!-- MORE DRAWER -->
-<div class="drawer-overlay" id="dov" onclick="closeMore()"></div>
+<div class="drawer-ov" id="dov" onclick="closeMore()"></div>
 <div class="more-drawer" id="mdrawer">
-  <div style="text-align:center;margin-bottom:12px"><div style="width:32px;height:3px;background:var(--stn);border-radius:99px;margin:0 auto"></div></div>
-  <div class="more-grid">
-    <button class="mdb" onclick="go('networth',null,'Net Worth');closeMore()"><span class="mdb-ic">◎</span>Net Worth</button>
-    <button class="mdb" onclick="go('upload',null,'Upload CSV');closeMore()"><span class="mdb-ic">↑</span>Upload</button>
-    <button class="mdb" onclick="go('cash',null,'Cash');closeMore()"><span class="mdb-ic">💵</span>Cash</button>
-    <button class="mdb" onclick="go('forecast',null,'Forecast');closeMore()"><span class="mdb-ic">◉</span>Forecast</button>
-    <button class="mdb" onclick="go('loans',null,'Loans');closeMore()"><span class="mdb-ic">🏦</span>Loans</button>
-    <button class="mdb" onclick="go('recon',null,'Reconciliation');closeMore()"><span class="mdb-ic">⚖</span>Recon</button>
-    <button class="mdb" onclick="go('reports',null,'Annual Report');closeMore()"><span class="mdb-ic">📋</span>Report</button>
-    <button class="mdb" onclick="go('cats',null,'Categories');closeMore()"><span class="mdb-ic">◧</span>Categories</button>
+  <div class="mdb-grid">
+    <button class="mdb" onclick="go('networth',null,'Net Worth');closeMore()"><span class="mdb-ic">NW</span>Net Worth</button>
+    <button class="mdb" onclick="go('upload',null,'Import');closeMore()"><span class="mdb-ic">UP</span>Import</button>
+    <button class="mdb" onclick="go('cash',null,'Cash');closeMore()"><span class="mdb-ic">CS</span>Cash</button>
+    <button class="mdb" onclick="go('forecast',null,'Forecast');closeMore()"><span class="mdb-ic">FC</span>Forecast</button>
+    <button class="mdb" onclick="go('loans',null,'Liabilities');closeMore()"><span class="mdb-ic">LB</span>Liabilities</button>
+    <button class="mdb" onclick="go('recon',null,'Reconciliation');closeMore()"><span class="mdb-ic">RC</span>Recon</button>
+    <button class="mdb" onclick="go('reports',null,'Report');closeMore()"><span class="mdb-ic">AR</span>Report</button>
+    <button class="mdb" onclick="go('cats',null,'Categories');closeMore()"><span class="mdb-ic">CT</span>Categories</button>
   </div>
 </div>
 
 <main class="main">
 
-<!-- ══════════════ DASHBOARD ══════════════ -->
+<!-- ══ DASHBOARD ══ -->
 <div id="dashboard" class="pg on">
-  <div class="ey">Monday, February 23</div>
-  <div class="pt">Good morning, Jorge.</div>
-  <div class="ps">Here's where your finances stand today.</div>
-  <div class="g4 mb6">
-    <div class="card"><div class="sl">Year-End</div><div class="sv go">$18,240</div><div class="ss">Projected balance</div></div>
-    <div class="card"><div class="sl">Expenses</div><div class="sv r">$4,182</div><div class="ss">Feb actual</div></div>
-    <div class="card"><div class="sl">Income</div><div class="sv g">$7,500</div><div class="ss">This month</div></div>
-    <div class="card"><div class="sl">Net</div><div class="sv g">+$3,318</div><div class="ss">This month</div></div>
-  </div>
-  <div class="g2 mb6">
-    <div class="card">
-      <div class="sth">Income vs Expenses — 2026</div>
-      <div class="barchart">
-        <div style="flex:1"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:60px;background:#f0d4d1"></div></div><div class="blbl">Jan</div></div>
-        <div style="flex:1"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:50px;background:#f0d4d1"></div></div><div class="blbl">Feb</div></div>
-        <div style="flex:1;opacity:.4"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:62px;background:#f0d4d1"></div></div><div class="blbl">Mar</div></div>
-        <div style="flex:1;opacity:.35"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:55px;background:#f0d4d1"></div></div><div class="blbl">Apr</div></div>
-        <div style="flex:1;opacity:.3"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:58px;background:#f0d4d1"></div></div><div class="blbl">May</div></div>
-        <div style="flex:1;opacity:.3"><div class="barpair"><div class="bar" style="height:88px;background:#d4e9db"></div><div class="bar" style="height:65px;background:#f0d4d1"></div></div><div class="blbl">Jun</div></div>
-      </div>
-      <div style="display:flex;gap:14px;margin-top:10px">
-        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#d4e9db;margin-right:5px"></span><span style="font-size:11px;color:var(--dim)">Income</span></span>
-        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#f0d4d1;margin-right:5px"></span><span style="font-size:11px;color:var(--dim)">Expenses</span></span>
-        <span style="font-size:11px;color:var(--mid)">Faded = projected</span>
-      </div>
-    </div>
-    <div class="card">
-      <div class="sth">Cumulative Balance Trajectory</div>
-      <div style="position:relative;height:72px;margin-bottom:10px">
-        <svg width="100%" height="72" viewBox="0 0 400 72" preserveAspectRatio="none">
-          <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stop-color="#2d7a4f" stop-opacity=".12"/><stop offset="95%" stop-color="#2d7a4f" stop-opacity="0"/></linearGradient></defs>
-          <polygon points="0,52 60,44 120,50 180,32 240,25 300,14 400,12 400,72 0,72" fill="url(#sg)"/>
-          <polyline points="0,52 60,44 120,50 180,32 240,25 300,14 400,12" fill="none" stroke="#2d7a4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="300" cy="14" r="3.5" fill="#2d7a4f"/>
-        </svg>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--mid)"><span>Jan</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Dec</span></div>
+  <div class="ph">
+    <div class="ph-left">
+      <div class="ph-eyebrow">Mon 23 Feb 2026 — FY2026</div>
+      <div class="ph-title">Dashboard</div>
     </div>
   </div>
-  <div class="card">
-    <div class="sth">Top Spending — Feb 2026</div>
-    <div id="dash-cats"></div>
+  <div class="pc">
+    <div class="grid g4" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Year-End Projection</div><div class="stat-val acc">$18,240</div><div class="stat-sub">Cumulative net balance</div></div>
+      <div class="stat"><div class="stat-label">Feb Expenses</div><div class="stat-val neg">$4,182</div><div class="stat-sub">Actual MTD</div></div>
+      <div class="stat"><div class="stat-label">Feb Income</div><div class="stat-val pos">$7,500</div><div class="stat-sub">Scheduled</div></div>
+      <div class="stat"><div class="stat-label">Net Feb</div><div class="stat-val pos">+$3,318</div><div class="stat-sub">After all expenses</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:24px">
+      <div style="background:var(--s1);padding:20px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Income vs Expenses — FY2026</div>
+        <div class="barchart">
+          <div style="flex:1"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos);opacity:.25"></div><div class="bar" style="height:54px;background:var(--neg);opacity:.3"></div></div><div class="blbl">JAN</div></div>
+          <div style="flex:1"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos);opacity:.6"></div><div class="bar" style="height:46px;background:var(--neg);opacity:.6"></div></div><div class="blbl">FEB</div></div>
+          <div style="flex:1;opacity:.3"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos)"></div><div class="bar" style="height:56px;background:var(--neg)"></div></div><div class="blbl">MAR</div></div>
+          <div style="flex:1;opacity:.2"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos)"></div><div class="bar" style="height:50px;background:var(--neg)"></div></div><div class="blbl">APR</div></div>
+          <div style="flex:1;opacity:.15"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos)"></div><div class="bar" style="height:53px;background:var(--neg)"></div></div><div class="blbl">MAY</div></div>
+          <div style="flex:1;opacity:.12"><div class="barpair"><div class="bar" style="height:80px;background:var(--pos)"></div><div class="bar" style="height:59px;background:var(--neg)"></div></div><div class="blbl">JUN</div></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:12px">
+          <span style="font-family:var(--fm);font-size:9.5px;color:var(--dim)"><span style="display:inline-block;width:8px;height:2px;background:var(--pos);margin-right:5px;vertical-align:middle"></span>Income</span>
+          <span style="font-family:var(--fm);font-size:9.5px;color:var(--dim)"><span style="display:inline-block;width:8px;height:2px;background:var(--neg);margin-right:5px;vertical-align:middle"></span>Expenses</span>
+          <span style="font-family:var(--fm);font-size:9.5px;color:var(--dim)">Opacity = confidence</span>
+        </div>
+      </div>
+      <div style="background:var(--s1);padding:20px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Cumulative Balance Trajectory</div>
+        <div class="linechart">
+          <svg width="100%" height="70" viewBox="0 0 300 70" preserveAspectRatio="none">
+            <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f542" stop-opacity=".12"/><stop offset="100%" stop-color="#c8f542" stop-opacity="0"/></linearGradient></defs>
+            <polygon points="0,54 40,48 80,52 120,36 160,28 220,18 300,14 300,70 0,70" fill="url(#lg)"/>
+            <polyline points="0,54 40,48 80,52 120,36 160,28 220,18 300,14" fill="none" stroke="#c8f542" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="220" cy="18" r="3" fill="#c8f542"/>
+          </svg>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--dim);margin-top:6px"><span>JAN</span><span>MAR</span><span>JUN</span><span>SEP</span><span>DEC</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-title">Top Expenditure — Feb 2026</div></div>
+      <div id="dash-cats" style="padding:0"></div>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════ NET WORTH ══════════════ -->
+<!-- ══ NET WORTH ══ -->
 <div id="networth" class="pg">
-  <div class="ey">Overview</div><div class="pt">Net Worth</div><div class="ps">Assets minus liabilities, tracked over time.</div>
-  <div class="g2s mb6">
-    <div class="card"><div class="sl">Net Worth</div><div class="sv go">$142,580</div><div class="ss">Assets − Liabilities</div></div>
-    <div class="card"><div class="sl">MoM Change</div><div class="sv g">+$2,140</div><div class="ss">vs January</div></div>
-    <div class="card"><div class="sl">Total Assets</div><div class="sv g">$394,780</div></div>
-    <div class="card"><div class="sl">Total Debt</div><div class="sv r">$252,200</div></div>
-  </div>
-  <div class="card mb6">
-    <div class="sth">Net Worth Over Time</div>
-    <div style="display:flex;align-items:flex-end;gap:6px;height:120px">
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9px;color:var(--mid);margin-bottom:3px">$118k</div><div style="height:84px;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0"></div><div style="font-size:9.5px;color:var(--mid);margin-top:4px">Aug</div></div>
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9px;color:var(--mid);margin-bottom:3px">$128k</div><div style="height:94px;width:100%;background:var(--bbg);border:1.5px solid var(--blu);border-radius:4px 4px 0 0"></div><div style="font-size:9.5px;color:var(--mid);margin-top:4px">Oct</div></div>
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9px;color:var(--mid);margin-bottom:3px">$138k</div><div style="height:104px;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0"></div><div style="font-size:9.5px;color:var(--mid);margin-top:4px">Dec</div></div>
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9px;color:var(--mid);margin-bottom:3px">$140k</div><div style="height:108px;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0"></div><div style="font-size:9.5px;color:var(--mid);margin-top:4px">Jan</div></div>
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-size:9px;color:var(--mid);margin-bottom:3px">$143k</div><div style="height:112px;width:100%;background:var(--gbg);border:1.5px solid var(--grn);border-radius:4px 4px 0 0"></div><div style="font-size:9.5px;color:var(--mid);margin-top:4px">Feb</div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Balance Sheet</div><div class="ph-title">Net Worth</div></div></div>
+  <div class="pc">
+    <div class="grid g4" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Net Worth</div><div class="stat-val gld">$142,580</div><div class="stat-sub">Assets minus liabilities</div></div>
+      <div class="stat"><div class="stat-label">MoM Change</div><div class="stat-val pos">+$2,140</div><div class="stat-sub">vs Jan 2026</div></div>
+      <div class="stat"><div class="stat-label">Total Assets</div><div class="stat-val pos">$394,780</div></div>
+      <div class="stat"><div class="stat-label">Total Liabilities</div><div class="stat-val neg">$252,200</div></div>
     </div>
-  </div>
-  <div class="card">
-    <div class="sth">Breakdown</div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span>Cash (Bank)</span><span style="font-weight:500;color:var(--grn)">$9,508</span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span>Investments</span><span style="font-weight:500;color:var(--blu)">$31,280</span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span>Real Estate Equity</span><span style="font-weight:500;color:var(--gld)">$354,000</span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.05)"><span>Home Mortgage</span><span style="font-weight:500;color:var(--red)">−$248,200</span></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0"><span>Car Loan</span><span style="font-weight:500;color:var(--red)">−$4,000</span></div>
-    <div style="display:flex;justify-content:space-between;padding:12px 0;font-weight:600;font-size:15px;border-top:1.5px solid var(--stn);margin-top:4px"><span>Net Worth</span><span style="color:var(--gld)">$142,580</span></div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:24px">
+      <div style="background:var(--s1);padding:20px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Net Worth — 7 Month Trend</div>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:100px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">118k</div><div style="height:75px;width:100%;background:var(--blu);opacity:.3"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">AUG</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">122k</div><div style="height:80px;width:100%;background:var(--blu);opacity:.4"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">SEP</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">128k</div><div style="height:86px;width:100%;background:var(--blu);opacity:.5"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">OCT</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">133k</div><div style="height:90px;width:100%;background:var(--blu);opacity:.6"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">NOV</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">138k</div><div style="height:94px;width:100%;background:var(--acc);opacity:.5"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">DEC</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">140k</div><div style="height:97px;width:100%;background:var(--acc);opacity:.7"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">JAN</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="font-family:var(--fm);font-size:8px;color:var(--dim);margin-bottom:3px">143k</div><div style="height:100px;width:100%;background:var(--acc)"></div><div style="font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px">FEB</div></div>
+        </div>
+      </div>
+      <div style="background:var(--s1);padding:20px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:14px">Component Breakdown</div>
+        <div class="wfr"><span style="color:var(--txt2)">Cash (Bank)</span><span style="color:var(--pos);font-family:var(--fm)">$9,508</span></div>
+        <div class="wfr"><span style="color:var(--txt2)">Investment Portfolio</span><span style="color:var(--blu);font-family:var(--fm)">$31,280</span></div>
+        <div class="wfr"><span style="color:var(--txt2)">Real Estate Equity</span><span style="color:var(--gld);font-family:var(--fm)">$354,000</span></div>
+        <div class="wfr"><span style="color:var(--txt2)">Home Mortgage</span><span style="color:var(--neg);font-family:var(--fm)">-$248,200</span></div>
+        <div class="wfr" style="border:none"><span style="color:var(--txt2)">Car Loan</span><span style="color:var(--neg);font-family:var(--fm)">-$4,000</span></div>
+        <div class="wft"><span>Net Worth</span><span style="color:var(--acc);font-family:var(--fm)">$142,580</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════ UPLOAD ══════════════ -->
+<!-- ══ IMPORT ══ -->
 <div id="upload" class="pg">
-  <div class="ey">Import</div><div class="pt">Upload Statement</div><div class="ps">Drop a CSV from any bank — Chase, AmEx, BofA and more.</div>
-  <div class="dz mb6"><div style="font-size:32px;margin-bottom:11px">↑</div><div style="font-size:15px;font-weight:500;margin-bottom:5px">Tap to select a file</div><div style="font-size:12.5px;color:var(--dim)">CSV or XLSX · Auto-detects bank format</div></div>
-  <div class="coff">
-    <div class="sth" style="margin-bottom:12px">How it works</div>
-    <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">1</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Auto-detect columns</div><div style="font-size:12px;color:var(--dim)">Date, Description and Amount found automatically</div></div></div>
-    <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">2</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Instant rule matching</div><div style="font-size:12px;color:var(--dim)">Known merchants categorized immediately</div></div></div>
-    <div style="display:flex;gap:11px;margin-bottom:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">3</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Claude for ambiguous ones</div><div style="font-size:12px;color:var(--dim)">AI categorizes unclear transactions</div></div></div>
-    <div style="display:flex;gap:11px"><div style="width:24px;height:24px;border-radius:50%;background:var(--stn);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">4</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Duplicate protection</div><div style="font-size:12px;color:var(--dim)">Re-uploading is safe — duplicates skipped</div></div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Data Ingestion</div><div class="ph-title">Import Statement</div></div></div>
+  <div class="pc">
+    <div class="dz" style="margin-bottom:20px">
+      <div class="dz-icon">UPLOAD</div>
+      <div class="dz-title">Drop statement file or click to select</div>
+      <div class="dz-sub" style="margin-top:4px">CSV / XLSX — Chase, AmEx, BofA, Citi, Capital One</div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-title">Processing Pipeline</div></div>
+      <div class="panel-body" style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">01</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Column Detection</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Date, description, and amount fields located automatically regardless of bank format</div></div></div>
+        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">02</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Rule Matching</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Known merchant patterns categorized immediately — zero manual intervention</div></div></div>
+        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">03</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">AI Classification</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Ambiguous transactions routed to Claude for intelligent categorization</div></div></div>
+        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">04</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Deduplication</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Re-importing is safe — duplicate entries detected and silently discarded</div></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════ CASH ══════════════ -->
+<!-- ══ CASH ══ -->
 <div id="cash" class="pg">
-  <div class="jb mb6">
-    <div><div class="ey">Manual Entry</div><div class="pt">Cash Transactions</div></div>
-    <button class="btn bp bsm" onclick="openModal('m-cash')">+ Add Entry</button>
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Manual Entry</div><div class="ph-title">Cash Ledger</div></div>
+    <div class="ph-actions"><button class="btn btn-acc" onclick="openModal('m-cash')">+ New Entry</button></div>
   </div>
-  <div class="tlist" id="cash-list"></div>
+  <div class="pc"><div class="rlist" id="cash-list"></div></div>
 </div>
 
-<!-- ══════════════ TRANSACTIONS ══════════════ -->
+<!-- ══ TRANSACTIONS ══ -->
 <div id="txns" class="pg">
-  <div class="ey">Ledger</div><div class="pt">Transactions</div>
-  <div class="card mb4" style="padding:12px 14px">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-      <div><div class="lbl" style="margin-top:0">Month</div><select class="inp" style="width:auto"><option>February 2026</option><option>January 2026</option></select></div>
-      <div style="display:flex;gap:16px;margin-left:auto;padding-bottom:2px">
-        <div style="text-align:right"><div class="sl">Income</div><div style="color:var(--grn);font-weight:600;font-size:15px">$7,500</div></div>
-        <div style="text-align:right"><div class="sl">Expenses</div><div style="color:var(--red);font-weight:600;font-size:15px">$4,182</div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Ledger</div><div class="ph-title">Transactions</div></div></div>
+  <div class="pc">
+    <div class="panel" style="margin-bottom:20px">
+      <div class="panel-body" style="padding:14px 20px;display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap">
+        <div><label class="flbl" style="margin-top:0">Period</label><select class="finp" style="width:160px"><option>February 2026</option><option>January 2026</option></select></div>
+        <div><label class="flbl" style="margin-top:0">Category</label><select class="finp" style="width:160px"><option>All Categories</option></select></div>
+        <div style="margin-left:auto;display:flex;gap:20px;align-items:flex-end;padding-bottom:2px">
+          <div style="text-align:right"><div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Inflows</div><div style="font-family:var(--fm);font-size:16px;color:var(--pos)">$7,500</div></div>
+          <div style="text-align:right"><div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Outflows</div><div style="font-family:var(--fm);font-size:16px;color:var(--neg)">$4,182</div></div>
+        </div>
       </div>
     </div>
+    <div class="rlist" id="txn-list"></div>
   </div>
-  <div class="tlist" id="txn-list"></div>
 </div>
 
-<!-- ══════════════ FORECAST ══════════════ -->
+<!-- ══ FORECAST ══ -->
 <div id="forecast" class="pg">
-  <div class="ey">Projections</div><div class="pt">Forecast</div><div class="ps">Actuals through today · projected forward.</div>
-  <div class="g2s mb6">
-    <div class="card"><div class="sl">Year-End</div><div class="sv g">$18,240</div></div>
-    <div class="card"><div class="sl">Avg Monthly Net</div><div class="sv go">$1,520</div></div>
-    <div class="card"><div class="sl">Total Income</div><div class="sv g">$90,000</div></div>
-    <div class="card"><div class="sl">Total Expenses</div><div class="sv r">$71,760</div></div>
-  </div>
-  <div class="tlist">
-    <div class="trow jb"><div><div style="font-weight:500">January</div><div style="font-size:11.5px;color:var(--mid)">$7,500 in · $5,820 out</div></div><div style="text-align:right"><span class="bd bg2">Actual</span><div class="gt" style="margin-top:3px;font-size:15px">+$1,680</div></div></div>
-    <div class="trow jb"><div><div style="font-weight:500">February</div><div style="font-size:11.5px;color:var(--mid)">$7,500 in · $4,182 out</div></div><div style="text-align:right"><span class="bd by">Current</span><div class="gt" style="margin-top:3px;font-size:15px">$4,998 cum.</div></div></div>
-    <div class="trow jb"><div><div style="font-weight:500">March</div><div style="font-size:11.5px;color:var(--mid)">$7,500 in · ~$5,960 out</div></div><div style="text-align:right"><span style="font-size:11px;color:var(--mid)">Projected</span><div class="gt" style="margin-top:3px;font-size:15px">$6,538 cum.</div></div></div>
-    <div class="trow jb"><div><div style="font-weight:500">Apr – Nov</div><div style="font-size:11.5px;color:var(--mid)">~$1,540/mo net each</div></div><div style="text-align:right"><span style="font-size:11px;color:var(--mid)">Projected</span></div></div>
-    <div class="trow jb"><div><div style="font-weight:500">December</div><div style="font-size:11.5px;color:var(--mid)">Year-end balance</div></div><div style="text-align:right"><span style="font-size:11px;color:var(--mid)">Projected</span><div class="gt" style="margin-top:3px;font-size:18px;font-weight:600">$18,240</div></div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Projections</div><div class="ph-title">Cash Flow Forecast</div></div></div>
+  <div class="pc">
+    <div class="grid g4" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Year-End Balance</div><div class="stat-val pos">$18,240</div></div>
+      <div class="stat"><div class="stat-label">Total Income</div><div class="stat-val pos">$90,000</div></div>
+      <div class="stat"><div class="stat-label">Total Expenses</div><div class="stat-val neg">$71,760</div></div>
+      <div class="stat"><div class="stat-label">Avg Monthly Net</div><div class="stat-val acc">$1,520</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-title">Monthly Projection Table</div></div>
+      <table class="tbl">
+        <thead><tr><th>Month</th><th>Status</th><th>Income</th><th>Expenses</th><th class="tr">Net</th><th class="tr">Cumulative</th></tr></thead>
+        <tbody>
+          <tr><td>January 2026</td><td><span class="tag tag-g">Actual</span></td><td style="font-family:var(--fm)">$7,500</td><td style="font-family:var(--fm)">$5,820</td><td class="tr pos">+$1,680</td><td class="tr gld">$1,680</td></tr>
+          <tr><td>February 2026</td><td><span class="tag tag-y">Current</span></td><td style="font-family:var(--fm)">$7,500</td><td style="font-family:var(--fm)">$4,182</td><td class="tr pos">+$3,318</td><td class="tr gld">$4,998</td></tr>
+          <tr><td>March 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$6,538</td></tr>
+          <tr><td>April 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$8,078</td></tr>
+          <tr><td>June 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$11,158</td></tr>
+          <tr><td>December 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$18,240</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- ══════════════ SCENARIOS ══════════════ -->
+<!-- ══ SCENARIOS ══ -->
 <div id="scenarios" class="pg">
-  <div class="jb mb4"><div><div class="ey">Planning</div><div class="pt">Scenarios</div><div class="ps" style="margin-bottom:0">Describe any change — Arca models the impact.</div></div></div>
-  <div class="tabs" style="width:100%;margin-bottom:18px">
-    <button class="tab on" onclick="scTab('chat',this)">Chat</button>
-    <button class="tab" onclick="scTab('saved',this)">Saved <span style="margin-left:3px;font-size:10px;background:var(--stn);color:var(--dim);padding:1px 6px;border-radius:99px" id="sc-count">3</span></button>
-    <button class="tab" onclick="scTab('compare',this)">Compare</button>
-  </div>
-  <div id="sc-chat" style="display:flex;flex-direction:column">
-    <div class="chatbox" id="chatbox">
-      <div class="msg"><div class="ava">A</div><div class="bub a">Hi! I'm your Arca planning assistant.<br><br>Describe any financial change and I'll model the exact impact using your real numbers.<br><br>What would you like to explore?</div></div>
-      <div class="msg u"><div class="ava u">JG</div><div class="bub u">What if I cut dining out by 50% and put that toward the mortgage?</div></div>
-      <div class="msg"><div class="ava">A</div><div class="bub a">Your dining averages <strong>$680/month</strong>. Cutting 50% frees <strong>$340/month</strong>.<br><br>Extra mortgage principal:<br>· Payoff <strong>Nov 2046 → Oct 2042</strong><br>· Save <strong>$38,400 in interest</strong><br>· This year: <strong>+$4,080</strong><div class="scnote">✓ <strong>Scenario saved:</strong> Cut Dining + Mortgage · +$4,080/yr</div></div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Quantitative Analysis</div><div class="ph-title">Scenario Modeling</div></div></div>
+  <div class="pc">
+    <div class="tabs">
+      <button class="tab on" onclick="scTab('chat',this)">AI Interface</button>
+      <button class="tab" onclick="scTab('saved',this)">Saved Models <span id="sc-count" style="font-family:var(--fm);font-size:9px;background:var(--s4);padding:1px 6px;margin-left:4px;letter-spacing:.06em">3</span></button>
+      <button class="tab" onclick="scTab('compare',this)">Comparative Analysis</button>
     </div>
-    <div class="chatrow">
-      <textarea class="chatinp" id="chatinp" rows="1" placeholder='e.g. "Model a $800/mo raise"'></textarea>
-      <button class="btn bp" onclick="sendMsg()" style="height:46px;padding:10px 16px;border-radius:10px;flex-shrink:0">↑</button>
-    </div>
-    <div style="font-size:11px;color:var(--mid);margin-top:5px">Based on your real spending data</div>
-  </div>
-  <div id="sc-saved" style="display:none;flex-direction:column;gap:12px">
-    <div class="scc sel"><div class="jb mb4"><div style="font-weight:600">Cut Dining + Mortgage</div></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:10px">Cut dining 50% · redirect to mortgage</div><div class="adjrow"><span>Cut Dining Out</span><span class="pos">−$340/mo</span></div><div class="adjrow"><span>Extra Principal</span><span class="pos">+$340/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--grn)">+$4,080/yr</div></div><button class="btn bsm bp">✓ Comparing</button></div></div>
-    <div class="scc"><div class="jb mb4"><div style="font-weight:600">Baby Year 2</div></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:10px">Increased childcare + healthcare costs</div><div class="adjrow"><span>Childcare</span><span class="neg">+$400/mo</span></div><div class="adjrow"><span>Healthcare</span><span class="neg">+$150/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--red)">−$6,600/yr</div></div><button class="btn bsm bg">Compare</button></div></div>
-    <div class="scc"><div class="jb mb4"><div style="font-weight:600">Side Income Boost</div></div><div style="font-size:12.5px;color:var(--dim);margin-bottom:10px">Add $1,500/month consulting income</div><div class="adjrow"><span>Consulting Income</span><span class="pos">+$1,500/mo</span></div><div class="jb" style="border-top:1px solid var(--stn);padding-top:11px;margin-top:11px"><div><div style="font-size:11px;color:var(--mid)">Annual impact</div><div style="font-size:15px;font-weight:600;color:var(--grn)">+$18,000/yr</div></div><button class="btn bsm bg">Compare</button></div></div>
-  </div>
-  <div id="sc-compare" style="display:none">
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
-      <div class="card"><div class="sl">Base Reality</div><div class="sv go">$1,520<span style="font-size:15px">/mo</span></div><div class="ss">Current monthly net</div></div>
-      <div class="card" style="border-color:#2d7a4f;border-width:1.5px"><div class="sl">Cut Dining + Mortgage</div><div class="sv g">$1,860<span style="font-size:15px">/mo</span></div><div class="ss" style="color:var(--grn)">+$340/mo vs base</div></div>
-      <div class="card" style="border-color:#1a5fa8;border-width:1.5px"><div class="sl">Side Income Boost</div><div class="sv b">$3,020<span style="font-size:15px">/mo</span></div><div class="ss" style="color:var(--blu)">+$1,500/mo vs base</div></div>
-    </div>
-    <div class="tlist">
-      <div class="trow jb"><span style="font-weight:500">Cut Dining + Mortgage</span><span class="pos">+$4,080/yr</span></div>
-      <div class="trow jb"><span style="font-weight:500">Side Income Boost</span><span class="pos">+$18,000/yr</span></div>
-      <div class="trow jb"><span style="font-weight:500">Baby Year 2</span><span class="neg">−$6,600/yr</span></div>
-    </div>
-  </div>
-</div>
 
-<!-- ══════════════ LOANS ══════════════ -->
-<div id="loans" class="pg">
-  <div class="jb mb6">
-    <div><div class="ey">Debt</div><div class="pt">Loans</div></div>
-    <button class="btn bp bsm" onclick="openModal('m-loan')">+ Add Loan</button>
-  </div>
-  <div class="g3 mb6">
-    <div class="card"><div class="sl">Total Debt</div><div class="sv r" id="loan-total-debt">$252,200</div></div>
-    <div class="card"><div class="sl">Monthly</div><div class="sv go" id="loan-total-mo">$2,063</div></div>
-    <div class="card"><div class="sl">Active Loans</div><div class="sv go" id="loan-count">2</div></div>
-  </div>
-  <div id="loans-list"></div>
-</div>
-
-<!-- ══════════════ INVESTMENTS ══════════════ -->
-<div id="investments" class="pg">
-  <div class="jb mb4">
-    <div><div class="ey">Portfolio</div><div class="pt">Investments</div></div>
-    <button class="btn bp bsm" onclick="openModal('m-invest')">+ Log Trade</button>
-  </div>
-  <div class="card mb4" style="background:var(--gbg);border-color:#b3d9c2;padding:14px 16px">
-    <div style="display:flex;align-items:center;gap:10px"><div style="font-weight:500">Schwab Sync</div><span class="bd bg2">Connected</span></div>
-    <div style="font-size:12px;color:var(--dim);margin-top:3px">Read-only · Last synced 4 min ago</div>
-  </div>
-  <div class="tabs" style="width:100%;margin-bottom:16px">
-    <button class="tab on" onclick="invTab('ov',this)">Overview</button>
-    <button class="tab" onclick="invTab('schw',this)">Schwab Live</button>
-    <button class="tab" onclick="invTab('log',this)">Trade Log</button>
-  </div>
-  <div id="inv-ov">
-    <div class="g2s mb4">
-      <div class="card"><div class="sl">Invested</div><div class="sv go">$24,500</div></div>
-      <div class="card"><div class="sl">Value</div><div class="sv b">$31,280</div></div>
-      <div class="card"><div class="sl">Unrealized P&amp;L</div><div class="sv g">+$6,780</div><div class="ss">+27.7%</div></div>
-      <div class="card"><div class="sl">Realized</div><div class="sv g">$3,200</div></div>
-    </div>
-    <div class="tlist">
-      <div class="trow jb"><div><div style="font-weight:500">Apple Inc. <span style="font-size:11px;color:var(--mid);font-weight:400">AAPL</span></div><div style="font-size:11.5px;color:var(--mid)">50 shares · cost $154.20</div></div><div style="text-align:right"><div style="font-weight:500">$218.24</div><div style="font-size:12px;color:var(--grn)">▲ +1.2%</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:500">Bitcoin <span style="font-size:11px;color:var(--mid);font-weight:400">BTC</span></div><div style="font-size:11.5px;color:var(--mid)">0.05 units · cost $72,400</div></div><div style="text-align:right"><div style="font-weight:500">$96,420</div><div style="font-size:12px;color:var(--grn)">▲ +0.8%</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:500">Vanguard VTSAX <span style="font-size:11px;color:var(--mid);font-weight:400">ETF</span></div><div style="font-size:11.5px;color:var(--mid)">100 shares · cost $124.18</div></div><div style="text-align:right"><div style="font-weight:500">$138.44</div><div style="font-size:12px;color:var(--red)">▼ −0.3%</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:500">S&amp;P 500 VOO <span style="font-size:11px;color:var(--mid);font-weight:400">ETF</span></div><div style="font-size:11.5px;color:var(--mid)">8 shares · cost $467.40</div></div><div style="text-align:right"><div style="font-weight:500">$543.21</div><div style="font-size:12px;color:var(--red)">▼ −0.2%</div></div></div>
-    </div>
-  </div>
-  <div id="inv-schw" style="display:none">
-    <div class="g3 mb4">
-      <div class="card"><div class="sl">Account Value</div><div class="sv b" style="font-size:22px">$31,280</div></div>
-      <div class="card"><div class="sl">Cash</div><div class="sv g" style="font-size:22px">$1,840</div></div>
-      <div class="card"><div class="sl">P&amp;L</div><div class="sv g" style="font-size:22px">+$6,780</div></div>
-    </div>
-    <div class="tlist">
-      <div class="trow jb"><div><div style="font-weight:600">AAPL</div><div style="font-size:11.5px;color:var(--mid)">50 shares</div></div><div style="text-align:right"><div style="font-weight:500">$218.24</div><div style="font-size:12px;color:var(--grn)">+$2,202 (+25.3%)</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:600">BTC</div><div style="font-size:11.5px;color:var(--mid)">0.05 units</div></div><div style="text-align:right"><div style="font-weight:500">$96,420</div><div style="font-size:12px;color:var(--grn)">+$421 (+9.6%)</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:600">VTSAX</div><div style="font-size:11.5px;color:var(--mid)">100 shares</div></div><div style="text-align:right"><div style="font-weight:500">$138.44</div><div style="font-size:12px;color:var(--grn)">+$1,626 (+13.3%)</div></div></div>
-      <div class="trow jb"><div><div style="font-weight:600">VOO</div><div style="font-size:11.5px;color:var(--mid)">8 shares</div></div><div style="text-align:right"><div style="font-weight:500">$543.21</div><div style="font-size:12px;color:var(--grn)">+$608 (+16.3%)</div></div></div>
-    </div>
-  </div>
-  <div id="inv-log" style="display:none">
-    <div class="tlist" id="inv-log-list"></div>
-  </div>
-</div>
-
-<!-- ══════════════ RECONCILIATION ══════════════ -->
-<div id="recon" class="pg">
-  <div class="ey">Cross-check</div><div class="pt">Reconciliation</div><div class="ps">Verify BoP → EoP cash matches the bank.</div>
-  <div class="g3 mb6">
-    <div class="card"><div class="sl">Tracked</div><div class="sv go">3</div></div>
-    <div class="card"><div class="sl">Reconciled</div><div class="sv g">2</div></div>
-    <div class="card"><div class="sl">Gaps</div><div class="sv r">1</div></div>
-  </div>
-  <div class="card mb4" style="border-left:2.5px solid var(--grn)">
-    <div class="jb mb4"><div><div style="font-size:15px;font-weight:500">January 2026</div><div style="font-size:12px;color:var(--dim)">87 transactions</div></div><span class="rok">✓ Reconciled</span></div>
-    <div class="coff" style="margin-bottom:12px">
-      <div class="wfr"><span>Beginning Cash</span><span style="font-weight:600">$12,400</span></div>
-      <div class="wfr"><span style="color:var(--dim)">+ Inflows</span><span class="pos">+$7,500</span></div>
-      <div class="wfr"><span style="color:var(--dim)">− Outflows</span><span class="neg">−$5,420</span></div>
-      <div class="wfr"><span style="color:var(--dim)">− Investments</span><span class="neg">−$3,800</span></div>
-      <div class="wft"><span>= Expected EoP</span><span class="gt">$10,680</span></div>
-    </div>
-    <div class="jb"><div><div style="font-size:12px;color:var(--dim)">Actual balance (Jan 31)</div><div style="font-size:17px;font-weight:500">$10,680</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--dim)">Difference</div><div style="font-size:22px;font-weight:700;color:var(--grn)">$0.00</div><div style="font-size:11px;color:var(--grn)">Perfect match</div></div></div>
-  </div>
-  <div class="card" style="border-left:2.5px solid var(--red)">
-    <div class="jb mb4"><div><div style="font-size:15px;font-weight:500">February 2026</div><div style="font-size:12px;color:var(--dim)">54 transactions</div></div><span class="rgap">⚠ −$240 gap</span></div>
-    <div class="coff" style="margin-bottom:12px">
-      <div class="wfr"><span>Beginning Cash</span><span style="font-weight:600">$10,680</span></div>
-      <div class="wfr"><span style="color:var(--dim)">+ Inflows</span><span class="pos">+$3,750</span></div>
-      <div class="wfr"><span style="color:var(--dim)">− Outflows</span><span class="neg">−$4,182</span></div>
-      <div class="wfr"><span style="color:var(--dim)">− Investments</span><span class="neg">−$500</span></div>
-      <div class="wft"><span>= Expected EoP</span><span class="gt">$9,748</span></div>
-    </div>
-    <div class="jb"><div><div style="font-size:12px;color:var(--dim)">Actual balance (Feb 22)</div><div style="font-size:17px;font-weight:500">$9,508</div></div><div style="text-align:right"><div style="font-size:11px;color:var(--dim)">Difference</div><div style="font-size:22px;font-weight:700;color:var(--red)">−$240</div><div style="font-size:11px;color:var(--dim)">Missing expenses</div></div></div>
-  </div>
-</div>
-
-<!-- ══════════════ REPORTS ══════════════ -->
-<div id="reports" class="pg">
-  <div class="jb mb6">
-    <div><div class="ey">Annual Summary</div><div class="pt">2025 Review</div></div>
-    <button class="btn bp bsm" onclick="downloadCSV()">⬇ Export CSV</button>
-  </div>
-  <div class="g3 mb6">
-    <div class="card"><div class="sl">Income</div><div class="sv g">$90,000</div></div>
-    <div class="card"><div class="sl">Expenses</div><div class="sv r">$71,760</div></div>
-    <div class="card"><div class="sl">Saved</div><div class="sv go">$18,240</div><div class="ss">20.3% rate</div></div>
-  </div>
-  <div class="g2">
-    <div class="tlist">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">By Category</div></div>
-      <div class="trow jb"><span>🏠 Housing</span><div style="text-align:right"><div style="font-weight:500">$22,200</div><div style="font-size:11px;color:var(--mid)">30.9%</div></div></div>
-      <div class="trow jb"><span>👶 Childcare</span><div style="text-align:right"><div style="font-weight:500">$14,400</div><div style="font-size:11px;color:var(--mid)">20.1%</div></div></div>
-      <div class="trow jb"><span>🍽️ Dining Out</span><div style="text-align:right"><div style="font-weight:500">$8,160</div><div style="font-size:11px;color:var(--mid)">11.4%</div></div></div>
-      <div class="trow jb"><span>🛒 Groceries</span><div style="text-align:right"><div style="font-weight:500">$6,240</div><div style="font-size:11px;color:var(--mid)">8.7%</div></div></div>
-      <div class="trow jb"><span>📈 Investments</span><div style="text-align:right"><div style="font-weight:500">$6,000</div><div style="font-size:11px;color:var(--mid)">8.4%</div></div></div>
-      <div class="trow jb"><span>🚗 Transport</span><div style="text-align:right"><div style="font-weight:500">$4,080</div><div style="font-size:11px;color:var(--mid)">5.7%</div></div></div>
-    </div>
-    <div class="tlist">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--stn)"><div class="sth" style="margin-bottom:0">Month by Month</div></div>
-      <div class="trow jb"><span>January</span><span class="gt">+$1,680</span></div>
-      <div class="trow jb"><span>February</span><span class="gt">+$3,318</span></div>
-      <div class="trow jb"><span>March</span><span class="gt">+$1,380</span></div>
-      <div class="trow jb"><span>April</span><span class="gt">+$1,520</span></div>
-      <div class="trow jb"><span>May</span><span class="gt">+$1,300</span></div>
-      <div class="trow jb"><span>June</span><span class="gt">+$1,700</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ CATEGORIES ══════════════ -->
-<div id="cats" class="pg">
-  <div class="jb mb6">
-    <div><div class="ey">Settings</div><div class="pt">Categories</div></div>
-    <button class="btn bp bsm" onclick="openModal('m-cat')">+ Add Category</button>
-  </div>
-  <div id="cats-list" style="display:flex;flex-direction:column;gap:10px"></div>
-</div>
-
-<!-- ══════════════ AUTH ══════════════ -->
-<div id="auth" class="pg">
-  <div style="display:flex;align-items:center;justify-content:center;min-height:70vh">
-    <div style="width:100%;max-width:390px;padding:36px 28px;background:var(--w);border:1px solid var(--stn);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.09)">
-      <div style="font-family:var(--fd);font-style:italic;font-size:28px;text-align:center;margin-bottom:5px">Arca</div>
-      <div style="text-align:center;color:var(--mid);font-size:12.5px;margin-bottom:26px">Personal finance, finally intelligent</div>
-      <div class="tabs" style="width:100%;margin-bottom:22px"><button class="tab on" style="flex:1">Sign In</button><button class="tab" style="flex:1">Create Account</button></div>
-      <div><div class="lbl" style="margin-top:0">Email</div><input class="inp" value="jorge@example.com"></div>
-      <div style="margin-bottom:20px">
-        <div class="lbl">Password</div>
-        <div style="position:relative"><input class="inp" type="password" style="padding-right:38px" value="mysecret123!"><span style="position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--mid);cursor:pointer">👁</span></div>
-        <div style="display:flex;gap:3px;margin-top:8px"><div style="flex:1;height:3px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:3px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:3px;border-radius:99px;background:var(--grn)"></div><div style="flex:1;height:3px;border-radius:99px;background:var(--grn)"></div></div>
-        <div style="display:flex;gap:8px;margin-top:5px"><span style="font-size:10.5px;color:var(--grn)">✓ 8+ chars</span><span style="font-size:10.5px;color:var(--grn)">✓ Number</span><span style="font-size:10.5px;color:var(--grn)">✓ Symbol</span><span style="font-size:10.5px;font-weight:600;color:var(--grn);margin-left:auto">Strong</span></div>
+    <div id="sc-chat" style="display:flex;flex-direction:column">
+      <div class="chatbox" id="chatbox">
+        <div class="msg"><div class="ava acc">AI</div><div class="bub a">Arca Modeling Engine initialized.<br><br>Describe any financial change — a new liability, income adjustment, category reallocation, or early payoff — and I will model the precise impact against your actual data and save a scenario for comparison.</div></div>
+        <div class="msg u"><div class="ava">JG</div><div class="bub u">What if I cut dining out by 50% and redirect to mortgage principal?</div></div>
+        <div class="msg"><div class="ava acc">AI</div><div class="bub a">Modeling against your actuals:<br><br>Dining avg: <strong>$680/mo</strong>. 50% reduction frees <strong>$340/mo</strong>.<br><br>Applied as extra mortgage principal:<br>— Payoff: Nov 2046 → Oct 2042 <span style="color:var(--acc)">(4 years earlier)</span><br>— Interest saved: <strong>$38,400</strong><br>— FY2026 impact: <strong>+$4,080</strong><div class="scnote">MODEL SAVED — Cut Dining / Mortgage Extra — +$4,080/yr</div></div></div>
       </div>
-      <button class="btn bp" style="width:100%;justify-content:center;padding:12px;font-size:15px" onclick="openModal('m-signin')">Sign In</button>
-      <div style="text-align:center;margin-top:12px;font-size:11.5px;color:var(--mid)">5 failed attempts = 15 min lockout</div>
+      <div class="chatrow">
+        <textarea class="chatinp" id="chatinp" rows="1" placeholder='e.g. "Model a $35k car loan at 7%" or "Show a $800/mo income increase"'></textarea>
+        <button class="chatsend" onclick="sendMsg()">&#x2191;</button>
+      </div>
+      <div style="font-family:var(--fm);font-size:9.5px;color:var(--dim);margin-top:8px;letter-spacing:.06em">ENTER to send — Models computed against live portfolio data</div>
+    </div>
+
+    <div id="sc-saved" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)">
+        <div style="background:var(--s1);padding:20px;border-left:2px solid var(--acc)">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px">Active Comparison</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Cut Dining / Mortgage</div>
+          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">Dining -50% — redirected to principal</div>
+          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:4px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Cut Dining Out</span><span style="color:var(--pos)">-$340/mo</span></div>
+          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Extra Principal</span><span style="color:var(--pos)">+$340/mo</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--pos)">+$4,080</div></div><button class="btn btn-ghost">Comparing</button></div>
+        </div>
+        <div style="background:var(--s1);padding:20px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px">Model</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Baby Year 2</div>
+          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">Childcare and healthcare cost increase</div>
+          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:4px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Childcare</span><span style="color:var(--neg)">+$400/mo</span></div>
+          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Healthcare</span><span style="color:var(--neg)">+$150/mo</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--neg)">-$6,600</div></div><button class="btn btn-ghost">Compare</button></div>
+        </div>
+        <div style="background:var(--s1);padding:20px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px">Model</div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Side Income</div>
+          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">+$1,500/mo consulting income</div>
+          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Consulting</span><span style="color:var(--pos)">+$1,500/mo</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--pos)">+$18,000</div></div><button class="btn btn-ghost">Compare</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sc-compare" style="display:none">
+      <div class="grid g3" style="margin-bottom:20px">
+        <div class="stat"><div class="stat-label">Baseline — Current</div><div class="stat-val acc">$1,520/mo</div><div class="stat-sub">Present monthly net</div></div>
+        <div class="stat" style="border-left:2px solid var(--pos)"><div class="stat-label">Cut Dining / Mortgage</div><div class="stat-val pos">$1,860/mo</div><div class="stat-sub">+$340/mo vs base</div></div>
+        <div class="stat" style="border-left:2px solid var(--blu)"><div class="stat-label">Side Income</div><div class="stat-val blu">$3,020/mo</div><div class="stat-sub">+$1,500/mo vs base</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><div class="panel-title">Scenario Impact Summary</div></div>
+        <table class="tbl">
+          <thead><tr><th>Scenario</th><th class="tr">Monthly</th><th class="tr">Annual</th><th class="tr">5-Year</th></tr></thead>
+          <tbody>
+            <tr><td>Cut Dining / Mortgage Extra</td><td class="tr pos">+$340</td><td class="tr pos">+$4,080</td><td class="tr pos">+$20,400</td></tr>
+            <tr><td>Side Income Boost</td><td class="tr pos">+$1,500</td><td class="tr pos">+$18,000</td><td class="tr pos">+$90,000</td></tr>
+            <tr><td>Baby Year 2</td><td class="tr neg">-$550</td><td class="tr neg">-$6,600</td><td class="tr neg">-$33,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOANS ══ -->
+<div id="loans" class="pg">
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Debt Management</div><div class="ph-title">Liabilities</div></div>
+    <div class="ph-actions"><button class="btn btn-acc" onclick="openModal('m-loan')">+ Add Liability</button></div>
+  </div>
+  <div class="pc">
+    <div class="grid g3" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Total Outstanding</div><div class="stat-val neg" id="loan-total-debt">$252,200</div><div class="stat-sub" id="loan-count-sub">2 active liabilities</div></div>
+      <div class="stat"><div class="stat-label">Monthly Obligation</div><div class="stat-val" id="loan-total-mo">$2,063</div></div>
+      <div class="stat"><div class="stat-label">Interest Remaining</div><div class="stat-val" style="color:var(--mid)">$186,440</div></div>
+    </div>
+    <div id="loans-list"></div>
+  </div>
+</div>
+
+<!-- ══ PORTFOLIO ══ -->
+<div id="investments" class="pg">
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Asset Management</div><div class="ph-title">Portfolio</div></div>
+    <div class="ph-actions"><button class="btn btn-acc" onclick="openModal('m-invest')">+ Log Trade</button></div>
+  </div>
+  <div class="pc">
+    <div style="font-family:var(--fm);font-size:10px;letter-spacing:.12em;color:var(--acc);background:var(--s2);border:1px solid var(--ln);border-left:2px solid var(--acc);padding:10px 16px;margin-bottom:20px">
+      SCHWAB SYNC — CONNECTED — READ-ONLY ACCESS — LAST SYNC 4 MIN AGO
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="invTab('ov',this)">Overview</button>
+      <button class="tab" onclick="invTab('schw',this)">Schwab Live</button>
+      <button class="tab" onclick="invTab('log',this)">Trade Log</button>
+    </div>
+    <div id="inv-ov">
+      <div class="grid g4" style="margin-bottom:20px">
+        <div class="stat"><div class="stat-label">Cost Basis</div><div class="stat-val">$24,500</div></div>
+        <div class="stat"><div class="stat-label">Market Value</div><div class="stat-val blu">$31,280</div></div>
+        <div class="stat"><div class="stat-label">Unrealized P&amp;L</div><div class="stat-val pos">+$6,780</div><div class="stat-sub">+27.7%</div></div>
+        <div class="stat"><div class="stat-label">Realized</div><div class="stat-val pos">$3,200</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><div class="panel-title">Holdings — Live Quotes</div></div>
+        <table class="tbl">
+          <thead><tr><th>Name</th><th>Ticker</th><th>Type</th><th class="tr">Live Price</th><th class="tr">Day</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600">Apple Inc.</td><td style="font-family:var(--fm);color:var(--mid)">AAPL</td><td><span class="tag tag-b">Stock</span></td><td class="tr" style="font-family:var(--fm)">$218.24</td><td class="tr pos">+1.2%</td></tr>
+            <tr><td style="font-weight:600">Bitcoin</td><td style="font-family:var(--fm);color:var(--mid)">BTC</td><td><span class="tag tag-y">Crypto</span></td><td class="tr" style="font-family:var(--fm)">$96,420</td><td class="tr pos">+0.8%</td></tr>
+            <tr><td style="font-weight:600">Vanguard Total Market</td><td style="font-family:var(--fm);color:var(--mid)">VTSAX</td><td><span class="tag tag-g">ETF</span></td><td class="tr" style="font-family:var(--fm)">$138.44</td><td class="tr neg">-0.3%</td></tr>
+            <tr><td style="font-weight:600">S&amp;P 500 ETF</td><td style="font-family:var(--fm);color:var(--mid)">VOO</td><td><span class="tag tag-g">ETF</span></td><td class="tr" style="font-family:var(--fm)">$543.21</td><td class="tr neg">-0.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="inv-schw" style="display:none">
+      <div class="grid g3" style="margin-bottom:20px">
+        <div class="stat"><div class="stat-label">Account Value</div><div class="stat-val blu">$31,280</div><div class="stat-sub">...4821</div></div>
+        <div class="stat"><div class="stat-label">Cash Balance</div><div class="stat-val pos">$1,840</div></div>
+        <div class="stat"><div class="stat-label">Unrealized P&amp;L</div><div class="stat-val pos">+$6,780</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><div class="panel-title">Live Positions</div><button class="btn-ghost btn">Refresh</button></div>
+        <table class="tbl">
+          <thead><tr><th>Symbol</th><th>Qty</th><th>Avg Cost</th><th class="tr">Market Value</th><th class="tr">Unrealized P&amp;L</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--fm);font-weight:500">AAPL</td><td style="font-family:var(--fm)">50</td><td style="font-family:var(--fm);color:var(--mid)">$154.20</td><td class="tr" style="font-family:var(--fm)">$10,912</td><td class="tr pos">+$2,202 / +25.3%</td></tr>
+            <tr><td style="font-family:var(--fm);font-weight:500">BTC</td><td style="font-family:var(--fm)">0.05</td><td style="font-family:var(--fm);color:var(--mid)">$72,400</td><td class="tr" style="font-family:var(--fm)">$4,821</td><td class="tr pos">+$421 / +9.6%</td></tr>
+            <tr><td style="font-family:var(--fm);font-weight:500">VTSAX</td><td style="font-family:var(--fm)">100</td><td style="font-family:var(--fm);color:var(--mid)">$124.18</td><td class="tr" style="font-family:var(--fm)">$13,844</td><td class="tr pos">+$1,626 / +13.3%</td></tr>
+            <tr><td style="font-family:var(--fm);font-weight:500">VOO</td><td style="font-family:var(--fm)">8</td><td style="font-family:var(--fm);color:var(--mid)">$467.40</td><td class="tr" style="font-family:var(--fm)">$4,346</td><td class="tr pos">+$608 / +16.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="inv-log" style="display:none">
+      <div class="rlist" id="inv-log-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RECON ══ -->
+<div id="recon" class="pg">
+  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Verification</div><div class="ph-title">Reconciliation</div></div></div>
+  <div class="pc">
+    <div class="grid g3" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Periods Tracked</div><div class="stat-val">3</div></div>
+      <div class="stat"><div class="stat-label">Reconciled</div><div class="stat-val pos">2</div></div>
+      <div class="stat"><div class="stat-label">Discrepancies</div><div class="stat-val neg">1</div></div>
+    </div>
+    <div style="border:1px solid var(--ln);border-left:2px solid var(--pos);background:var(--s1);padding:20px 24px;margin-bottom:1px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div><div style="font-weight:600;font-size:14px">January 2026</div><div style="font-family:var(--fm);font-size:10px;color:var(--mid);margin-top:2px">87 transactions</div></div>
+        <span class="tag tag-g">Reconciled</span>
+      </div>
+      <div class="wfr"><span style="color:var(--txt2)">Opening Balance</span><span style="font-family:var(--fm)">$12,400</span></div>
+      <div class="wfr"><span style="color:var(--mid)">+ Inflows</span><span style="font-family:var(--fm);color:var(--pos)">+$7,500</span></div>
+      <div class="wfr"><span style="color:var(--mid)">- Outflows</span><span style="font-family:var(--fm);color:var(--neg)">-$5,420</span></div>
+      <div class="wfr" style="border:none"><span style="color:var(--mid)">- Investments</span><span style="font-family:var(--fm);color:var(--neg)">-$3,800</span></div>
+      <div class="wft"><span>Expected Closing</span><span style="font-family:var(--fm);color:var(--acc)">$10,680</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:14px 16px;background:var(--s2)">
+        <div><div style="font-family:var(--fm);font-size:10px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase">Actual Bank Balance</div><div style="font-family:var(--fm);font-size:18px;margin-top:4px">$10,680</div></div>
+        <div style="text-align:right"><div style="font-family:var(--fm);font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Variance</div><div style="font-family:var(--fm);font-size:26px;color:var(--pos);margin-top:4px">$0.00</div></div>
+      </div>
+    </div>
+    <div style="border:1px solid var(--ln);border-left:2px solid var(--neg);background:var(--s1);padding:20px 24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div><div style="font-weight:600;font-size:14px">February 2026</div><div style="font-family:var(--fm);font-size:10px;color:var(--mid);margin-top:2px">54 transactions</div></div>
+        <span class="tag tag-r">-$240 Gap</span>
+      </div>
+      <div class="wfr"><span style="color:var(--txt2)">Opening Balance</span><span style="font-family:var(--fm)">$10,680</span></div>
+      <div class="wfr"><span style="color:var(--mid)">+ Inflows</span><span style="font-family:var(--fm);color:var(--pos)">+$3,750</span></div>
+      <div class="wfr"><span style="color:var(--mid)">- Outflows</span><span style="font-family:var(--fm);color:var(--neg)">-$4,182</span></div>
+      <div class="wfr" style="border:none"><span style="color:var(--mid)">- Investments</span><span style="font-family:var(--fm);color:var(--neg)">-$500</span></div>
+      <div class="wft"><span>Expected Closing</span><span style="font-family:var(--fm);color:var(--acc)">$9,748</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:14px 16px;background:var(--s2)">
+        <div><div style="font-family:var(--fm);font-size:10px;color:var(--mid);letter-spacing:.1em;text-transform:uppercase">Actual Bank Balance</div><div style="font-family:var(--fm);font-size:18px;margin-top:4px">$9,508</div></div>
+        <div style="text-align:right"><div style="font-family:var(--fm);font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Variance</div><div style="font-family:var(--fm);font-size:26px;color:var(--neg);margin-top:4px">-$240</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REPORT ══ -->
+<div id="reports" class="pg">
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Year-End Summary</div><div class="ph-title">Annual Report — 2025</div></div>
+    <div class="ph-actions">
+      <select class="finp" style="width:90px;padding:8px 10px"><option>2025</option><option>2024</option></select>
+      <button class="btn btn-acc" onclick="downloadCSV()">Export CSV</button>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="grid g3" style="margin-bottom:24px">
+      <div class="stat"><div class="stat-label">Total Income</div><div class="stat-val pos">$90,000</div></div>
+      <div class="stat"><div class="stat-label">Total Expenses</div><div class="stat-val neg">$71,760</div></div>
+      <div class="stat"><div class="stat-label">Net Saved</div><div class="stat-val acc">$18,240</div><div class="stat-sub">20.3% savings rate</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln)">
+      <div style="background:var(--s1)">
+        <div class="panel-hd"><div class="panel-title">Expenditure by Category</div></div>
+        <table class="tbl">
+          <thead><tr><th>Category</th><th class="tr">Total</th><th class="tr">Share</th></tr></thead>
+          <tbody>
+            <tr><td>Housing</td><td class="tr" style="font-family:var(--fm)">$22,200</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">30.9%</td></tr>
+            <tr><td>Childcare</td><td class="tr" style="font-family:var(--fm)">$14,400</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">20.1%</td></tr>
+            <tr><td>Dining Out</td><td class="tr" style="font-family:var(--fm)">$8,160</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">11.4%</td></tr>
+            <tr><td>Groceries</td><td class="tr" style="font-family:var(--fm)">$6,240</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">8.7%</td></tr>
+            <tr><td>Investments</td><td class="tr" style="font-family:var(--fm)">$6,000</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">8.4%</td></tr>
+            <tr><td>Transport</td><td class="tr" style="font-family:var(--fm)">$4,080</td><td class="tr" style="font-family:var(--fm);color:var(--mid)">5.7%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background:var(--s1)">
+        <div class="panel-hd"><div class="panel-title">Monthly Summary</div></div>
+        <table class="tbl">
+          <thead><tr><th>Month</th><th class="tr">Income</th><th class="tr">Expenses</th><th class="tr">Net</th></tr></thead>
+          <tbody>
+            <tr><td>January</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$5,820</td><td class="tr gld">+$1,680</td></tr>
+            <tr><td>February</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$4,182</td><td class="tr gld">+$3,318</td></tr>
+            <tr><td>March</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$6,120</td><td class="tr gld">+$1,380</td></tr>
+            <tr><td>April</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$5,980</td><td class="tr gld">+$1,520</td></tr>
+            <tr><td>May</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$6,200</td><td class="tr gld">+$1,300</td></tr>
+            <tr><td>June</td><td class="tr" style="font-family:var(--fm)">$7,500</td><td class="tr" style="font-family:var(--fm)">$5,800</td><td class="tr gld">+$1,700</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CATEGORIES ══ -->
+<div id="cats" class="pg">
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Configuration</div><div class="ph-title">Categories</div></div>
+    <div class="ph-actions"><button class="btn btn-acc" onclick="openModal('m-cat')">+ Add Category</button></div>
+  </div>
+  <div class="pc"><div id="cats-list"></div></div>
+</div>
+
+<!-- ══ ACCESS ══ -->
+<div id="auth" class="pg">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-hd">
+        <div class="auth-logo">ARCA</div>
+        <div class="auth-sub">Private Financial Intelligence — Secure Access</div>
+      </div>
+      <div class="auth-body">
+        <div style="display:flex;margin-bottom:20px;border:1px solid var(--ln)">
+          <button style="flex:1;padding:9px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:none;background:var(--acc);color:#000;cursor:pointer;font-weight:600">Sign In</button>
+          <button style="flex:1;padding:9px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:none;background:transparent;color:var(--mid);cursor:pointer">Register</button>
+        </div>
+        <div class="fgrp"><label class="flbl">Email Address</label><input class="finp" value="garcia@example.com" type="email"></div>
+        <div class="fgrp">
+          <label class="flbl">Password</label>
+          <input class="finp" type="password" value="Secure123!">
+          <div class="pwd-strength"><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div></div>
+          <div class="strengths"><span class="stchk">+ 8 chars</span><span class="stchk">+ Uppercase</span><span class="stchk">+ Number</span><span class="stchk">+ Symbol</span><span style="font-family:var(--fm);font-size:10px;color:var(--pos);margin-left:auto">Strong</span></div>
+        </div>
+      </div>
+      <div class="auth-ft">
+        <button class="btn btn-acc" style="width:100%;justify-content:center;padding:12px;font-size:13px" onclick="openModal('m-signin')">Authenticate</button>
+      </div>
+      <div style="padding:12px 32px;font-family:var(--fm);font-size:9.5px;color:var(--dim);letter-spacing:.06em">5 failed attempts triggers 15-minute lockout. Invite code required for registration.</div>
     </div>
   </div>
 </div>
@@ -543,40 +784,37 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
 </main>
 </div>
 
-<!-- ════════════════════════════════
-     MODALS
-════════════════════════════════ -->
+<!-- ═════════ MODALS ═════════ -->
 
-<!-- ADD CASH ENTRY -->
+<!-- ADD CASH -->
 <div class="mo" id="m-cash" onclick="bgClose(event,'m-cash')">
   <div class="mbox">
-    <div class="mhandle"></div>
-    <div class="mtitle">Add Cash Entry</div>
-    <div class="msub">Log cash, Venmo, Zelle — anything not on your bank statement.</div>
-    <div class="mrow2">
-      <div><div class="lbl" style="margin-top:0">Date</div><input class="inp" type="date" id="c-date"></div>
-      <div><div class="lbl" style="margin-top:0">Amount ($)</div><input class="inp" type="number" id="c-amt" placeholder="0.00" min="0" step="0.01"></div>
-    </div>
-    <div><div class="lbl">Description</div><input class="inp" type="text" id="c-desc" placeholder="e.g. Farmer's Market, babysitter…"></div>
-    <div class="mrow2">
-      <div><div class="lbl">Category</div>
-        <select class="inp" id="c-cat">
-          <option>🛒 Groceries</option><option>🍽️ Dining Out</option><option>👶 Childcare</option>
-          <option>🚗 Transport</option><option>🎬 Entertainment</option><option>🏠 Housing</option>
-          <option>🎁 Gifts</option><option>💰 Other Income</option><option>🏥 Healthcare</option><option>📦 Other</option>
-        </select>
+    <div class="mhd"><div class="mtitle">New Cash Entry</div><button class="mclose" onclick="closeModal('m-cash')">x</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div><label class="flbl">Date</label><input class="finp" type="date" id="c-date"></div>
+        <div><label class="flbl">Amount (USD)</label><input class="finp" type="number" id="c-amt" placeholder="0.00" min="0" step="0.01"></div>
       </div>
-      <div><div class="lbl">Method</div>
-        <select class="inp" id="c-type"><option>Cash</option><option>Venmo</option><option>Zelle</option><option>Check</option><option>Other</option></select>
+      <div class="fgrp"><label class="flbl">Description</label><input class="finp" type="text" id="c-desc" placeholder="Payee or description"></div>
+      <div class="fg2">
+        <div><label class="flbl">Category</label>
+          <select class="finp" id="c-cat">
+            <option>Groceries</option><option>Dining Out</option><option>Childcare</option><option>Transport</option>
+            <option>Entertainment</option><option>Housing</option><option>Gifts</option><option>Other Income</option><option>Healthcare</option><option>Other</option>
+          </select>
+        </div>
+        <div><label class="flbl">Method</label>
+          <select class="finp" id="c-type"><option>Cash</option><option>Venmo</option><option>Zelle</option><option>Check</option><option>Other</option></select>
+        </div>
       </div>
+      <div class="fgrp"><label class="flbl">Direction</label>
+        <select class="finp" id="c-dir"><option value="-">Expense — Outflow</option><option value="+">Income — Inflow</option></select>
+      </div>
+      <div class="flash" id="c-flash">Entry recorded successfully</div>
     </div>
-    <div><div class="lbl">Direction</div>
-      <select class="inp" id="c-dir"><option value="-">Expense (money out)</option><option value="+">Income (money in)</option></select>
-    </div>
-    <div class="flash" id="c-flash">✓ Entry added!</div>
     <div class="mactions">
-      <button class="btn bg" onclick="closeModal('m-cash')">Cancel</button>
-      <button class="btn bp" onclick="saveCash()">Save Entry</button>
+      <button class="btn btn-out" onclick="closeModal('m-cash')">Cancel</button>
+      <button class="btn btn-acc" onclick="saveCash()">Record Entry</button>
     </div>
   </div>
 </div>
@@ -584,61 +822,60 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
 <!-- ADD LOAN -->
 <div class="mo" id="m-loan" onclick="bgClose(event,'m-loan')">
   <div class="mbox">
-    <div class="mhandle"></div>
-    <div class="mtitle">Add Loan</div>
-    <div class="msub">Arca calculates your amortization and payoff date automatically.</div>
-    <div><div class="lbl" style="margin-top:0">Loan Name</div><input class="inp" type="text" id="l-name" placeholder="e.g. Student Loan, Personal Loan"></div>
-    <div><div class="lbl">Type</div>
-      <select class="inp" id="l-type">
-        <option value="🏠">Mortgage 🏠</option><option value="🚗">Car Loan 🚗</option><option value="🎓">Student Loan 🎓</option>
-        <option value="💳">Personal Loan 💳</option><option value="🏢">Business Loan 🏢</option><option value="💰">Other 💰</option>
-      </select>
+    <div class="mhd"><div class="mtitle">Add Liability</div><button class="mclose" onclick="closeModal('m-loan')">x</button></div>
+    <div class="mbody">
+      <div class="fgrp"><label class="flbl">Liability Name</label><input class="finp" type="text" id="l-name" placeholder="e.g. Student Loan, Auto Loan"></div>
+      <div class="fgrp"><label class="flbl">Type</label>
+        <select class="finp" id="l-type">
+          <option value="M">Mortgage</option><option value="A">Auto Loan</option><option value="S">Student Loan</option><option value="P">Personal Loan</option><option value="B">Business Loan</option><option value="O">Other</option>
+        </select>
+      </div>
+      <div class="fg2">
+        <div><label class="flbl">Original Principal (USD)</label><input class="finp" type="number" id="l-orig" placeholder="25,000" oninput="loanPreview()"></div>
+        <div><label class="flbl">Current Balance (USD)</label><input class="finp" type="number" id="l-bal" placeholder="22,000" oninput="loanPreview()"></div>
+      </div>
+      <div class="fg2">
+        <div><label class="flbl">Interest Rate (% APR)</label><input class="finp" type="number" id="l-rate" placeholder="6.5" step="0.01" oninput="loanPreview()"></div>
+        <div><label class="flbl">Term (months)</label><input class="finp" type="number" id="l-term" placeholder="60" oninput="loanPreview()"></div>
+      </div>
+      <div class="preview-box" id="l-preview"></div>
+      <div class="flash" id="l-flash">Liability recorded</div>
     </div>
-    <div class="mrow2">
-      <div><div class="lbl">Original Amount ($)</div><input class="inp" type="number" id="l-orig" placeholder="25,000" oninput="loanPreview()"></div>
-      <div><div class="lbl">Current Balance ($)</div><input class="inp" type="number" id="l-bal" placeholder="22,000" oninput="loanPreview()"></div>
-    </div>
-    <div class="mrow2">
-      <div><div class="lbl">Interest Rate (% APR)</div><input class="inp" type="number" id="l-rate" placeholder="6.5" step="0.01" oninput="loanPreview()"></div>
-      <div><div class="lbl">Term (months)</div><input class="inp" type="number" id="l-term" placeholder="60" oninput="loanPreview()"></div>
-    </div>
-    <div class="preview-box" id="l-preview"></div>
-    <div class="flash" id="l-flash">✓ Loan added!</div>
     <div class="mactions">
-      <button class="btn bg" onclick="closeModal('m-loan')">Cancel</button>
-      <button class="btn bp" onclick="saveLoan()">Add Loan</button>
+      <button class="btn btn-out" onclick="closeModal('m-loan')">Cancel</button>
+      <button class="btn btn-acc" onclick="saveLoan()">Add Liability</button>
     </div>
   </div>
 </div>
 
-<!-- LOG INVESTMENT -->
+<!-- LOG TRADE -->
 <div class="mo" id="m-invest" onclick="bgClose(event,'m-invest')">
   <div class="mbox">
-    <div class="mhandle"></div>
-    <div class="mtitle">Log Trade</div>
-    <div class="msub">Record a buy, sell, or dividend. Arca tracks your cost basis and P&amp;L.</div>
-    <div class="mrow2">
-      <div><div class="lbl" style="margin-top:0">Action</div>
-        <select class="inp" id="i-action"><option>Buy</option><option>Sell</option><option>Dividend</option></select>
+    <div class="mhd"><div class="mtitle">Log Trade</div><button class="mclose" onclick="closeModal('m-invest')">x</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div><label class="flbl">Action</label>
+          <select class="finp" id="i-action"><option>Buy</option><option>Sell</option><option>Dividend</option></select>
+        </div>
+        <div><label class="flbl">Date</label><input class="finp" type="date" id="i-date"></div>
       </div>
-      <div><div class="lbl" style="margin-top:0">Date</div><input class="inp" type="date" id="i-date"></div>
-    </div>
-    <div class="mrow2">
-      <div><div class="lbl">Ticker / Symbol</div><input class="inp" type="text" id="i-ticker" placeholder="AAPL, BTC, VTSAX…" style="text-transform:uppercase"></div>
-      <div><div class="lbl">Asset Type</div>
-        <select class="inp" id="i-type"><option>Stock</option><option>ETF</option><option>Crypto</option><option>Bond</option><option>Other</option></select>
+      <div class="fg2">
+        <div><label class="flbl">Ticker / Symbol</label><input class="finp" type="text" id="i-ticker" placeholder="AAPL, BTC, VTSAX" style="text-transform:uppercase"></div>
+        <div><label class="flbl">Asset Class</label>
+          <select class="finp" id="i-type"><option>Equity</option><option>ETF</option><option>Crypto</option><option>Fixed Income</option><option>Other</option></select>
+        </div>
       </div>
+      <div class="fg2">
+        <div><label class="flbl">Quantity</label><input class="finp" type="number" id="i-qty" placeholder="10" step="any" oninput="invCalc()"></div>
+        <div><label class="flbl">Price per Unit (USD)</label><input class="finp" type="number" id="i-price" placeholder="218.24" step="0.01" oninput="invCalc()"></div>
+      </div>
+      <div class="fgrp"><label class="flbl">Total Amount (USD)</label><input class="finp" type="number" id="i-total" placeholder="Auto-calculated" step="0.01" oninput="invCalcRev()"></div>
+      <div class="fgrp"><label class="flbl">Notes</label><input class="finp" type="text" id="i-notes" placeholder="e.g. DCA, rebalance"></div>
+      <div class="flash" id="i-flash">Trade recorded successfully</div>
     </div>
-    <div class="mrow2">
-      <div><div class="lbl">Quantity / Shares</div><input class="inp" type="number" id="i-qty" placeholder="10" step="any" oninput="invCalc()"></div>
-      <div><div class="lbl">Price per Share ($)</div><input class="inp" type="number" id="i-price" placeholder="218.24" step="0.01" oninput="invCalc()"></div>
-    </div>
-    <div><div class="lbl">Total Amount ($)</div><input class="inp" type="number" id="i-total" placeholder="Auto-calculated" step="0.01" oninput="invCalcRev()"></div>
-    <div><div class="lbl">Notes (optional)</div><input class="inp" type="text" id="i-notes" placeholder="e.g. DCA buy, rebalance"></div>
-    <div class="flash" id="i-flash">✓ Trade logged!</div>
     <div class="mactions">
-      <button class="btn bg" onclick="closeModal('m-invest')">Cancel</button>
-      <button class="btn bp" onclick="saveInvest()">Log Trade</button>
+      <button class="btn btn-out" onclick="closeModal('m-invest')">Cancel</button>
+      <button class="btn btn-acc" onclick="saveInvest()">Record Trade</button>
     </div>
   </div>
 </div>
@@ -646,346 +883,333 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
 <!-- ADD CATEGORY -->
 <div class="mo" id="m-cat" onclick="bgClose(event,'m-cat')">
   <div class="mbox">
-    <div class="mhandle"></div>
-    <div class="mtitle">Add Category</div>
-    <div class="msub">Create a spending bucket with a monthly budget cap.</div>
-    <div class="mrow2">
-      <div><div class="lbl" style="margin-top:0">Name</div><input class="inp" type="text" id="k-name" placeholder="e.g. Vacation, Pet, Gym"></div>
-      <div><div class="lbl" style="margin-top:0">Emoji</div><input class="inp" type="text" id="k-emoji" placeholder="🏖️" maxlength="2" style="font-size:20px;text-align:center"></div>
-    </div>
-    <div><div class="lbl">Monthly Budget ($)</div><input class="inp" type="number" id="k-budget" placeholder="200"></div>
-    <div><div class="lbl">Color</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:8px" id="clr-grid">
-        <div class="clr-pick on" data-c="#1a5fa8" style="background:#1a5fa8" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#2d7a4f" style="background:#2d7a4f" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#b83232" style="background:#b83232" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#7a5f28" style="background:#7a5f28" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#6b3fa8" style="background:#6b3fa8" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#c27c0e" style="background:#c27c0e" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#2a8080" style="background:#2a8080" onclick="pickClr(this)"></div>
-        <div class="clr-pick" data-c="#c2574e" style="background:#c2574e" onclick="pickClr(this)"></div>
+    <div class="mhd"><div class="mtitle">Add Category</div><button class="mclose" onclick="closeModal('m-cat')">x</button></div>
+    <div class="mbody">
+      <div class="fg2">
+        <div><label class="flbl">Name</label><input class="finp" type="text" id="k-name" placeholder="e.g. Travel, Medical"></div>
+        <div><label class="flbl">Monthly Budget (USD)</label><input class="finp" type="number" id="k-budget" placeholder="200"></div>
       </div>
+      <div class="fgrp"><label class="flbl">Accent Color</label>
+        <div class="clr-opts">
+          <div class="clr-swatch on" data-c="#60a5fa" style="background:#60a5fa" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#4ade80" style="background:#4ade80" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#f87171" style="background:#f87171" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#fbbf24" style="background:#fbbf24" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#c8f542" style="background:#c8f542" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#a78bfa" style="background:#a78bfa" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#fb923c" style="background:#fb923c" onclick="pickClr(this)"></div>
+          <div class="clr-swatch" data-c="#94a3b8" style="background:#94a3b8" onclick="pickClr(this)"></div>
+        </div>
+      </div>
+      <div class="flash" id="k-flash">Category added</div>
     </div>
-    <div class="flash" id="k-flash">✓ Category added!</div>
     <div class="mactions">
-      <button class="btn bg" onclick="closeModal('m-cat')">Cancel</button>
-      <button class="btn bp" onclick="saveCat()">Add Category</button>
+      <button class="btn btn-out" onclick="closeModal('m-cat')">Cancel</button>
+      <button class="btn btn-acc" onclick="saveCat()">Add Category</button>
     </div>
   </div>
 </div>
 
-<!-- SIGN IN SUCCESS -->
+<!-- AUTH SUCCESS -->
 <div class="mo" id="m-signin" onclick="bgClose(event,'m-signin')">
-  <div class="mbox" style="text-align:center">
-    <div class="mhandle"></div>
-    <div style="font-size:42px;margin-bottom:12px">✓</div>
-    <div class="mtitle">Welcome back, Jorge!</div>
-    <div class="msub">Signing you in…</div>
-    <div style="margin:20px 0;padding:16px;background:var(--gbg);border:1px solid #b3d9c2;border-radius:10px;color:var(--grn);font-size:13px">Session started · All your data is private and encrypted</div>
-    <button class="btn bp" style="width:100%;justify-content:center;padding:12px" onclick="closeModal('m-signin');go('dashboard',null,'Dashboard')">Go to Dashboard →</button>
+  <div class="mbox">
+    <div class="mhd"><div class="mtitle">Authentication Successful</div><button class="mclose" onclick="closeModal('m-signin')">x</button></div>
+    <div class="mbody">
+      <div style="font-family:var(--fm);font-size:10px;letter-spacing:.14em;color:var(--acc);background:var(--s2);border-left:2px solid var(--acc);padding:12px 16px;margin-bottom:16px">SESSION ESTABLISHED — GARCIA, JORGE — PRV ACCESS — TLS 1.3</div>
+      <div style="font-family:var(--fm);font-size:12px;color:var(--mid);line-height:1.8">
+        Last login: Feb 22, 2026 — 21:44 EST<br>
+        Access level: Private<br>
+        Session expires: 24 hours
+      </div>
+    </div>
+    <div class="mactions">
+      <button class="btn btn-acc" style="flex:1;justify-content:center" onclick="closeModal('m-signin');go('dashboard',null,'Dashboard')">Enter Dashboard</button>
+    </div>
   </div>
 </div>
 
 <script>
-// ════ DATA ════
-var cashData = [
-  {date:'Feb 22',desc:"Farmer's Market",cat:'🛒 Groceries',type:'Cash',dir:'-',amt:45},
-  {date:'Feb 20',desc:'Babysitter — Saturday',cat:'👶 Childcare',type:'Cash',dir:'-',amt:80},
-  {date:'Feb 18',desc:'Venmo — split dinner',cat:'🍽️ Dining Out',type:'Venmo',dir:'-',amt:34.50},
-  {date:'Feb 15',desc:'Birthday gift — nephew',cat:'🎁 Gifts',type:'Cash',dir:'-',amt:50},
-  {date:'Feb 12',desc:'Garage sale earnings',cat:'💰 Other Income',type:'Cash',dir:'+',amt:120}
+// ═══ DATA ═══
+var cashData=[
+  {date:'FEB 22',desc:'Farmer\'s Market',cat:'Groceries',type:'Cash',dir:'-',amt:45},
+  {date:'FEB 20',desc:'Babysitter — Saturday',cat:'Childcare',type:'Cash',dir:'-',amt:80},
+  {date:'FEB 18',desc:'Venmo — Split Dinner',cat:'Dining Out',type:'Venmo',dir:'-',amt:34.50},
+  {date:'FEB 15',desc:'Birthday Gift — Nephew',cat:'Gifts',type:'Cash',dir:'-',amt:50},
+  {date:'FEB 12',desc:'Garage Sale Proceeds',cat:'Other Income',type:'Cash',dir:'+',amt:120}
 ];
-var txnData = [
-  {date:'Feb 22',desc:'Whole Foods Market',cat:'🛒 Groceries',dir:'-',amt:94.30},
-  {date:'Feb 21',desc:'Salary Deposit',cat:'💰 Income',dir:'+',amt:3750},
-  {date:'Feb 20',desc:'Little Stars Daycare',cat:'👶 Childcare',dir:'-',amt:600},
-  {date:'Feb 18',desc:'Netflix',cat:'🎬 Entertainment',dir:'-',amt:15.99},
-  {date:'Feb 17',desc:'Robinhood — AAPL Buy',cat:'📈 Investments',dir:'-',amt:500},
-  {date:'Feb 15',desc:'Mortgage Payment',cat:'🏠 Housing',dir:'-',amt:1850},
-  {date:'Feb 14',desc:'Shell Gas Station',cat:'🚗 Transport',dir:'-',amt:62.40}
+var txnData=[
+  {date:'FEB 22',desc:'Whole Foods Market',cat:'Groceries',dir:'-',amt:94.30},
+  {date:'FEB 21',desc:'Salary Deposit',cat:'Income',dir:'+',amt:3750},
+  {date:'FEB 20',desc:'Little Stars Daycare',cat:'Childcare',dir:'-',amt:600},
+  {date:'FEB 18',desc:'Netflix Subscription',cat:'Entertainment',dir:'-',amt:15.99},
+  {date:'FEB 17',desc:'Robinhood — AAPL Purchase',cat:'Investments',dir:'-',amt:500},
+  {date:'FEB 15',desc:'Mortgage Payment',cat:'Housing',dir:'-',amt:1850},
+  {date:'FEB 14',desc:'Shell — Fuel',cat:'Transport',dir:'-',amt:62.40}
 ];
-var loanData = [
-  {name:'Home Mortgage',icon:'🏠',bal:248200,monthly:1850,rate:6.25,payoff:'Nov 2046',pct:22,color:'#1a5fa8'},
-  {name:'Honda CR-V',icon:'🚗',bal:4000,monthly:213,rate:5.9,payoff:'Mar 2027',pct:82,color:'#2d7a4f'}
+var loanData=[
+  {name:'Home Mortgage',type:'M',bal:248200,monthly:1850,rate:6.25,payoff:'Nov 2046',pct:22,color:'#60a5fa'},
+  {name:'Honda CR-V Auto',type:'A',bal:4000,monthly:213,rate:5.9,payoff:'Mar 2027',pct:82,color:'#4ade80'}
 ];
-var invData = [
-  {date:'Feb 17',name:'Apple Inc.',ticker:'AAPL',type:'Stock',action:'Buy',qty:10,amt:1750},
-  {date:'Feb 10',name:'Bitcoin',ticker:'BTC',type:'Crypto',action:'Buy',qty:0.05,amt:2300},
-  {date:'Jan 28',name:'Vanguard Total Market',ticker:'VTSAX',type:'ETF',action:'Buy',qty:20,amt:3800},
-  {date:'Jan 15',name:'Tesla Inc.',ticker:'TSLA',type:'Stock',action:'Sell',qty:5,amt:1200}
+var invData=[
+  {date:'FEB 17',name:'Apple Inc.',ticker:'AAPL',type:'Equity',action:'Buy',qty:10,amt:1750},
+  {date:'FEB 10',name:'Bitcoin',ticker:'BTC',type:'Crypto',action:'Buy',qty:0.05,amt:2300},
+  {date:'JAN 28',name:'Vanguard Total Market',ticker:'VTSAX',type:'ETF',action:'Buy',qty:20,amt:3800},
+  {date:'JAN 15',name:'Tesla Inc.',ticker:'TSLA',type:'Equity',action:'Sell',qty:5,amt:1200}
 ];
-var catData = [
-  {emoji:'🏠',name:'Housing',budget:2000,spent:2400,color:'#1a5fa8'},
-  {emoji:'🍽️',name:'Dining Out',budget:500,spent:680,color:'#b83232'},
-  {emoji:'🛒',name:'Groceries',budget:600,spent:520,color:'#2d7a4f'},
-  {emoji:'👶',name:'Childcare',budget:1200,spent:1200,color:'#7a5f28'},
-  {emoji:'🎬',name:'Entertainment',budget:200,spent:120,color:'#6b3fa8'}
+var catData=[
+  {name:'Housing',budget:2000,spent:2400,color:'#60a5fa'},
+  {name:'Dining Out',budget:500,spent:680,color:'#f87171'},
+  {name:'Groceries',budget:600,spent:520,color:'#4ade80'},
+  {name:'Childcare',budget:1200,spent:1200,color:'#fbbf24'},
+  {name:'Entertainment',budget:200,spent:120,color:'#a78bfa'}
 ];
-var selColor = '#1a5fa8';
+var selColor='#60a5fa';
 
-// ════ RENDER ════
-function renderCash() {
-  var el = document.getElementById('cash-list');
-  el.className = 'tlist';
-  el.innerHTML = cashData.map(function(e) {
-    var s = e.dir==='+' ? '+' : '−';
-    var c = e.dir==='+' ? 'pos' : 'neg';
-    return '<div class="trow jb"><div><div style="font-weight:500">'+e.desc+'</div>'+
-      '<div style="font-size:11.5px;color:var(--mid);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
-      '<span>'+e.date+'</span><span class="pill" style="font-size:10.5px">'+e.cat+'</span><span class="bd bs">'+e.type+'</span></div></div>'+
-      '<span class="'+c+'" style="font-size:15px;white-space:nowrap;margin-left:12px">'+s+'$'+e.amt.toFixed(2)+'</span></div>';
+// ═══ RENDER ═══
+function tag(txt,cls){return '<span class="tag tag-'+cls+'">'+txt+'</span>';}
+
+function renderCash(){
+  var el=document.getElementById('cash-list');
+  el.innerHTML=cashData.map(function(e){
+    var s=e.dir==='+'?'+':'−'; var c=e.dir==='+'?'pos':'neg';
+    return '<div class="rrow"><div class="rrow-l"><div class="rrow-name">'+e.desc+'</div>'+
+      '<div class="rrow-sub" style="display:flex;gap:10px">'+
+      '<span>'+e.date+'</span><span style="color:var(--dim)">'+e.cat.toUpperCase()+'</span>'+
+      '<span class="tag tag-d">'+e.type.toUpperCase()+'</span></div></div>'+
+      '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+e.amt.toFixed(2)+'</div></div></div>';
   }).join('');
 }
 
-function renderTxns() {
-  var el = document.getElementById('txn-list');
-  el.className = 'tlist';
-  el.innerHTML = txnData.map(function(e) {
-    var s = e.dir==='+' ? '+' : '−';
-    var c = e.dir==='+' ? 'pos' : 'neg';
-    return '<div class="trow jb"><div><div style="font-weight:500">'+e.desc+'</div>'+
-      '<div style="font-size:11.5px;color:var(--mid);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
-      '<span>'+e.date+'</span><span class="pill" style="font-size:10.5px">'+e.cat+'</span></div></div>'+
-      '<span class="'+c+'" style="font-size:15px;white-space:nowrap;margin-left:12px">'+s+'$'+e.amt.toFixed(2)+'</span></div>';
+function renderTxns(){
+  var el=document.getElementById('txn-list');
+  el.innerHTML=txnData.map(function(e){
+    var s=e.dir==='+'?'+':'−'; var c=e.dir==='+'?'pos':'neg';
+    return '<div class="rrow"><div class="rrow-l"><div class="rrow-name">'+e.desc+'</div>'+
+      '<div class="rrow-sub"><span>'+e.date+'</span> &nbsp; <span style="color:var(--dim)">'+e.cat.toUpperCase()+'</span></div></div>'+
+      '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+e.amt.toFixed(2)+'</div></div></div>';
   }).join('');
 }
 
-function renderLoans() {
-  var el = document.getElementById('loans-list');
-  el.innerHTML = loanData.map(function(l) {
+function renderLoans(){
+  var el=document.getElementById('loans-list');
+  el.innerHTML=loanData.map(function(l){
+    var types={M:'Mortgage',A:'Auto Loan',S:'Student Loan',P:'Personal Loan',B:'Business Loan',O:'Other'};
     return '<div class="lcard">'+
-      '<div class="jb" style="margin-bottom:14px">'+
-        '<div class="row"><div style="width:36px;height:36px;border-radius:8px;background:'+l.color+'18;display:flex;align-items:center;justify-content:center;font-size:20px">'+l.icon+'</div>'+
-        '<div><div style="font-weight:500;font-size:15px">'+l.name+'</div><div style="font-size:12px;color:var(--mid)">'+l.rate+'% APR</div></div></div></div>'+
-      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">'+
-        '<div><div class="sl">Balance</div><div style="font-size:14px;font-weight:500;color:var(--red)">$'+l.bal.toLocaleString()+'</div></div>'+
-        '<div><div class="sl">Monthly</div><div style="font-size:14px;font-weight:500">$'+l.monthly.toLocaleString()+'</div></div>'+
-        '<div><div class="sl">Payoff</div><div style="font-size:14px;font-weight:500;color:var(--gld)">'+l.payoff+'</div></div></div>'+
-      '<div style="font-size:11.5px;color:var(--mid);display:flex;justify-content:space-between;margin-bottom:5px"><span>'+l.pct+'% paid off</span></div>'+
-      '<div class="pb"><div class="pf" style="width:'+l.pct+'%;background:'+l.color+'"></div></div></div>';
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">'+
+        '<div><div style="font-weight:700;font-size:14px;margin-bottom:3px">'+l.name+'</div>'+
+        '<div style="font-family:var(--fm);font-size:10px;color:var(--mid);letter-spacing:.1em">'+types[l.type].toUpperCase()+' — '+l.rate+'% APR</div></div>'+
+        '<span class="tag tag-d">'+types[l.type].toUpperCase()+'</span></div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px">'+
+        '<div><div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Balance</div><div style="font-family:var(--fm);font-size:16px;color:var(--neg)">$'+l.bal.toLocaleString()+'</div></div>'+
+        '<div><div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Monthly</div><div style="font-family:var(--fm);font-size:16px">$'+l.monthly.toLocaleString()+'</div></div>'+
+        '<div><div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:5px">Payoff</div><div style="font-family:var(--fm);font-size:16px;color:var(--gld)">'+l.payoff+'</div></div></div>'+
+      '<div style="font-family:var(--fm);font-size:9.5px;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:5px;letter-spacing:.08em"><span>'+l.pct+'% RETIRED</span><span>'+Math.round(l.bal/l.monthly)+' MO REMAINING</span></div>'+
+      '<div class="prog"><div class="progf" style="width:'+l.pct+'%;background:'+l.color+'"></div></div></div>';
   }).join('');
-  // update stats
-  var totalDebt = loanData.reduce(function(a,l){return a+l.bal;},0);
-  var totalMo = loanData.reduce(function(a,l){return a+l.monthly;},0);
-  document.getElementById('loan-total-debt').textContent = '$'+totalDebt.toLocaleString();
-  document.getElementById('loan-total-mo').textContent = '$'+totalMo.toLocaleString();
-  document.getElementById('loan-count').textContent = loanData.length;
+  var td=loanData.reduce(function(a,l){return a+l.bal;},0);
+  var tm=loanData.reduce(function(a,l){return a+l.monthly;},0);
+  document.getElementById('loan-total-debt').textContent='$'+td.toLocaleString();
+  document.getElementById('loan-total-mo').textContent='$'+tm.toLocaleString();
+  document.getElementById('loan-count-sub').textContent=loanData.length+' active liabilities';
 }
 
-function renderInvLog() {
-  var el = document.getElementById('inv-log-list');
-  el.innerHTML = invData.map(function(i) {
-    var s = i.action==='Sell' ? '+' : '−';
-    var c = i.action==='Sell' ? 'pos' : 'neg';
-    var bc = i.action==='Sell' ? 'bd br' : 'bd bg2';
-    return '<div class="trow jb"><div>'+
-      '<div style="font-weight:500">'+i.name+' · '+i.ticker+'</div>'+
-      '<div style="font-size:11.5px;color:var(--mid);margin-top:2px">'+i.date+' · '+i.qty+' '+(i.type==='Crypto'?'units':'shares')+'</div></div>'+
-      '<div style="text-align:right;margin-left:12px"><span class="'+bc+'">'+i.action+'</span>'+
-      '<div class="'+c+'" style="margin-top:3px">'+s+'$'+i.amt.toLocaleString()+'</div></div></div>';
+function renderInvLog(){
+  var el=document.getElementById('inv-log-list');
+  el.innerHTML=invData.map(function(i){
+    var s=i.action==='Sell'?'+':'−'; var c=i.action==='Sell'?'pos':'neg';
+    var tc=i.action==='Sell'?'g':'r';
+    return '<div class="rrow"><div class="rrow-l">'+
+      '<div class="rrow-name">'+i.name+' <span style="font-family:var(--fm);font-size:10.5px;color:var(--mid)">'+i.ticker+'</span></div>'+
+      '<div class="rrow-sub"><span>'+i.date+'</span> <span style="color:var(--dim)">'+i.qty+' '+(i.type==='Crypto'?'UNITS':'SHS')+'</span> <span class="tag tag-'+tc+'">'+i.action.toUpperCase()+'</span></div></div>'+
+      '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+i.amt.toLocaleString()+'</div></div></div>';
   }).join('');
 }
 
-function renderCats() {
-  document.getElementById('cats-list').innerHTML = catData.map(function(c) {
-    var over = c.spent > c.budget;
-    var pct = Math.min(100, Math.round(c.spent/c.budget*100));
-    var badge = over ? '<span class="bd br">Over $'+(c.spent-c.budget)+'</span>' :
-      c.spent===c.budget ? '<span class="bd bg2">On budget</span>' :
-      '<span class="bd bg2">$'+(c.budget-c.spent)+' left</span>';
-    return '<div class="card" style="padding:14px 16px">'+
-      '<div class="jb" style="margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">'+c.emoji+'</span><span style="font-weight:500">'+c.name+'</span></div>'+badge+'</div>'+
-      '<div class="jb" style="font-size:12.5px;color:var(--dim);margin-bottom:6px"><span>Budget: $'+c.budget.toLocaleString()+'</span>'+
-      '<span style="color:'+(over?'var(--red)':'var(--ink)')+';font-weight:500">Spent: $'+c.spent.toLocaleString()+'</span></div>'+
-      '<div class="pb"><div class="pf" style="width:'+pct+'%;background:'+(over?'var(--red)':c.color)+'"></div></div></div>';
+function renderCats(){
+  var el=document.getElementById('cats-list');
+  el.innerHTML='<div style="display:flex;flex-direction:column;gap:1px;border:1px solid var(--ln);background:var(--ln)">'+
+  catData.map(function(c){
+    var over=c.spent>c.budget;
+    var pct=Math.min(100,Math.round(c.spent/c.budget*100));
+    var badge=over?tag('OVER BUDGET','r'):c.spent===c.budget?tag('ON BUDGET','g'):tag('$'+(c.budget-c.spent)+' REMAINING','g');
+    return '<div style="background:var(--s1);padding:16px 20px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<div style="font-weight:600;letter-spacing:.02em">'+c.name+'</div>'+badge+'</div>'+
+      '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10.5px;margin-bottom:7px">'+
+        '<span style="color:var(--dim)">BUDGET $'+c.budget.toLocaleString()+'</span>'+
+        '<span style="color:'+(over?'var(--neg)':'var(--txt2)')+'">'+(over?'OVER ':'')+'$'+c.spent.toLocaleString()+' SPENT</span></div>'+
+      '<div class="prog"><div class="progf" style="width:'+pct+'%;background:'+(over?'var(--neg)':c.color)+'"></div></div></div>';
+  }).join('')+'</div>';
+}
+
+function renderDashCats(){
+  var mx=Math.max.apply(null,catData.map(function(c){return c.spent;}));
+  document.getElementById('dash-cats').innerHTML=catData.slice(0,5).map(function(c){
+    var pct=Math.round(c.spent/mx*100);
+    return '<div style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--s3)">'+
+      '<div style="font-family:var(--fm);font-size:10px;color:var(--mid);width:80px;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0">'+c.name+'</div>'+
+      '<div style="flex:1"><div class="prog" style="height:3px"><div class="progf" style="width:'+pct+'%;background:'+c.color+'"></div></div></div>'+
+      '<div style="font-family:var(--fm);font-size:12.5px;color:var(--txt2);width:60px;text-align:right;flex-shrink:0">$'+c.spent.toLocaleString()+'</div></div>';
   }).join('');
 }
 
-function renderDashCats() {
-  document.getElementById('dash-cats').innerHTML = catData.slice(0,6).map(function(c) {
-    var pct = Math.min(100, Math.round(c.spent/Math.max(...catData.map(x=>x.spent))*100));
-    return '<div style="display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.04)">'+
-      '<span style="font-size:18px;width:26px;text-align:center">'+c.emoji+'</span>'+
-      '<div style="flex:1"><div class="jb" style="margin-bottom:4px"><span>'+c.name+'</span><span style="font-weight:500">$'+c.spent.toLocaleString()+'</span></div>'+
-      '<div class="pb"><div class="pf" style="width:'+pct+'%;background:'+c.color+'"></div></div></div></div>';
-  }).join('');
-}
+// ═══ MODALS ═══
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+function bgClose(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+function flash(id,mid){var el=document.getElementById(id);el.classList.add('on');setTimeout(function(){el.classList.remove('on');closeModal(mid);},900);}
 
-// ════ MODALS ════
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-  document.body.style.overflow='';
-}
-function bgClose(e, id) { if(e.target===document.getElementById(id)) closeModal(id); }
-
-function flash(id, modalId) {
-  var el = document.getElementById(id);
-  el.classList.add('on');
-  setTimeout(function(){ el.classList.remove('on'); closeModal(modalId); }, 1100);
-}
-
-// ════ SUBMIT HANDLERS ════
-function saveCash() {
-  var desc = document.getElementById('c-desc').value.trim();
-  var amt  = parseFloat(document.getElementById('c-amt').value);
-  if (!desc || !amt || isNaN(amt)) { document.getElementById('c-desc').focus(); return; }
-  var d = new Date(document.getElementById('c-date').value);
-  var ds = isNaN(d)?'Today':d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  cashData.unshift({date:ds, desc:desc, cat:document.getElementById('c-cat').value,
-    type:document.getElementById('c-type').value, dir:document.getElementById('c-dir').value, amt:amt});
+// ═══ SUBMIT ═══
+function saveCash(){
+  var desc=document.getElementById('c-desc').value.trim();
+  var amt=parseFloat(document.getElementById('c-amt').value);
+  if(!desc||!amt||isNaN(amt)){document.getElementById('c-desc').focus();return;}
+  var d=new Date(document.getElementById('c-date').value);
+  var ds=isNaN(d.getTime())?'TODAY':d.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+  cashData.unshift({date:ds,desc:desc,cat:document.getElementById('c-cat').value,type:document.getElementById('c-type').value,dir:document.getElementById('c-dir').value,amt:amt});
   renderCash();
-  document.getElementById('c-desc').value=''; document.getElementById('c-amt').value='';
+  document.getElementById('c-desc').value='';document.getElementById('c-amt').value='';
   flash('c-flash','m-cash');
 }
 
-function loanPayoff(bal,rate,term) {
-  var r=rate/100/12; if(r===0) return {mo:bal/term,months:term};
+function loanCalc(bal,rate,term){
+  var r=rate/100/12;if(r===0)return{mo:bal/term,months:term};
   var mo=bal*r*Math.pow(1+r,term)/(Math.pow(1+r,term)-1);
   var months=Math.ceil(-Math.log(1-bal*r/mo)/Math.log(1+r));
-  return {mo:mo, months:months};
+  return{mo:mo,months:months};
 }
-function loanPreview() {
+function loanPreview(){
   var bal=parseFloat(document.getElementById('l-bal').value);
   var rate=parseFloat(document.getElementById('l-rate').value);
   var term=parseInt(document.getElementById('l-term').value);
   var box=document.getElementById('l-preview');
-  if (!bal||!rate||!term) { box.classList.remove('on'); return; }
-  var lp=loanPayoff(bal,rate,term);
-  var d=new Date(); d.setMonth(d.getMonth()+lp.months);
-  var payoff=d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  if(!bal||!rate||!term){box.classList.remove('on');return;}
+  var lp=loanCalc(bal,rate,term);
+  var d=new Date();d.setMonth(d.getMonth()+lp.months);
+  var payoff=d.toLocaleDateString('en-US',{month:'short',year:'numeric'}).toUpperCase();
   var interest=Math.max(0,Math.round(lp.mo*lp.months-bal));
   box.classList.add('on');
-  box.innerHTML='📅 Payoff: <strong>'+payoff+'</strong> &nbsp;·&nbsp; 💵 Monthly: <strong>$'+Math.round(lp.mo).toLocaleString()+'</strong> &nbsp;·&nbsp; 💸 Interest: <strong>$'+interest.toLocaleString()+'</strong>';
+  box.innerHTML='PAYOFF: <strong style="color:var(--gld)">'+payoff+'</strong> &nbsp; MONTHLY: <strong style="color:var(--txt)">$'+Math.round(lp.mo).toLocaleString()+'</strong> &nbsp; TOTAL INTEREST: <strong style="color:var(--neg)">$'+interest.toLocaleString()+'</strong>';
 }
-function saveLoan() {
+function saveLoan(){
   var name=document.getElementById('l-name').value.trim();
   var bal=parseFloat(document.getElementById('l-bal').value);
   var rate=parseFloat(document.getElementById('l-rate').value);
   var term=parseInt(document.getElementById('l-term').value);
   var orig=parseFloat(document.getElementById('l-orig').value)||bal;
-  if (!name||!bal||!rate||!term) { document.getElementById('l-name').focus(); return; }
-  var lp=loanPayoff(bal,rate,term);
-  var d=new Date(); d.setMonth(d.getMonth()+lp.months);
+  if(!name||!bal||!rate||!term){document.getElementById('l-name').focus();return;}
+  var lp=loanCalc(bal,rate,term);
+  var d=new Date();d.setMonth(d.getMonth()+lp.months);
   var payoff=d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
   var pct=Math.max(0,Math.min(98,Math.round((1-bal/orig)*100)));
-  var icon=document.getElementById('l-type').value;
-  var colors={'🏠':'#1a5fa8','🚗':'#2d7a4f','🎓':'#7a5f28','💳':'#b83232','🏢':'#6b3fa8','💰':'#6b6560'};
-  loanData.push({name:name,icon:icon,bal:bal,monthly:Math.round(lp.mo),rate:rate,payoff:payoff,pct:pct,color:colors[icon]||'#6b6560'});
+  var colors={M:'#60a5fa',A:'#4ade80',S:'#fbbf24',P:'#f87171',B:'#c8f542',O:'#94a3b8'};
+  var t=document.getElementById('l-type').value;
+  loanData.push({name:name,type:t,bal:bal,monthly:Math.round(lp.mo),rate:rate,payoff:payoff,pct:pct,color:colors[t]||'#94a3b8'});
   renderLoans();
   ['l-name','l-orig','l-bal','l-rate','l-term'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('l-preview').classList.remove('on');
   flash('l-flash','m-loan');
 }
 
-function invCalc() {
+function invCalc(){
   var q=parseFloat(document.getElementById('i-qty').value);
   var p=parseFloat(document.getElementById('i-price').value);
-  if(q&&p) document.getElementById('i-total').value=(q*p).toFixed(2);
+  if(q&&p)document.getElementById('i-total').value=(q*p).toFixed(2);
 }
-function invCalcRev() {
+function invCalcRev(){
   var t=parseFloat(document.getElementById('i-total').value);
   var p=parseFloat(document.getElementById('i-price').value);
-  if(t&&p) document.getElementById('i-qty').value=(t/p).toFixed(4);
+  if(t&&p)document.getElementById('i-qty').value=(t/p).toFixed(4);
 }
-function saveInvest() {
+function saveInvest(){
   var ticker=document.getElementById('i-ticker').value.trim().toUpperCase();
   var total=parseFloat(document.getElementById('i-total').value);
   var qty=parseFloat(document.getElementById('i-qty').value)||0;
-  if (!ticker||!total||isNaN(total)) { document.getElementById('i-ticker').focus(); return; }
-  var dval=document.getElementById('i-date').value;
-  var d=new Date(dval); var ds=isNaN(d)?'Today':d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  invData.unshift({date:ds,name:document.getElementById('i-notes').value||ticker,ticker:ticker,
-    type:document.getElementById('i-type').value,action:document.getElementById('i-action').value,qty:qty,amt:total});
+  if(!ticker||!total||isNaN(total)){document.getElementById('i-ticker').focus();return;}
+  var dv=document.getElementById('i-date').value;
+  var d=new Date(dv);var ds=isNaN(d.getTime())?'TODAY':d.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+  invData.unshift({date:ds,name:document.getElementById('i-notes').value||ticker,ticker:ticker,type:document.getElementById('i-type').value,action:document.getElementById('i-action').value,qty:qty,amt:total});
   renderInvLog();
   ['i-ticker','i-qty','i-price','i-total','i-notes'].forEach(function(id){document.getElementById(id).value='';});
   flash('i-flash','m-invest');
 }
 
-function pickClr(el) {
-  document.querySelectorAll('.clr-pick').forEach(function(c){c.classList.remove('on');});
-  el.classList.add('on');
-  selColor=el.getAttribute('data-c');
+function pickClr(el){
+  document.querySelectorAll('.clr-swatch').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');selColor=el.getAttribute('data-c');
 }
-function saveCat() {
+function saveCat(){
   var name=document.getElementById('k-name').value.trim();
   var budget=parseFloat(document.getElementById('k-budget').value);
-  var emoji=document.getElementById('k-emoji').value.trim()||'📦';
-  if (!name||!budget||isNaN(budget)) { document.getElementById('k-name').focus(); return; }
-  catData.push({emoji:emoji,name:name,budget:budget,spent:0,color:selColor});
-  renderCats(); renderDashCats();
-  document.getElementById('k-name').value=''; document.getElementById('k-budget').value=''; document.getElementById('k-emoji').value='';
+  if(!name||!budget||isNaN(budget)){document.getElementById('k-name').focus();return;}
+  catData.push({name:name,budget:budget,spent:0,color:selColor});
+  renderCats();renderDashCats();
+  document.getElementById('k-name').value='';document.getElementById('k-budget').value='';
   flash('k-flash','m-cat');
 }
 
-// ════ NAV ════
-function go(id,el,title) {
+// ═══ NAV ═══
+function go(id,el,title){
   document.querySelectorAll('.pg').forEach(function(p){p.style.display='none';p.classList.remove('on');});
   document.querySelectorAll('.ni,.mnb').forEach(function(b){b.classList.remove('on');});
-  var s=document.getElementById(id); s.style.display='block'; s.classList.add('on');
-  if(el) el.classList.add('on');
-  if(title) document.getElementById('mob-title').textContent=title;
+  var s=document.getElementById(id);s.style.display='block';s.classList.add('on');
+  if(el)el.classList.add('on');
+  if(title)document.getElementById('mob-title').textContent=title.toUpperCase();
 }
-function scTab(id,el) {
+function scTab(id,el){
   ['sc-chat','sc-saved','sc-compare'].forEach(function(x){document.getElementById(x).style.display='none';});
   var t=document.getElementById('sc-'+id);
-  t.style.display=(id==='chat')?'flex':(id==='saved'?'flex':'block');
-  if(id==='saved') t.style.flexDirection='column';
+  t.style.display=(id==='chat')?'flex':(id==='saved'?'block':'block');
   document.querySelectorAll('#scenarios .tab').forEach(function(t){t.classList.remove('on');});
-  if(el) el.classList.add('on');
+  if(el)el.classList.add('on');
 }
-function invTab(id,el) {
+function invTab(id,el){
   ['inv-ov','inv-schw','inv-log'].forEach(function(x){document.getElementById(x).style.display='none';});
   document.getElementById('inv-'+id).style.display='block';
   document.querySelectorAll('#investments .tab').forEach(function(t){t.classList.remove('on');});
-  if(el) el.classList.add('on');
+  if(el)el.classList.add('on');
 }
-function toggleMore() {
+function toggleMore(){
   document.getElementById('mdrawer').classList.toggle('open');
   document.getElementById('dov').classList.toggle('open');
 }
-function closeMore() {
+function closeMore(){
   document.getElementById('mdrawer').classList.remove('open');
   document.getElementById('dov').classList.remove('open');
 }
 
-// ════ CHAT ════
+// ═══ CHAT ═══
 var chatReplies=[
-  "Based on your numbers:<br><br>Your dining averages <strong>$680/month</strong>. This change would add <strong>+$4,080</strong> to your year-end balance. Scenario saved.",
-  "With your mortgage at <strong>$248,200 and 6.25% APR</strong>, an extra $300/month saves <strong>$41,200 in interest</strong> and pays off <strong>4 years earlier</strong>. Scenario saved.",
-  "Modeling a $1,500/month income boost: monthly net goes from <strong>$1,520 to $3,020</strong>. Over 5 years that's <strong>+$90,000</strong> extra. Scenario saved."
+  "Modeling against actuals:<br><br>Dining avg: <strong>$680/mo</strong>. 50% reduction frees <strong>$340/mo</strong>.<br><br>Applied as mortgage principal:<br>— Payoff: Nov 2046 → Oct 2042 <span style='color:var(--acc)'>(4 yr earlier)</span><br>— Interest saved: <strong>$38,400</strong><br>— FY2026 impact: <strong>+$4,080</strong>",
+  "Mortgage analysis: <strong>$248,200 outstanding at 6.25% APR</strong>.<br><br>Extra $300/mo principal application:<br>— Interest saved: <strong>$41,200</strong><br>— Payoff advance: <strong>4 years</strong><br>— Break-even: immediate",
+  "Income scenario: <strong>+$1,500/mo gross</strong>.<br><br>Monthly net: <strong>$1,520 → $3,020</strong><br>Annual delta: <strong>+$18,000</strong><br>5-year accretion: <strong>+$90,000</strong>"
 ];
 var chatIdx=0;
-function sendMsg() {
+function sendMsg(){
   var inp=document.getElementById('chatinp');
   var box=document.getElementById('chatbox');
-  var txt=inp.value.trim(); if(!txt) return; inp.value='';
-  var u=document.createElement('div'); u.className='msg u';
-  u.innerHTML='<div class="ava u">JG</div><div class="bub u">'+txt+'</div>';
+  var txt=inp.value.trim();if(!txt)return;inp.value='';
+  var u=document.createElement('div');u.className='msg u';
+  u.innerHTML='<div class="ava">JG</div><div class="bub u">'+txt+'</div>';
   box.appendChild(u);
-  var t=document.createElement('div'); t.className='msg';
-  t.innerHTML='<div class="ava">A</div><div class="bub a" style="padding:14px"><div style="display:flex;gap:5px">'+
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease infinite"></div>'+
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease infinite;animation-delay:.22s"></div>'+
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--sm);animation:pulse 1.3s ease infinite;animation-delay:.44s"></div></div></div>';
-  box.appendChild(t); box.scrollTop=box.scrollHeight;
+  var t=document.createElement('div');t.className='msg';
+  t.innerHTML='<div class="ava acc">AI</div><div class="bub a" style="padding:12px 14px"><div style="display:flex;gap:4px">'+
+    '<div style="width:5px;height:5px;border-radius:50%;background:var(--mid);animation:pulse 1.3s ease infinite"></div>'.repeat(3)+'</div></div>';
+  box.appendChild(t);box.scrollTop=box.scrollHeight;
   setTimeout(function(){
     box.removeChild(t);
-    var r=chatReplies[chatIdx%chatReplies.length]; chatIdx++;
-    var a=document.createElement('div'); a.className='msg';
-    a.innerHTML='<div class="ava">A</div><div class="bub a">'+r+'<div class="scnote" style="margin-top:10px">✓ <strong>Scenario saved</strong> — see Saved tab</div></div>';
-    box.appendChild(a); box.scrollTop=box.scrollHeight;
-  },1500);
+    var r=chatReplies[chatIdx%chatReplies.length];chatIdx++;
+    var a=document.createElement('div');a.className='msg';
+    a.innerHTML='<div class="ava acc">AI</div><div class="bub a">'+r+'<div class="scnote" style="margin-top:10px">MODEL SAVED — See Saved Models tab</div></div>';
+    box.appendChild(a);box.scrollTop=box.scrollHeight;
+  },1400);
 }
 document.addEventListener('keydown',function(e){
   if(e.target.id==='chatinp'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
 });
 
-// ════ CSV EXPORT ════
-function downloadCSV() {
+// ═══ CSV ═══
+function downloadCSV(){
   var rows=[['Month','Income','Expenses','Net'],
     ['January 2025',7500,5820,1680],['February 2025',7500,4182,3318],
     ['March 2025',7500,6120,1380],['April 2025',7500,5980,1520],
@@ -995,20 +1219,14 @@ function downloadCSV() {
     ['November 2025',7500,5960,1540],['December 2025',7500,5960,1540]
   ];
   var csv=rows.map(function(r){return r.join(',');}).join('\n');
-  var a=document.createElement('a');
-  a.href='data:text/csv,'+encodeURIComponent(csv);
-  a.download='arca-2025-annual-report.csv'; a.click();
+  var a=document.createElement('a');a.href='data:text/csv,'+encodeURIComponent(csv);
+  a.download='arca-annual-report-2025.csv';a.click();
 }
 
-// ════ INIT ════
+// ═══ INIT ═══
 var today=new Date().toISOString().split('T')[0];
 ['c-date','i-date'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=today;});
-renderCash();
-renderTxns();
-renderLoans();
-renderInvLog();
-renderCats();
-renderDashCats();
+renderCash();renderTxns();renderLoans();renderInvLog();renderCats();renderDashCats();
 </script>
 </body>
 </html>
