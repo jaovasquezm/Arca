@@ -195,7 +195,7 @@ select.finp{cursor:pointer}
 .mo{display:none;position:fixed;inset:0;z-index:200;background:rgba(26,24,20,.4);backdrop-filter:blur(3px);align-items:flex-end;justify-content:center}
 .mo.open{display:flex;animation:mofade .15s ease}
 @keyframes mofade{from{opacity:0}to{opacity:1}}
-@media(min-width:701px){.mo{align-items:center}}
+@media(min-width:701px){.mo{align-items:center}.hh-desktop-note{display:inline !important}}
 .mbox{background:var(--s1);border:1px solid var(--ln);width:100%;max-width:520px;padding:0;max-height:90dvh;overflow-y:auto;animation:moSlide .18s ease;border-radius:6px;box-shadow:var(--shadow-md)}
 @keyframes moSlide{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mhd{padding:20px 24px;border-bottom:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between}
@@ -269,6 +269,13 @@ select.finp{cursor:pointer}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:700px){
+  /* Profile page two-col → single col */
+  .prof-two-col{grid-template-columns:1fr !important}
+  /* Conversion table 4-col → 2-col */
+  .conv-table-4{grid-template-columns:repeat(2,1fr) !important}
+  /* More drawer 4-col → 3-col on small screens */
+  .mdb-grid{grid-template-columns:repeat(3,1fr) !important}
+
   .sb{display:none}
   .mob-hd{display:flex}
   .mob-nav{display:flex}
@@ -290,6 +297,32 @@ select.finp{cursor:pointer}
 
 @keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
 
+/* UPLOAD LOG */
+.ul-row-flagged td{background:var(--negL) !important}
+.ul-row-flagged .ul-fname{color:var(--neg)}
+.ul-confirm{display:none;background:var(--negL);border-top:1px solid var(--neg)}
+.ul-confirm.open{display:table-row}
+.ul-confirm td{padding:12px 16px !important;border-bottom:1px solid var(--ln) !important}
+.ul-del-btn{padding:5px 14px;font-size:11px;font-weight:600;letter-spacing:.04em;border-radius:3px;cursor:pointer;border:none;transition:all .12s}
+.ul-del-confirm{background:var(--neg);color:#fff}.ul-del-confirm:hover{background:#b91c1c}
+.ul-del-cancel{background:var(--s3);color:var(--txt2);margin-left:8px}.ul-del-cancel:hover{background:var(--s4)}
+.ul-flag-btn{padding:4px 10px;font-size:10.5px;font-weight:500;letter-spacing:.03em;border-radius:3px;cursor:pointer;border:1px solid var(--gld);color:var(--gld);background:transparent;transition:all .12s}
+.ul-flag-btn:hover{background:var(--gldL)}
+.ul-flag-btn.flagged{background:var(--gldL);color:var(--gld)}
+
+/* BILLING CYCLE */
+.cc-timeline{display:flex;align-items:center;margin:16px 0;position:relative}
+.cc-tnode{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.cc-tnode-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor}
+.cc-tnode-label{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.cc-tnode-date{font-size:11px;color:var(--txt2)}
+.cc-tline{flex:1;height:2px;background:var(--ln);margin:0 8px;position:relative;top:-10px}
+.cc-tline-fill{height:100%;border-radius:1px;transition:width .4s ease}
+.cc-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln);border-radius:var(--radius);overflow:hidden;margin:16px 0}
+.cc-card{background:var(--s1);padding:14px 18px}
+.cc-card-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:6px;font-weight:500}
+.cc-card-val{font-size:16px;font-weight:700;letter-spacing:-.02em}
+
 /* FORECAST MONTH DETAIL */
 .fc-expand-btn{background:none;border:none;cursor:pointer;color:var(--dim);font-size:11px;padding:2px 6px;transition:color .1s;line-height:1;border-radius:2px}
 .fc-expand-btn:hover,.fc-expand-btn.open{color:var(--acc);background:var(--accL)}
@@ -307,9 +340,91 @@ select.finp{cursor:pointer}
 .fc-inc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 20px 7px 0;border-bottom:1px solid var(--s3)}
 .fc-section-hd{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);padding:10px 20px 6px 0;font-weight:500}
 @keyframes tick{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+
+/* ═══ UPLOAD LOG ═══ */
+.ul-confirm{display:none;background:var(--negL)}
+.ul-confirm.open{display:table-row}
+.ul-confirm td{padding:10px 18px !important;border-bottom:1px solid var(--neg) !important}
+.ul-row-flagged{background:var(--gldL)}
+.ul-flag-btn{background:none;border:1px solid var(--ln);color:var(--mid);font-size:11px;padding:4px 10px;border-radius:3px;cursor:pointer;font-weight:500;margin-right:6px;transition:all .12s}
+.ul-flag-btn:hover{border-color:var(--gld);color:var(--gld)}
+.ul-flag-btn.flagged{border-color:var(--gld);color:var(--gld);background:var(--gldL)}
+.ul-del-btn{font-size:11px;padding:5px 12px;border-radius:3px;cursor:pointer;font-weight:500;border:1px solid}
+.ul-del-confirm{background:var(--neg);color:#fff;border-color:var(--neg)}
+.ul-del-cancel{background:none;color:var(--mid);border-color:var(--ln)}
+.del-btn{background:none;border:1px solid var(--ln);color:var(--mid);font-size:11px;padding:4px 10px;border-radius:3px;cursor:pointer;font-weight:500}
+.del-btn:hover{border-color:var(--neg);color:var(--neg)}
+
+/* ═══ BILLING CYCLE ═══ */
+#cc-cycle-banner{transition:all .2s}
+
 </style>
 </head>
 <body>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  AUTH GATE — PRODUCTION ARCHITECTURE NOTE                                ║
+  ║                                                                           ║
+  ║  In production this #auth-gate sits BEFORE the #app shell in the DOM.   ║
+  ║  On page load, only #auth-gate is visible; #app is hidden.               ║
+  ║                                                                           ║
+  ║  Flow:                                                                    ║
+  ║    1. User lands on the page → sees only the sign-in screen               ║
+  ║    2. POST /api/auth/login → server returns JWT                           ║
+  ║    3. Store JWT in httpOnly cookie (server-side) or memory (client-side)  ║
+  ║    4. hideAuthGate() → fade out gate, reveal #app                        ║
+  ║    5. On subsequent visits, validate cookie/token server-side            ║
+  ║       before serving the page — skip the gate entirely                   ║
+  ║                                                                           ║
+  ║  In this PREVIEW the "Sign In" button calls previewSignIn() which        ║
+  ║  simply hides the gate so you can explore the app.                       ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<div id="auth-gate" style="
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  transition:opacity .3s ease;
+">
+  <div class="auth-box" style="width:100%;max-width:380px">
+    <div class="auth-hd">
+      <div class="auth-logo">Arca</div>
+      <div class="auth-sub">Private financial intelligence — Secure access</div>
+    </div>
+    <div class="auth-body">
+      <div style="display:flex;margin-bottom:20px;border:1px solid var(--ln);border-radius:var(--radius);overflow:hidden">
+        <button id="auth-tab-in"  onclick="authTab('in')"  style="flex:1;padding:9px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;background:var(--acc);color:#fff;transition:all .12s">Sign In</button>
+        <button id="auth-tab-up"  onclick="authTab('up')"  style="flex:1;padding:9px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;background:transparent;color:var(--mid);transition:all .12s">Register</button>
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Email Address</label>
+        <input class="finp" id="auth-email" type="email" value="garcia@example.com" placeholder="you@example.com">
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Password</label>
+        <input class="finp" id="auth-pass" type="password" value="Secure123!" placeholder="Password">
+        <div class="pwd-strength" style="margin-top:8px">
+          <div class="pwd-bar" style="background:var(--pos)"></div>
+          <div class="pwd-bar" style="background:var(--pos)"></div>
+          <div class="pwd-bar" style="background:var(--pos)"></div>
+          <div class="pwd-bar" style="background:var(--s3)"></div>
+        </div>
+        <div class="pwd-label">Strong</div>
+      </div>
+    </div>
+    <div class="auth-ft">
+      <!-- PREVIEW: calls previewSignIn(). Production: submit to /api/auth/login -->
+      <button class="btn btn-acc" onclick="previewSignIn()" style="width:100%;justify-content:center;padding:12px;font-size:13px;border-radius:var(--radius)">Sign In</button>
+      <div style="font-size:11px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6">
+        This is a <strong style="color:var(--acc)">preview</strong> — click Sign In to explore the app.
+        <br>In production, credentials are verified server-side before access is granted.
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 
 <!-- ═══ SIDEBAR ═══ -->
@@ -349,7 +464,6 @@ select.finp{cursor:pointer}
     <button class="ni" onclick="go('recon',this,'Reconciliation')"><span class="ni-dot"></span>Reconciliation</button>
     <button class="ni" onclick="go('reports',this,'Annual Report')"><span class="ni-dot"></span>Annual Report</button>
     <button class="ni" onclick="go('cats',this,'Categories')"><span class="ni-dot"></span>Categories</button>
-    <button class="ni" onclick="go('auth',this,'Access')"><span class="ni-dot"></span>Access</button>
     <button class="ni" onclick="go('profile',this,'User Profile')"><span class="ni-dot"></span>User Profile</button>
     <button class="ni" onclick="go('household',this,'Household')"><span class="ni-dot"></span>Household</button>
   </div>
@@ -378,6 +492,7 @@ select.finp{cursor:pointer}
 </div>
 <div class="drawer-ov" id="dov" onclick="closeMore()"></div>
 <div class="more-drawer" id="mdrawer">
+  <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500;margin-bottom:10px;padding:0 2px">All Pages</div>
   <div class="mdb-grid">
     <button class="mdb" onclick="go('networth',null,'Net Worth');closeMore()"><span class="mdb-ic">NW</span>Net Worth</button>
     <button class="mdb" onclick="go('upload',null,'Import');closeMore()"><span class="mdb-ic">UP</span>Import</button>
@@ -387,6 +502,8 @@ select.finp{cursor:pointer}
     <button class="mdb" onclick="go('recon',null,'Reconciliation');closeMore()"><span class="mdb-ic">RC</span>Recon</button>
     <button class="mdb" onclick="go('reports',null,'Report');closeMore()"><span class="mdb-ic">AR</span>Report</button>
     <button class="mdb" onclick="go('cats',null,'Categories');closeMore()"><span class="mdb-ic">CT</span>Categories</button>
+    <button class="mdb" onclick="go('household',null,'Household');closeMore()"><span class="mdb-ic">HH</span>Household</button>
+    <button class="mdb" onclick="go('profile',null,'User Profile');closeMore()"><span class="mdb-ic">ME</span>Profile</button>
   </div>
 </div>
 
@@ -484,22 +601,42 @@ select.finp{cursor:pointer}
 
 <!-- ══ IMPORT ══ -->
 <div id="upload" class="pg">
-  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Data Ingestion</div><div class="ph-title">Import Statement</div></div></div>
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Data Ingestion</div><div class="ph-title">Import Statement</div></div>
+  </div>
   <div class="pc">
-    <div class="dz" style="margin-bottom:20px">
+
+    <!-- Drop zone -->
+    <div class="dz" style="margin-bottom:24px" onclick="simulateUpload()">
       <div class="dz-icon">UPLOAD</div>
       <div class="dz-title">Drop statement file or click to select</div>
       <div class="dz-sub" style="margin-top:4px">CSV / XLSX — Chase, AmEx, BofA, Citi, Capital One</div>
     </div>
+
+    <!-- Upload Log -->
     <div class="panel">
-      <div class="panel-hd"><div class="panel-title">Processing Pipeline</div></div>
-      <div class="panel-body" style="display:flex;flex-direction:column;gap:14px">
-        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">01</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Column Detection</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Date, description, and amount fields located automatically regardless of bank format</div></div></div>
-        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">02</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Rule Matching</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Known merchant patterns categorized immediately — zero manual intervention</div></div></div>
-        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">03</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">AI Classification</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Ambiguous transactions routed to Claude for intelligent categorization</div></div></div>
-        <div style="display:flex;gap:14px"><div style="font-family:var(--fm);font-size:10px;color:var(--acc);flex-shrink:0;width:20px">04</div><div><div style="font-weight:600;font-size:13px;margin-bottom:2px">Deduplication</div><div style="font-family:var(--fm);font-size:11px;color:var(--mid)">Re-importing is safe — duplicate entries detected and silently discarded</div></div></div>
+      <div class="panel-hd" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="panel-title">Upload History</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:2px" id="ul-log-summary">— files tracked</div>
+        </div>
+        <div style="font-size:11px;color:var(--mid)">Flag incorrect files · Delete removes only the log record</div>
       </div>
+      <table class="tbl" id="upload-log-table">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Uploaded by</th>
+            <th>Date &amp; Time</th>
+            <th>Rows</th>
+            <th>Status</th>
+            <th style="text-align:right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="upload-log-body"></tbody>
+      </table>
     </div>
+
   </div>
 </div>
 
@@ -526,7 +663,28 @@ select.finp{cursor:pointer}
         </div>
       </div>
     </div>
-    <div class="rlist" id="txn-list"></div>
+        <!-- Billing Cycle Banner — shown when CC transactions exist -->
+    <div id="cc-cycle-banner" style="margin-bottom:16px;background:var(--accL);border:1px solid var(--acc);border-left:3px solid var(--acc);border-radius:0 var(--radius) var(--radius) 0;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:3px" id="cc-banner-cycle-name">Current Cycle</div>
+        <div style="font-size:12px;color:var(--txt2)" id="cc-banner-cycle-dates"></div>
+      </div>
+      <div style="display:flex;gap:24px;align-items:center">
+        <div style="text-align:center">
+          <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.08em">Charged so far</div>
+          <div style="font-size:18px;font-weight:700;color:var(--neg)" id="cc-banner-charged">$0</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.08em">Payment due</div>
+          <div style="font-size:18px;font-weight:700;color:var(--acc)" id="cc-banner-due-date">—</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.08em">Days to close</div>
+          <div style="font-size:18px;font-weight:700;color:var(--gld)" id="cc-banner-days">—</div>
+        </div>
+      </div>
+    </div>
+<div class="rlist" id="txn-list"></div>
   </div>
 </div>
 
@@ -785,36 +943,6 @@ select.finp{cursor:pointer}
   </div>
   <div class="pc"><div id="cats-list"></div></div>
 </div>
-
-<!-- ══ ACCESS ══ -->
-<div id="auth" class="pg">
-  <div class="auth-wrap">
-    <div class="auth-box">
-      <div class="auth-hd">
-        <div class="auth-logo">Arca</div>
-        <div class="auth-sub">Private Financial Intelligence — Secure Access</div>
-      </div>
-      <div class="auth-body">
-        <div style="display:flex;margin-bottom:20px;border:1px solid var(--ln)">
-          <button style="flex:1;padding:9px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:none;background:var(--acc);color:#fff;cursor:pointer;font-weight:600">Sign In</button>
-          <button style="flex:1;padding:9px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;border:none;background:transparent;color:var(--mid);cursor:pointer">Register</button>
-        </div>
-        <div class="fgrp"><label class="flbl">Email Address</label><input class="finp" value="garcia@example.com" type="email"></div>
-        <div class="fgrp">
-          <label class="flbl">Password</label>
-          <input class="finp" type="password" value="Secure123!">
-          <div class="pwd-strength"><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div><div class="pwd-bar" style="background:var(--pos)"></div></div>
-          <div class="strengths"><span class="stchk">+ 8 chars</span><span class="stchk">+ Uppercase</span><span class="stchk">+ Number</span><span class="stchk">+ Symbol</span><span style="font-family:var(--fm);font-size:10px;color:var(--pos);margin-left:auto">Strong</span></div>
-        </div>
-      </div>
-      <div class="auth-ft">
-        <button class="btn btn-acc" style="width:100%;justify-content:center;padding:12px;font-size:13px" onclick="openModal('m-signin')">Authenticate</button>
-      </div>
-      <div style="padding:12px 32px;font-family:var(--fm);font-size:9.5px;color:var(--dim);letter-spacing:.06em">5 failed attempts triggers 15-minute lockout. Invite code required for registration.</div>
-    </div>
-  </div>
-</div>
-
 <!-- ══ PROFILE ══ -->
 <div id="profile" class="pg">
   <div class="ph">
@@ -828,7 +956,7 @@ select.finp{cursor:pointer}
       LOADING EXCHANGE RATE...
     </div>
 
-    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:20px">
+    <div class="prof-two-col" style="display:grid;grid-template-columns:1.2fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:20px">
       <!-- LEFT: Identity -->
       <div style="background:var(--s1);padding:24px">
         <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Identity</div>
@@ -894,10 +1022,69 @@ select.finp{cursor:pointer}
           <div><label class="flbl">Amount</label><input class="finp" type="number" id="p-conv-amt" placeholder="1000" oninput="updateConvTable()" style="width:140px"></div>
           <div style="font-family:var(--fm);font-size:10px;color:var(--dim);padding-bottom:12px">Enter any amount to convert</div>
         </div>
-        <div id="p-conv-table" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)"></div>
+        <div id="p-conv-table" class="conv-table-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)"></div>
       </div>
     </div>
 
+
+    <!-- ── BILLING CYCLE SETTINGS ─────────────────────────────── -->
+    <div style="margin-top:20px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--radius);overflow:hidden">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);font-weight:500">Credit Card Billing Cycle</div>
+        <span class="tag tag-b">Cash flow planning</span>
+      </div>
+      <div style="padding:20px">
+        <div style="font-size:12px;color:var(--mid);margin-bottom:18px;line-height:1.6;padding:10px 14px;background:var(--accL);border-left:2px solid var(--acc);border-radius:0 3px 3px 0">
+          Charges made between the <strong id="cc-cycle-explain-prev"></strong> and <strong id="cc-cycle-explain-close"></strong> of each month form one billing cycle, paid on the <strong id="cc-cycle-explain-pay"></strong>. Arca uses these dates to group spending and place the payment on the correct day in your cash flow forecast.
+        </div>
+        <div class="fg2" style="margin-bottom:16px">
+          <div>
+            <label class="flbl">Cycle closes on (day of month)</label>
+            <input class="finp" type="number" id="cc-close-day" min="1" max="31" value="21" oninput="updateCycleExplain()">
+            <div style="font-size:11px;color:var(--dim);margin-top:5px">Statement is locked on this date each month</div>
+          </div>
+          <div>
+            <label class="flbl">Payment due on (day of month)</label>
+            <input class="finp" type="number" id="cc-pay-day" min="1" max="31" value="26" oninput="updateCycleExplain()">
+            <div style="font-size:11px;color:var(--dim);margin-top:5px">When you pay — aligns with income arrival</div>
+          </div>
+        </div>
+        <div class="fg2" style="margin-bottom:0">
+          <div>
+            <label class="flbl">Card nickname</label>
+            <input class="finp" type="text" id="cc-nickname" value="Visa Rewards" placeholder="e.g. Visa Rewards">
+          </div>
+          <div>
+            <label class="flbl">Income source covering payment</label>
+            <select class="finp" id="cc-income-source">
+              <option value="salary">Salary (26th)</option>
+              <option value="freelance">Freelance Income</option>
+              <option value="manual">Manual / Variable</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Live cycle preview -->
+        <div id="cc-cycle-preview" style="margin-top:20px;background:var(--s2);border:1px solid var(--ln);border-radius:var(--radius);padding:20px">
+          <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:500;margin-bottom:14px">Current Cycle Preview</div>
+
+          <!-- Visual timeline -->
+          <div id="cc-timeline-wrap" style="margin-bottom:18px"></div>
+
+          <!-- 3-card stat grid -->
+          <div class="cc-card-grid" id="cc-cycle-cards"></div>
+
+          <!-- Explanation text -->
+          <div style="margin-top:14px;font-size:11.5px;color:var(--txt2);line-height:1.7;padding:12px 14px;background:var(--s1);border:1px solid var(--ln);border-radius:var(--radius)" id="cc-cycle-note"></div>
+
+          <!-- How Arca uses this -->
+          <div style="margin-top:12px;padding:12px 14px;border-left:3px solid var(--acc);background:var(--accL);border-radius:0 var(--radius) var(--radius) 0">
+            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);font-weight:600;margin-bottom:6px">How Arca uses this</div>
+            <div id="cc-arca-note" style="font-size:11.5px;color:var(--txt2);line-height:1.7"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="profile-saved-banner" style="display:none;margin-top:16px;padding:11px 16px;background:var(--s2);border-left:2px solid var(--acc);font-family:var(--fm);font-size:10.5px;color:var(--acc);letter-spacing:.08em">
       PROFILE SAVED — EXCHANGE RATE APPLIED GLOBALLY
     </div>
@@ -920,7 +1107,7 @@ select.finp{cursor:pointer}
     <!-- Member pills -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap">
       <div id="hh-member-pills" style="display:flex;gap:8px"></div>
-      <span style="margin-left:auto;font-size:11px;color:var(--dim)">Both members see the same data</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--dim);display:none" class="hh-desktop-note">Both members see the same data</span>
     </div>
 
     <!-- Stats -->
@@ -1112,6 +1299,29 @@ select.finp{cursor:pointer}
 </div>
 
 <script>
+// ── AUTH GATE ─────────────────────────────────────────────────────────────
+function previewSignIn() {
+  var gate = document.getElementById('auth-gate');
+  if (!gate) return;
+  gate.style.opacity = '0';
+  gate.style.pointerEvents = 'none';
+  setTimeout(function() { gate.style.display = 'none'; }, 320);
+}
+
+function authTab(tab) {
+  var inBtn = document.getElementById('auth-tab-in');
+  var upBtn = document.getElementById('auth-tab-up');
+  if (inBtn) {
+    inBtn.style.background = tab === 'in' ? 'var(--acc)' : 'transparent';
+    inBtn.style.color      = tab === 'in' ? '#fff' : 'var(--mid)';
+  }
+  if (upBtn) {
+    upBtn.style.background = tab === 'up' ? 'var(--acc)' : 'transparent';
+    upBtn.style.color      = tab === 'up' ? '#fff' : 'var(--mid)';
+  }
+}
+
+
 // ══════════════════════════════════════════════════════════════
 //  ARCA — CURRENCY + SCENARIO + FORECAST ENGINE
 // ══════════════════════════════════════════════════════════════
@@ -2301,15 +2511,328 @@ function sendInvite() {
 }
 
 
+
+// ══════════════════════════════════════════════════════════════════
+//  UPLOAD LOG
+// ══════════════════════════════════════════════════════════════════
+var uploadLog = [
+  { id:1, filename:'chase_jan_2026.csv',  user:'Jorge García', date:'2026-01-28 09:14', rows:87,  status:'ok' },
+  { id:2, filename:'amex_dec_2025.csv',   user:'Jorge García', date:'2026-01-15 14:32', rows:112, status:'ok' },
+  { id:3, filename:'visa_nov_2025.xlsx',  user:'María García', date:'2025-12-04 11:07', rows:64,  status:'error', note:'3 unrecognised categories — review needed' },
+  { id:4, filename:'chase_oct_2025.csv',  user:'Jorge García', date:'2025-11-02 08:55', rows:93,  status:'ok' }
+];
+var uploadLogNextId = 5;
+
+function renderUploadLog() {
+  var tbody = document.getElementById('upload-log-body');
+  if (!tbody) return;
+  if (uploadLog.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--dim);font-size:13px">No files uploaded yet — drag a CSV or XLSX above to get started.</td></tr>';
+    var sumEl = document.getElementById('ul-log-summary');
+    if (sumEl) sumEl.textContent = '0 files tracked';
+    return;
+  }
+  tbody.innerHTML = uploadLog.map(function(f) {
+    var isMaria = f.user.indexOf('Mar') !== -1;
+    var avBg = isMaria ? '#fce7f3' : '#dbeafe';
+    var avTc = isMaria ? '#9d174d' : '#1e40af';
+    var initials = f.user.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    var flagged = f.flagged || false;
+    var statusTag = flagged
+      ? '<span class="tag tag-y">Flagged</span>'
+      : (f.status === 'ok' ? '<span class="tag tag-g">Imported</span>' : '<span class="tag tag-r">Review needed</span>');
+    var flagLabel = flagged ? 'Unflag' : 'Flag';
+    var rowClass  = flagged ? 'ul-row-flagged' : '';
+    var noteHtml  = f.note ? '<div style="font-size:10.5px;color:var(--neg);margin-top:3px">' + f.note + '</div>' : '';
+    if (flagged && !f.note) noteHtml = '<div style="font-size:10.5px;color:var(--gld);margin-top:3px">Marked as potentially incorrect</div>';
+
+    // Main data row
+    var mainRow = '<tr class="' + rowClass + '" id="ul-row-' + f.id + '">' +
+      '<td><div class="ul-fname" style="font-weight:500;color:var(--txt)">' + f.filename + '</div>' + noteHtml + '</td>' +
+      '<td><div style="display:flex;align-items:center;gap:8px">' +
+        '<div style="width:24px;height:24px;border-radius:50%;background:' + avBg + ';color:' + avTc + ';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">' + initials + '</div>' +
+        '<span style="font-size:12.5px;color:var(--txt2)">' + f.user + '</span>' +
+      '</div></td>' +
+      '<td style="color:var(--txt2);font-size:12px;white-space:nowrap">' + f.date + '</td>' +
+      '<td style="color:var(--txt2);font-size:12px">' + f.rows + ' rows</td>' +
+      '<td>' + statusTag + '</td>' +
+      '<td style="text-align:right">' +
+        '<button class="ul-flag-btn' + (flagged?' flagged':'') + '" onclick="flagUpload(' + f.id + ')" style="margin-right:6px">' + flagLabel + '</button>' +
+        '<button onclick="confirmDeleteUpload(' + f.id + ')" style="padding:4px 10px;font-size:10.5px;font-weight:500;border-radius:3px;cursor:pointer;border:1px solid var(--neg);color:var(--neg);background:none">Delete</button>' +
+      '</td>' +
+    '</tr>';
+
+    // Inline confirmation row (hidden by default)
+    var confirmRow = '<tr class="ul-confirm" id="ul-confirm-' + f.id + '">' +
+      '<td colspan="6">' +
+        '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">' +
+          '<span style="font-size:12.5px;color:var(--neg);font-weight:500">⚠ Delete <em>' + f.filename + '</em>?</span>' +
+          '<span style="font-size:12px;color:var(--txt2)">The ' + f.rows + ' imported transactions will remain in your ledger and must be removed manually if needed.</span>' +
+          '<div style="margin-left:auto;display:flex;gap:6px">' +
+            '<button class="ul-del-btn ul-del-confirm" onclick="executeDeleteUpload(' + f.id + ')">Yes, delete record</button>' +
+            '<button class="ul-del-btn ul-del-cancel" onclick="cancelDeleteUpload(' + f.id + ')">Cancel</button>' +
+          '</div>' +
+        '</div>' +
+      '</td>' +
+    '</tr>';
+
+    return mainRow + confirmRow;
+  }).join('');
+  var sumEl2 = document.getElementById('ul-log-summary');
+  if (sumEl2) sumEl2.textContent = uploadLog.length + ' file' + (uploadLog.length===1?'':'s') + ' tracked';
+}
+
+function confirmDeleteUpload(id) {
+  // Close any other open confirm rows first
+  uploadLog.forEach(function(f) {
+    var c = document.getElementById('ul-confirm-' + f.id);
+    if (c && f.id !== id) c.classList.remove('open');
+  });
+  var row = document.getElementById('ul-confirm-' + id);
+  if (row) row.classList.toggle('open');
+}
+
+function cancelDeleteUpload(id) {
+  var row = document.getElementById('ul-confirm-' + id);
+  if (row) row.classList.remove('open');
+}
+
+function executeDeleteUpload(id) {
+  var f = uploadLog.find(function(x){return x.id===id;});
+  uploadLog = uploadLog.filter(function(x){ return x.id !== id; });
+  renderUploadLog();
+  // Show a brief notification
+  var note = document.createElement('div');
+  note.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--txt);color:#fff;padding:10px 18px;border-radius:4px;font-size:12px;z-index:9998;box-shadow:var(--shadow-md)';
+  note.textContent = (f ? f.filename : 'File') + ' removed from upload log.';
+  document.body.appendChild(note);
+  setTimeout(function(){ note.remove(); }, 3000);
+}
+
+function flagUpload(id) {
+  var f = uploadLog.find(function(x){return x.id===id;});
+  if (f) f.flagged = !f.flagged;
+  renderUploadLog();
+}
+
+function simulateUpload() {
+  var names = ['chase_feb_2026.csv','visa_feb_2026.csv','amex_feb_2026.xlsx','citi_feb_2026.csv'];
+  var name  = names[Math.floor(Math.random() * names.length)];
+  var now   = new Date();
+  var dateStr = now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0') + ' ' +
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0');
+  uploadLog.unshift({
+    id: uploadLogNextId++,
+    filename: name,
+    user: (userProfile.firstName || 'Jorge') + ' ' + (userProfile.lastName || 'García'),
+    date: dateStr,
+    rows: Math.floor(Math.random() * 80) + 30,
+    status: 'ok'
+  });
+  renderUploadLog();
+  var sumEl = document.getElementById('ul-log-summary');
+  if (sumEl) sumEl.textContent = uploadLog.length + ' file' + (uploadLog.length===1?'':'s') + ' tracked · ' + uploadLog.filter(function(f){return f.flagged;}).length + ' flagged';
+  var dz = document.querySelector('#upload .dz');
+  if (dz) {
+    var origBorder = dz.style.borderColor, origBg = dz.style.background;
+    dz.style.borderColor = 'var(--pos)'; dz.style.background = 'var(--posL)';
+    setTimeout(function(){ dz.style.borderColor = origBorder; dz.style.background = origBg; }, 1500);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  BILLING CYCLE ENGINE
+// ══════════════════════════════════════════════════════════════════
+var ccSettings = { closeDay:21, payDay:26, nickname:'Visa Rewards', incomeSource:'salary' };
+
+var ccChargesThisCycle = [
+  { date:'FEB 18', desc:'Netflix',            amt:15.99 },
+  { date:'FEB 15', desc:'Shell — Fuel',        amt:62.40 },
+  { date:'FEB 14', desc:'Whole Foods',          amt:94.30 },
+  { date:'FEB 10', desc:'Amazon — Household',  amt:78.40 },
+  { date:'FEB 08', desc:'Starbucks',            amt:18.50 },
+  { date:'JAN 28', desc:'H&M',                 amt:124.00 },
+  { date:'JAN 24', desc:'Yoga Studio Monthly', amt:85.00 }
+];
+
+function ccSuffix(n) {
+  if (n===1||n===21||n===31) return 'st';
+  if (n===2||n===22) return 'nd';
+  if (n===3||n===23) return 'rd';
+  return 'th';
+}
+
+function formatCycleDate(d) {
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate();
+}
+
+function getCycleRange(closeDay, refDate) {
+  var d = refDate || new Date();
+  var y = d.getFullYear(), m = d.getMonth();
+  var closeThisMonth = new Date(y, m, closeDay);
+  var cycleStart, cycleEnd, paymentDate;
+  if (d <= closeThisMonth) {
+    cycleStart   = new Date(y, m-1, closeDay+1);
+    cycleEnd     = closeThisMonth;
+    paymentDate  = new Date(y, m, ccSettings.payDay);
+    if (paymentDate < cycleEnd) paymentDate = new Date(y, m+1, ccSettings.payDay);
+  } else {
+    cycleStart  = new Date(y, m, closeDay+1);
+    cycleEnd    = new Date(y, m+1, closeDay);
+    paymentDate = new Date(y, m+1, ccSettings.payDay);
+  }
+  return { cycleStart:cycleStart, cycleEnd:cycleEnd, paymentDate:paymentDate };
+}
+
+function updateCycleExplain() {
+  var closeDay = parseInt((document.getElementById('cc-close-day')||{}).value) || 21;
+  var payDay   = parseInt((document.getElementById('cc-pay-day')||{}).value)   || 26;
+  var nickname = (document.getElementById('cc-nickname')||{}).value || ccSettings.nickname;
+  ccSettings.closeDay = closeDay; ccSettings.payDay = payDay; ccSettings.nickname = nickname;
+
+  var prev = closeDay + 1;
+  var ep = document.getElementById('cc-cycle-explain-prev');
+  var ec = document.getElementById('cc-cycle-explain-close');
+  var ey = document.getElementById('cc-cycle-explain-pay');
+  if (ep) ep.textContent = prev + ccSuffix(prev);
+  if (ec) ec.textContent = closeDay + ccSuffix(closeDay);
+  if (ey) ey.textContent = payDay + ccSuffix(payDay);
+
+  var today   = new Date(2026, 1, 24); // fixed for preview; production: new Date()
+  var cycle   = getCycleRange(closeDay, today);
+  var charged = ccChargesThisCycle.reduce(function(a,c){return a+c.amt;},0);
+
+  // Days remaining in cycle
+  var daysToClose  = Math.max(0, Math.round((cycle.cycleEnd - today) / 86400000));
+  var cycleLenDays = Math.round((cycle.cycleEnd - cycle.cycleStart) / 86400000) + 1;
+  var daysElapsed  = cycleLenDays - daysToClose;
+  var pctElapsed   = Math.min(100, Math.round(daysElapsed / cycleLenDays * 100));
+  var bufferDays   = payDay > closeDay ? payDay - closeDay : (30 - closeDay + payDay);
+
+  // ── Visual timeline ───────────────────────────────────────────────
+  var timelineEl = document.getElementById('cc-timeline-wrap');
+  if (timelineEl) {
+    var todayLabel = 'Today ' + today.getDate() + ccSuffix(today.getDate());
+    timelineEl.innerHTML =
+      '<div style="display:flex;align-items:flex-start;gap:0">' +
+
+        // Node 1: Cycle opens
+        '<div class="cc-tnode" style="color:var(--mid)">' +
+          '<div class="cc-tnode-dot"></div>' +
+          '<div class="cc-tnode-label" style="color:var(--mid)">Opens</div>' +
+          '<div class="cc-tnode-date">' + formatCycleDate(cycle.cycleStart) + '</div>' +
+        '</div>' +
+
+        // Line segment 1 (elapsed)
+        '<div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative;top:4px">' +
+          '<div style="width:100%;height:2px;background:var(--s4);border-radius:1px;position:relative">' +
+            '<div style="position:absolute;left:0;top:0;height:100%;width:' + pctElapsed + '%;background:var(--acc);border-radius:1px;transition:width .4s ease"></div>' +
+          '</div>' +
+          '<div style="margin-top:6px;font-size:9.5px;color:var(--acc);font-weight:500">' + (daysToClose > 0 ? daysToClose + 'd left' : 'closes today') + '</div>' +
+        '</div>' +
+
+        // Node 2: Cycle closes
+        '<div class="cc-tnode" style="color:var(--neg)">' +
+          '<div class="cc-tnode-dot" style="border-color:var(--neg)"></div>' +
+          '<div class="cc-tnode-label" style="color:var(--neg)">Closes</div>' +
+          '<div class="cc-tnode-date">' + closeDay + ccSuffix(closeDay) + '</div>' +
+        '</div>' +
+
+        // Line segment 2 (buffer gap)
+        '<div style="flex:0 0 80px;display:flex;flex-direction:column;align-items:center;position:relative;top:4px">' +
+          '<div style="width:100%;height:2px;background:var(--gldL);border:1px dashed var(--gld);border-radius:1px"></div>' +
+          '<div style="margin-top:6px;font-size:9.5px;color:var(--gld);font-weight:500">' + bufferDays + 'd buffer</div>' +
+        '</div>' +
+
+        // Node 3: Paycheck / payment
+        '<div class="cc-tnode" style="color:var(--pos)">' +
+          '<div class="cc-tnode-dot" style="border-color:var(--pos)"></div>' +
+          '<div class="cc-tnode-label" style="color:var(--pos)">Paycheck</div>' +
+          '<div class="cc-tnode-date">' + payDay + ccSuffix(payDay) + '</div>' +
+        '</div>' +
+
+      '</div>';
+  }
+
+  // ── Stat cards ───────────────────────────────────────────────────
+  var cardsEl = document.getElementById('cc-cycle-cards');
+  if (cardsEl) {
+    var cards = [
+      { label:'Cycle period',    val: formatCycleDate(cycle.cycleStart) + ' – ' + formatCycleDate(cycle.cycleEnd), color:'var(--txt)' },
+      { label:'Charged so far',  val: '$' + charged.toFixed(2), color:'var(--neg)' },
+      { label:'Buffer days',     val: bufferDays + ' days', color: bufferDays >= 3 ? 'var(--pos)' : 'var(--neg)' }
+    ];
+    cardsEl.innerHTML = cards.map(function(card){
+      return '<div class="cc-card">' +
+        '<div class="cc-card-label">' + card.label + '</div>' +
+        '<div class="cc-card-val" style="color:' + card.color + '">' + card.val + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Cycle explanation ────────────────────────────────────────────
+  var noteEl = document.getElementById('cc-cycle-note');
+  if (noteEl) {
+    noteEl.innerHTML =
+      'Charges accumulate from <strong>' + formatCycleDate(cycle.cycleStart) + '</strong> through <strong>' + formatCycleDate(cycle.cycleEnd) + '</strong>. ' +
+      'Your statement closes on the <strong>' + closeDay + ccSuffix(closeDay) + '</strong> and you have <strong>' + bufferDays + ' days</strong> before your paycheck covers it on the <strong>' + payDay + ccSuffix(payDay) + '</strong>. ' +
+      (daysToClose > 0 ? 'You have <strong>' + daysToClose + ' days</strong> left in the current cycle.' : '<strong>Today is cycle close day</strong> — statement is being finalized.');
+  }
+
+  // ── How Arca uses this ───────────────────────────────────────────
+  var arcaNoteEl = document.getElementById('cc-arca-note');
+  if (arcaNoteEl) {
+    arcaNoteEl.innerHTML =
+      'Transactions dated between the <strong>' + (closeDay+1) + ccSuffix(closeDay+1) + ' and ' + closeDay + ccSuffix(closeDay) + '</strong> are grouped together as one billing period. ' +
+      'In the <strong>Forecast</strong>, your card payment of ~$' + charged.toFixed(0) + ' is scheduled as a cash outflow on the <strong>' + payDay + ccSuffix(payDay) + '</strong>, ' +
+      'keeping your monthly net calculation accurate even when statement dates cross calendar month boundaries. ' +
+      'Your <strong>' + bufferDays + '-day buffer</strong> means ' + (bufferDays >= 5
+        ? 'you are in a comfortable position — paycheck arrives before the payment is due.'
+        : 'timing is tight — consider moving your payment date later if possible.');
+  }
+
+  updateCycleBanner();
+}
+
+function updateCycleBanner() {
+  var today   = new Date(2026, 1, 24);
+  var cycle   = getCycleRange(ccSettings.closeDay, today);
+  var charged = ccChargesThisCycle.reduce(function(a,c){return a+c.amt;},0);
+  var daysToClose = Math.max(0, Math.round((cycle.cycleEnd - today) / 86400000));
+
+  var nameEl  = document.getElementById('cc-banner-cycle-name');
+  var datesEl = document.getElementById('cc-banner-cycle-dates');
+  var chgEl   = document.getElementById('cc-banner-charged');
+  var dueEl   = document.getElementById('cc-banner-due-date');
+  var daysEl  = document.getElementById('cc-banner-days');
+  if (nameEl)  nameEl.textContent  = ccSettings.nickname + ' — Current Cycle';
+  if (datesEl) datesEl.textContent = formatCycleDate(cycle.cycleStart) + ' → ' + formatCycleDate(cycle.cycleEnd);
+  if (chgEl)   chgEl.textContent   = '$' + charged.toFixed(2);
+  if (dueEl)   dueEl.textContent   = formatCycleDate(cycle.paymentDate);
+  if (daysEl)  daysEl.textContent  = daysToClose + 'd left';
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────
+try {
 var today=new Date().toISOString().split('T')[0];
 ['c-date','i-date'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=today;});
 renderCash();renderTxns();renderLoans();renderInvLog();renderCats();renderDashCats();renderForecast();
+renderUploadLog();
+updateCycleExplain();
+updateCycleBanner();
+renderUploadLog();
+updateCycleExplain();
+updateCycleBanner();
 // Fetch live exchange rate for default country (Guatemala / GTQ)
 fetchExchangeRate();
 renderSidebarHH();
 renderHHMemberPills();
 renderHousehold();
+} catch(e) { console.error('Arca init error:', e); }
 
 </script>
 <!-- ══ INVITE MODAL ══ -->
