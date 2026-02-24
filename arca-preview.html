@@ -2175,13 +2175,18 @@ function renderHousehold() {
   // Filters
   var filtersEl = document.getElementById('hh-filters');
   if (filtersEl) {
-    filtersEl.innerHTML = [['all','All'],['jorge','Jorge'],['maria','María']].map(function(pair){
+    var filterHTML = '';
+    [['all','All'],['jorge','Jorge'],['maria','María']].forEach(function(pair){
       var active = hhTxnFilter === pair[0];
-      return '<button onclick="hhFilterMember(''+pair[0]+'')" id="hh-f-'+pair[0]+'" style="padding:4px 12px;font-size:11px;font-weight:500;border-radius:20px;border:1px solid '+(active?'var(--acc)':'var(--ln)')+';background:'+(active?'var(--accL)':'transparent')+';color:'+(active?'var(--acc)':'var(--mid)')+';cursor:pointer">'+pair[1]+'</button>';
-    }).join('');
+      var style = 'padding:4px 12px;font-size:11px;font-weight:500;border-radius:20px;cursor:pointer;border:1px solid ' +
+        (active ? 'var(--acc)' : 'var(--ln)') + ';background:' +
+        (active ? 'var(--accL)' : 'transparent') + ';color:' +
+        (active ? 'var(--acc)' : 'var(--mid)') + ';transition:all .12s';
+      filterHTML += '<button id="hh-f-' + pair[0] + '" style="' + style + '" onclick="hhFilterMember(\'' + pair[0] + '\')">' + pair[1] + '</button>';
+    });
+    filtersEl.innerHTML = filterHTML;
   }
-
-  renderHHMerged();
+    renderHHMerged();
 }
 
 function memberPill(m, isActive) {
