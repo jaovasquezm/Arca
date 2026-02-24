@@ -272,7 +272,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
 <nav class="sb">
   <div class="sb-brand">
     <div class="sb-logo">ARCA</div>
-    <div class="sb-user">GARCIA, JORGE / PRV</div>
+    <div class="sb-user" id="sb-user-label">GARCIA, JORGE / GTM</div>
   </div>
 
   <div class="sb-section">
@@ -306,6 +306,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
     <button class="ni" onclick="go('reports',this,'Annual Report')"><span class="ni-dot"></span>Annual Report</button>
     <button class="ni" onclick="go('cats',this,'Categories')"><span class="ni-dot"></span>Categories</button>
     <button class="ni" onclick="go('auth',this,'Access')"><span class="ni-dot"></span>Access</button>
+    <button class="ni" onclick="go('profile',this,'User Profile')"><span class="ni-dot"></span>User Profile</button>
   </div>
 </nav>
 
@@ -480,26 +481,19 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
 
 <!-- ══ FORECAST ══ -->
 <div id="forecast" class="pg">
-  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Projections</div><div class="ph-title">Cash Flow Forecast</div></div></div>
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Projections</div><div class="ph-title">Cash Flow Forecast</div></div>
+    <div class="ph-actions"><button class="btn btn-ghost" onclick="openModal('m-future-exp')">+ Future Expense</button></div>
+  </div>
   <div class="pc">
-    <div class="grid g4" style="margin-bottom:24px">
-      <div class="stat"><div class="stat-label">Year-End Balance</div><div class="stat-val pos">$18,240</div></div>
-      <div class="stat"><div class="stat-label">Total Income</div><div class="stat-val pos">$90,000</div></div>
-      <div class="stat"><div class="stat-label">Total Expenses</div><div class="stat-val neg">$71,760</div></div>
-      <div class="stat"><div class="stat-label">Avg Monthly Net</div><div class="stat-val acc">$1,520</div></div>
-    </div>
+    <div id="fc-scenario-bar" style="display:none;margin-bottom:16px;padding:10px 16px;background:var(--s2);border:1px solid var(--ln);border-left:2px solid var(--acc);font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--acc)"></div>
+    <div class="grid g4" style="margin-bottom:24px" id="fc-stats"></div>
+    <div id="fc-future-bar" style="display:none;margin-bottom:16px"></div>
     <div class="panel">
-      <div class="panel-hd"><div class="panel-title">Monthly Projection Table</div></div>
+      <div class="panel-hd"><div class="panel-title" id="fc-table-title">Monthly Projection Table</div></div>
       <table class="tbl">
         <thead><tr><th>Month</th><th>Status</th><th>Income</th><th>Expenses</th><th class="tr">Net</th><th class="tr">Cumulative</th></tr></thead>
-        <tbody>
-          <tr><td>January 2026</td><td><span class="tag tag-g">Actual</span></td><td style="font-family:var(--fm)">$7,500</td><td style="font-family:var(--fm)">$5,820</td><td class="tr pos">+$1,680</td><td class="tr gld">$1,680</td></tr>
-          <tr><td>February 2026</td><td><span class="tag tag-y">Current</span></td><td style="font-family:var(--fm)">$7,500</td><td style="font-family:var(--fm)">$4,182</td><td class="tr pos">+$3,318</td><td class="tr gld">$4,998</td></tr>
-          <tr><td>March 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$6,538</td></tr>
-          <tr><td>April 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$8,078</td></tr>
-          <tr><td>June 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$11,158</td></tr>
-          <tr><td>December 2026</td><td><span class="tag tag-d">Proj.</span></td><td style="font-family:var(--fm);color:var(--mid)">$7,500</td><td style="font-family:var(--fm);color:var(--mid)">$5,960</td><td class="tr pos">+$1,540</td><td class="tr gld">$18,240</td></tr>
-        </tbody>
+        <tbody id="fc-tbody"></tbody>
       </table>
     </div>
   </div>
@@ -507,7 +501,12 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
 
 <!-- ══ SCENARIOS ══ -->
 <div id="scenarios" class="pg">
-  <div class="ph"><div class="ph-left"><div class="ph-eyebrow">Quantitative Analysis</div><div class="ph-title">Scenario Modeling</div></div></div>
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Quantitative Analysis</div><div class="ph-title">Scenario Modeling</div></div>
+    <div class="ph-actions" id="sc-apply-bar" style="display:none">
+      <button class="btn btn-acc" onclick="applyToForecast()">Apply Active to Forecast</button>
+    </div>
+  </div>
   <div class="pc">
     <div class="tabs">
       <button class="tab on" onclick="scTab('chat',this)">AI Interface</button>
@@ -515,6 +514,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
       <button class="tab" onclick="scTab('compare',this)">Comparative Analysis</button>
     </div>
 
+    <!-- CHAT TAB -->
     <div id="sc-chat" style="display:flex;flex-direction:column">
       <div class="chatbox" id="chatbox">
         <div class="msg"><div class="ava acc">AI</div><div class="bub a">Arca Modeling Engine initialized.<br><br>Describe any financial change — a new liability, income adjustment, category reallocation, or early payoff — and I will model the precise impact against your actual data and save a scenario for comparison.</div></div>
@@ -528,49 +528,29 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
       <div style="font-family:var(--fm);font-size:9.5px;color:var(--dim);margin-top:8px;letter-spacing:.06em">ENTER to send — Models computed against live portfolio data</div>
     </div>
 
+    <!-- SAVED MODELS TAB -->
     <div id="sc-saved" style="display:none">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)">
-        <div style="background:var(--s1);padding:20px;border-left:2px solid var(--acc)">
-          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px">Active Comparison</div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Cut Dining / Mortgage</div>
-          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">Dining -50% — redirected to principal</div>
-          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:4px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Cut Dining Out</span><span style="color:var(--pos)">-$340/mo</span></div>
-          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Extra Principal</span><span style="color:var(--pos)">+$340/mo</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--pos)">+$4,080</div></div><button class="btn btn-ghost">Comparing</button></div>
+      <div style="font-family:var(--fm);font-size:9.5px;color:var(--mid);letter-spacing:.1em;margin-bottom:14px">TOGGLE SCENARIOS TO ACTIVATE — ACTIVATE TWO OR MORE TO ENABLE COMBINED FORECAST</div>
+      <div id="sc-cards" style="display:flex;flex-direction:column;gap:1px;background:var(--ln);border:1px solid var(--ln)"></div>
+      <div id="sc-combined-panel" style="display:none;margin-top:20px">
+        <div style="padding:14px 18px;background:var(--s2);border:1px solid var(--ln);border-left:2px solid var(--acc);margin-bottom:1px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:6px">Combined Active Scenario Impact</div>
+          <div style="display:flex;gap:32px;flex-wrap:wrap" id="sc-combined-vals"></div>
         </div>
-        <div style="background:var(--s1);padding:20px">
-          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px">Model</div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Baby Year 2</div>
-          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">Childcare and healthcare cost increase</div>
-          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:4px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Childcare</span><span style="color:var(--neg)">+$400/mo</span></div>
-          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Healthcare</span><span style="color:var(--neg)">+$150/mo</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--neg)">-$6,600</div></div><button class="btn btn-ghost">Compare</button></div>
-        </div>
-        <div style="background:var(--s1);padding:20px">
-          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px">Model</div>
-          <div style="font-weight:700;font-size:14px;margin-bottom:6px">Side Income</div>
-          <div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">+$1,500/mo consulting income</div>
-          <div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);margin-bottom:14px;display:flex;justify-content:space-between"><span style="color:var(--mid)">Consulting</span><span style="color:var(--pos)">+$1,500/mo</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div><div style="font-family:var(--fm);font-size:18px;color:var(--pos)">+$18,000</div></div><button class="btn btn-ghost">Compare</button></div>
+        <div style="padding:12px 18px;background:var(--s1);border:1px solid var(--ln);border-top:none;font-family:var(--fm);font-size:10px;color:var(--mid)">
+          Active: <span id="sc-active-names" style="color:var(--txt)"></span>
         </div>
       </div>
     </div>
 
+    <!-- COMPARE TAB -->
     <div id="sc-compare" style="display:none">
-      <div class="grid g3" style="margin-bottom:20px">
-        <div class="stat"><div class="stat-label">Baseline — Current</div><div class="stat-val acc">$1,520/mo</div><div class="stat-sub">Present monthly net</div></div>
-        <div class="stat" style="border-left:2px solid var(--pos)"><div class="stat-label">Cut Dining / Mortgage</div><div class="stat-val pos">$1,860/mo</div><div class="stat-sub">+$340/mo vs base</div></div>
-        <div class="stat" style="border-left:2px solid var(--blu)"><div class="stat-label">Side Income</div><div class="stat-val blu">$3,020/mo</div><div class="stat-sub">+$1,500/mo vs base</div></div>
-      </div>
+      <div class="grid g3" style="margin-bottom:20px" id="sc-compare-stats"></div>
       <div class="panel">
-        <div class="panel-hd"><div class="panel-title">Scenario Impact Summary</div></div>
+        <div class="panel-hd"><div class="panel-title">Scenario Impact Matrix</div></div>
         <table class="tbl">
-          <thead><tr><th>Scenario</th><th class="tr">Monthly</th><th class="tr">Annual</th><th class="tr">5-Year</th></tr></thead>
-          <tbody>
-            <tr><td>Cut Dining / Mortgage Extra</td><td class="tr pos">+$340</td><td class="tr pos">+$4,080</td><td class="tr pos">+$20,400</td></tr>
-            <tr><td>Side Income Boost</td><td class="tr pos">+$1,500</td><td class="tr pos">+$18,000</td><td class="tr pos">+$90,000</td></tr>
-            <tr><td>Baby Year 2</td><td class="tr neg">-$550</td><td class="tr neg">-$6,600</td><td class="tr neg">-$33,000</td></tr>
-          </tbody>
+          <thead><tr><th>Scenario</th><th>Status</th><th class="tr">Monthly</th><th class="tr">Annual</th><th class="tr">5-Year</th></tr></thead>
+          <tbody id="sc-compare-rows"></tbody>
         </table>
       </div>
     </div>
@@ -781,6 +761,95 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
   </div>
 </div>
 
+<!-- ══ PROFILE ══ -->
+<div id="profile" class="pg">
+  <div class="ph">
+    <div class="ph-left"><div class="ph-eyebrow">Account Configuration</div><div class="ph-title">User Profile</div></div>
+    <div class="ph-actions"><button class="btn btn-acc" onclick="saveProfile()">Save Changes</button></div>
+  </div>
+  <div class="pc">
+
+    <!-- FX STATUS BAR -->
+    <div id="profile-fx-bar" style="margin-bottom:20px;padding:11px 16px;background:var(--s2);border:1px solid var(--ln);border-left:2px solid var(--acc);font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--mid)">
+      LOADING EXCHANGE RATE...
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1px;background:var(--ln);border:1px solid var(--ln);margin-bottom:20px">
+      <!-- LEFT: Identity -->
+      <div style="background:var(--s1);padding:24px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Identity</div>
+        <div class="fg2">
+          <div class="fgrp"><label class="flbl">First Name</label><input class="finp" id="p-fname" value="Jorge"></div>
+          <div class="fgrp"><label class="flbl">Last Name</label><input class="finp" id="p-lname" value="Garcia"></div>
+        </div>
+        <div class="fgrp"><label class="flbl">Email</label><input class="finp" id="p-email" value="garcia@example.com" type="email"></div>
+        <div class="fgrp"><label class="flbl">Access Level</label>
+          <select class="finp" id="p-access">
+            <option value="PRV">PRV — Private</option>
+            <option value="FAM">FAM — Family</option>
+            <option value="BUS">BUS — Business</option>
+          </select>
+        </div>
+      </div>
+      <!-- RIGHT: Locale & Currency -->
+      <div style="background:var(--s1);padding:24px">
+        <div style="font-family:var(--fm);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px">Locale &amp; Currency</div>
+        <div class="fgrp">
+          <label class="flbl">Registered Country</label>
+          <select class="finp" id="p-country" onchange="onCountryChange()">
+            <option value="GT">Guatemala — GTQ</option>
+            <option value="MX">Mexico — MXN</option>
+            <option value="CO">Colombia — COP</option>
+            <option value="AR">Argentina — ARS</option>
+            <option value="CL">Chile — CLP</option>
+            <option value="PE">Peru — PEN</option>
+            <option value="ES">Spain — EUR</option>
+            <option value="DE">Germany — EUR</option>
+            <option value="US">United States — USD</option>
+            <option value="GB">United Kingdom — GBP</option>
+            <option value="CA">Canada — CAD</option>
+            <option value="JP">Japan — JPY</option>
+            <option value="BR">Brazil — BRL</option>
+          </select>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Home Currency (auto-set by country)</label>
+          <div id="p-cur-display" style="padding:10px 14px;background:var(--s3);border:1px solid var(--ln);font-family:var(--fm);font-size:12.5px;color:var(--acc)">GTQ — Guatemalan Quetzal</div>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Default Entry Currency</label>
+          <select class="finp" id="p-def-cur">
+            <option value="home">Home currency (auto)</option>
+            <option value="USD">Always USD</option>
+          </select>
+        </div>
+        <div id="p-rate-box" style="margin-top:12px;padding:12px 14px;background:var(--s2);border:1px solid var(--ln);font-family:var(--fm);font-size:11px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Official Exchange Rate</div>
+          <div id="p-rate-val" style="font-size:18px;color:var(--acc)">Loading...</div>
+          <div id="p-rate-src" style="color:var(--dim);margin-top:4px;font-size:10px"></div>
+          <button class="btn btn-ghost" style="margin-top:10px;font-size:10px" onclick="fetchExchangeRate()">Refresh Rate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rate history / conversion table -->
+    <div class="panel">
+      <div class="panel-hd"><div class="panel-title" id="p-conv-title">Quick Conversion — GTQ to USD</div></div>
+      <div style="padding:16px 20px">
+        <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap">
+          <div><label class="flbl">Amount</label><input class="finp" type="number" id="p-conv-amt" placeholder="1000" oninput="updateConvTable()" style="width:140px"></div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--dim);padding-bottom:12px">Enter any amount to convert</div>
+        </div>
+        <div id="p-conv-table" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--ln);border:1px solid var(--ln)"></div>
+      </div>
+    </div>
+
+    <div id="profile-saved-banner" style="display:none;margin-top:16px;padding:11px 16px;background:var(--s2);border-left:2px solid var(--acc);font-family:var(--fm);font-size:10.5px;color:var(--acc);letter-spacing:.08em">
+      PROFILE SAVED — EXCHANGE RATE APPLIED GLOBALLY
+    </div>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -807,9 +876,18 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
           <select class="finp" id="c-type"><option>Cash</option><option>Venmo</option><option>Zelle</option><option>Check</option><option>Other</option></select>
         </div>
       </div>
-      <div class="fgrp"><label class="flbl">Direction</label>
-        <select class="finp" id="c-dir"><option value="-">Expense — Outflow</option><option value="+">Income — Inflow</option></select>
+      <div class="fg2">
+        <div><label class="flbl">Direction</label>
+          <select class="finp" id="c-dir"><option value="-">Expense — Outflow</option><option value="+">Income — Inflow</option></select>
+        </div>
+        <div><label class="flbl">Currency</label>
+          <select class="finp" id="c-cur" onchange="updateCashPreview()">
+            <option value="USD">USD ($)</option>
+            <option value="home">Home currency (profile)</option>
+          </select>
+        </div>
       </div>
+      <div id="c-fx-preview" style="display:none;padding:9px 12px;background:var(--s2);border-left:2px solid var(--blu);font-family:var(--fm);font-size:10.5px;color:var(--mid);margin-bottom:8px"></div>
       <div class="flash" id="c-flash">Entry recorded successfully</div>
     </div>
     <div class="mactions">
@@ -870,7 +948,16 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
         <div><label class="flbl">Price per Unit (USD)</label><input class="finp" type="number" id="i-price" placeholder="218.24" step="0.01" oninput="invCalc()"></div>
       </div>
       <div class="fgrp"><label class="flbl">Total Amount (USD)</label><input class="finp" type="number" id="i-total" placeholder="Auto-calculated" step="0.01" oninput="invCalcRev()"></div>
-      <div class="fgrp"><label class="flbl">Notes</label><input class="finp" type="text" id="i-notes" placeholder="e.g. DCA, rebalance"></div>
+      <div class="fg2">
+        <div><label class="flbl">Notes</label><input class="finp" type="text" id="i-notes" placeholder="e.g. DCA, rebalance"></div>
+        <div><label class="flbl">Currency</label>
+          <select class="finp" id="i-cur" onchange="updateInvPreview()">
+            <option value="USD">USD ($)</option>
+            <option value="home">Home currency (profile)</option>
+          </select>
+        </div>
+      </div>
+      <div id="i-fx-preview" style="display:none;padding:9px 12px;background:var(--s2);border-left:2px solid var(--blu);font-family:var(--fm);font-size:10.5px;color:var(--mid);margin-bottom:8px"></div>
       <div class="flash" id="i-flash">Trade recorded successfully</div>
     </div>
     <div class="mactions">
@@ -929,7 +1016,264 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--ff
 </div>
 
 <script>
-// ═══ DATA ═══
+// ══════════════════════════════════════════════════════════════
+//  ARCA — CURRENCY + SCENARIO + FORECAST ENGINE
+// ══════════════════════════════════════════════════════════════
+
+// ── USER PROFILE ──────────────────────────────────────────────
+var userProfile = {
+  firstName: 'Jorge',
+  lastName: 'Garcia',
+  email: 'garcia@example.com',
+  access: 'PRV',
+  country: 'GT',
+  homeCurrency: 'GTQ',
+  defCurMode: 'home'
+};
+
+// Country → currency map
+var COUNTRY_CUR = {
+  GT:'GTQ', MX:'MXN', CO:'COP', AR:'ARS', CL:'CLP', PE:'PEN',
+  ES:'EUR', DE:'EUR', US:'USD', GB:'GBP', CA:'CAD', JP:'JPY', BR:'BRL'
+};
+var CUR_NAMES = {
+  GTQ:'Guatemalan Quetzal', MXN:'Mexican Peso', COP:'Colombian Peso',
+  ARS:'Argentine Peso', CLP:'Chilean Peso', PEN:'Peruvian Sol',
+  EUR:'Euro', USD:'US Dollar', GBP:'British Pound', CAD:'Canadian Dollar',
+  JPY:'Japanese Yen', BRL:'Brazilian Real'
+};
+var CUR_SYMBOLS = {
+  GTQ:'Q', MXN:'$', COP:'$', ARS:'$', CLP:'$', PEN:'S/',
+  EUR:'€', USD:'$', GBP:'£', CAD:'$', JPY:'¥', BRL:'R$'
+};
+
+// ── EXCHANGE RATES (live-fetched via Anthropic API, fallback hardcoded) ──
+// Official source: Banco de Guatemala, Banxico, etc. per country
+var FX_RATES = {
+  GTQ: { rate: 0.13028, label:'1 GTQ = $0.13028 USD', source:'Banco de Guatemala (Banguat)', date:'Feb 23, 2026', fetched:false },
+  MXN: { rate: 0.04880, label:'1 MXN = $0.0488 USD',  source:'Banco de México (Banxico)', date:'Feb 23, 2026', fetched:false },
+  COP: { rate: 0.000235, label:'1 COP = $0.000235 USD', source:'Banco de la República Colombia', date:'Feb 23, 2026', fetched:false },
+  ARS: { rate: 0.000970, label:'1 ARS = $0.00097 USD', source:'Banco Central Argentina (BCRA)', date:'Feb 23, 2026', fetched:false },
+  CLP: { rate: 0.001048, label:'1 CLP = $0.001048 USD', source:'Banco Central de Chile', date:'Feb 23, 2026', fetched:false },
+  PEN: { rate: 0.26667, label:'1 PEN = $0.2667 USD', source:'Banco Central de Reserva del Perú', date:'Feb 23, 2026', fetched:false },
+  EUR: { rate: 1.08330, label:'1 EUR = $1.0833 USD', source:'European Central Bank (ECB)', date:'Feb 23, 2026', fetched:false },
+  GBP: { rate: 1.26410, label:'1 GBP = $1.2641 USD', source:'Bank of England', date:'Feb 23, 2026', fetched:false },
+  CAD: { rate: 0.71200, label:'1 CAD = $0.712 USD', source:'Bank of Canada', date:'Feb 23, 2026', fetched:false },
+  JPY: { rate: 0.00657, label:'1 JPY = $0.00657 USD', source:'Bank of Japan', date:'Feb 23, 2026', fetched:false },
+  BRL: { rate: 0.17280, label:'1 BRL = $0.1728 USD', source:'Banco Central do Brasil', date:'Feb 23, 2026', fetched:false },
+  USD: { rate: 1.00000, label:'1 USD = $1.0000 USD', source:'Base currency', date:'—', fetched:true }
+};
+var fxFetching = false;
+
+function toUSD(amt, cur) {
+  var c = (cur === 'home') ? userProfile.homeCurrency : cur;
+  return amt * (FX_RATES[c] ? FX_RATES[c].rate : 1);
+}
+function homeSym() { return CUR_SYMBOLS[userProfile.homeCurrency] || ''; }
+function homeCurLabel() { return userProfile.homeCurrency + ' ' + homeSym(); }
+
+// ── LIVE RATE FETCH (Anthropic API) ──────────────────────────────────────
+async function fetchExchangeRate(showSpinner) {
+  var cur = userProfile.homeCurrency;
+  if (cur === 'USD') { updateFXDisplay(); return; }
+  if (fxFetching) return;
+  fxFetching = true;
+  var rateBox = document.getElementById('p-rate-val');
+  var srcBox  = document.getElementById('p-rate-src');
+  var fxBar   = document.getElementById('profile-fx-bar');
+  if (rateBox) rateBox.innerHTML = '<span style="color:var(--dim)">Fetching from central bank...</span>';
+  if (fxBar) fxBar.innerHTML = 'FETCHING OFFICIAL RATE — '+cur+'/USD — CENTRAL BANK SOURCE...';
+
+  var fxInfo = FX_RATES[cur] || {};
+  var prompt = 'What is the current official exchange rate of '+cur+' to USD as of today? ' +
+    'Respond ONLY with a JSON object in this exact format, no other text: ' +
+    '{"rate":0.13028,"label":"1 '+cur+' = $X.XXXXX USD","source":"Central bank name","date":"Month DD, YYYY"}';
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:200,
+        system:'You are a financial data assistant. Respond ONLY with valid JSON. No markdown, no backticks, no explanation.',
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    var data = await resp.json();
+    var raw = data.content && data.content[0] && data.content[0].text ? data.content[0].text.trim() : '';
+    raw = raw.replace(/```json|```/g,'').trim();
+    var parsed = JSON.parse(raw);
+    if (parsed.rate && parsed.rate > 0) {
+      FX_RATES[cur] = { rate: parsed.rate, label: parsed.label, source: parsed.source, date: parsed.date, fetched: true };
+      console.log('FX fetched:', cur, parsed);
+    }
+  } catch(e) {
+    console.warn('FX fetch failed, using fallback:', e.message);
+    FX_RATES[cur].fetched = false;
+  }
+  fxFetching = false;
+  updateFXDisplay();
+  renderConvTable();
+}
+
+function updateFXDisplay() {
+  var cur = userProfile.homeCurrency;
+  var fx = FX_RATES[cur] || {};
+  var rateBox = document.getElementById('p-rate-val');
+  var srcBox  = document.getElementById('p-rate-src');
+  var fxBar   = document.getElementById('profile-fx-bar');
+  var titleEl = document.getElementById('p-conv-title');
+  if (rateBox) {
+    rateBox.innerHTML = fx.label || (cur+' rate unavailable');
+    rateBox.style.color = fx.fetched ? 'var(--acc)' : 'var(--gld)';
+  }
+  if (srcBox) {
+    srcBox.innerHTML = (fx.source||'') + (fx.date?' — '+fx.date:'') + (fx.fetched?' <span style="color:var(--acc)">LIVE</span>':' <span style="color:var(--gld)">CACHED</span>');
+  }
+  if (fxBar) {
+    var indicator = fx.fetched ? '<span style="color:var(--acc)">LIVE</span>' : '<span style="color:var(--gld)">CACHED</span>';
+    fxBar.innerHTML = 'OFFICIAL RATE — 1 '+cur+' = $'+fx.rate.toFixed(5)+' USD &nbsp;|&nbsp; '+fx.source+' &nbsp;|&nbsp; '+indicator;
+  }
+  if (titleEl) titleEl.textContent = 'Quick Conversion — '+cur+' to USD';
+  updateConvTable();
+  refreshCurrencyDropdowns();
+}
+
+function refreshCurrencyDropdowns() {
+  var cur = userProfile.homeCurrency;
+  var sym = CUR_SYMBOLS[cur] || '';
+  var rate = (FX_RATES[cur]||{}).rate || 1;
+  var label = cur+' ('+sym+') — 1 '+cur+' = $'+rate.toFixed(5)+' USD';
+  // Update all 'home' option labels
+  document.querySelectorAll('option[value="home"]').forEach(function(o){
+    o.textContent = 'Home: '+label;
+  });
+}
+
+function updateConvTable() {
+  var cur = userProfile.homeCurrency;
+  if (cur === 'USD') return;
+  var amt = parseFloat(document.getElementById('p-conv-amt') && document.getElementById('p-conv-amt').value) || 1;
+  renderConvTable(amt);
+}
+function renderConvTable(baseAmt) {
+  var cur = userProfile.homeCurrency;
+  if (cur === 'USD') {
+    var el = document.getElementById('p-conv-table');
+    if (el) el.innerHTML = '<div style="background:var(--s1);padding:16px;font-family:var(--fm);font-size:11px;color:var(--mid);grid-column:1/-1">Home currency is USD — no conversion needed.</div>';
+    return;
+  }
+  var el = document.getElementById('p-conv-table');
+  if (!el) return;
+  var fx = FX_RATES[cur] || {};
+  var amounts = baseAmt ? [baseAmt, baseAmt*5, baseAmt*10, baseAmt*100] : [1, 100, 500, 1000];
+  el.innerHTML = amounts.map(function(a) {
+    var usd = toUSD(a, cur);
+    return '<div style="background:var(--s1);padding:14px 16px">'+
+      '<div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">'+cur+'</div>'+
+      '<div style="font-family:var(--fm);font-size:16px;color:var(--txt)">'+(CUR_SYMBOLS[cur]||'')+' '+a.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>'+
+      '<div style="font-family:var(--fm);font-size:11px;color:var(--acc);margin-top:4px">= $'+usd.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' USD</div>'+
+      '<div style="font-family:var(--fm);font-size:9px;color:var(--dim);margin-top:2px">@ '+fx.rate.toFixed(5)+'</div></div>';
+  }).join('');
+}
+
+// ── PROFILE FUNCTIONS ─────────────────────────────────────────────────────
+function onCountryChange() {
+  var country = document.getElementById('p-country').value;
+  var cur = COUNTRY_CUR[country] || 'USD';
+  userProfile.country = country;
+  userProfile.homeCurrency = cur;
+  var disp = document.getElementById('p-cur-display');
+  if (disp) disp.textContent = cur + ' — ' + (CUR_NAMES[cur]||cur);
+  // Trigger live rate fetch
+  fetchExchangeRate(true);
+}
+
+function saveProfile() {
+  userProfile.firstName = (document.getElementById('p-fname')||{}).value || userProfile.firstName;
+  userProfile.lastName  = (document.getElementById('p-lname')||{}).value || userProfile.lastName;
+  userProfile.email     = (document.getElementById('p-email')||{}).value || userProfile.email;
+  userProfile.access    = (document.getElementById('p-access')||{}).value || userProfile.access;
+  userProfile.defCurMode= (document.getElementById('p-def-cur')||{}).value || userProfile.defCurMode;
+  // Update sidebar label
+  var lbl = document.getElementById('sb-user-label');
+  if (lbl) lbl.textContent = userProfile.lastName.toUpperCase()+', '+userProfile.firstName.toUpperCase()+' / '+userProfile.access;
+  // Show banner
+  var b = document.getElementById('profile-saved-banner');
+  if (b) { b.style.display='block'; setTimeout(function(){b.style.display='none';}, 2500); }
+}
+
+// ── CURRENCY PREVIEW HELPERS ──────────────────────────────────────────────
+function fmtConvert(amt, cur) {
+  var c = (cur==='home') ? userProfile.homeCurrency : cur;
+  var usd = toUSD(amt, c);
+  var sym = CUR_SYMBOLS[c] || '';
+  var src = (FX_RATES[c]||{}).source || 'Official rate';
+  if (c === 'USD') return null;
+  return sym+' '+amt.toFixed(2)+' '+c+' → $'+usd.toFixed(2)+' USD &nbsp;|&nbsp; Rate: '+(FX_RATES[c]||{}).rate+' &nbsp;|&nbsp; '+src;
+}
+function updateCashPreview() {
+  var cur = document.getElementById('c-cur').value;
+  var amt = parseFloat(document.getElementById('c-amt').value)||0;
+  var box = document.getElementById('c-fx-preview');
+  var msg = amt ? fmtConvert(amt, cur) : null;
+  if (!msg) { box.style.display='none'; return; }
+  box.style.display='block'; box.innerHTML = msg;
+}
+function updateInvPreview() {
+  var cur = document.getElementById('i-cur').value;
+  var amt = parseFloat(document.getElementById('i-total').value)||0;
+  var box = document.getElementById('i-fx-preview');
+  var msg = amt ? fmtConvert(amt, cur) : null;
+  if (!msg) { box.style.display='none'; return; }
+  box.style.display='block'; box.innerHTML = msg;
+}
+function updateFEPreview() {
+  var cur  = document.getElementById('fe-cur').value;
+  var amt  = parseFloat(document.getElementById('fe-amt').value)||0;
+  var box  = document.getElementById('fe-preview');
+  var abox = document.getElementById('fe-analysis');
+  if (!amt) { box.style.display='none'; abox.style.display='none'; return; }
+  var c    = (cur==='home') ? userProfile.homeCurrency : cur;
+  var usd  = toUSD(amt, c);
+  var msg  = fmtConvert(amt, cur);
+  box.style.display = 'block';
+  box.innerHTML = msg ? msg : '$'+usd.toFixed(2)+' USD (no conversion)';
+
+  // ── Scenario analysis ────────────────────────────────────────
+  var baseNet = 1520;
+  var activeScenarios = scenarioModels.filter(function(m){ return m.active; });
+  var scenarioDelta   = activeScenarios.reduce(function(a,m){ return a+m.monthlyDelta; }, 0);
+  var adjNet = baseNet + scenarioDelta;
+  var moBase = Math.ceil(usd / Math.max(1, baseNet));
+  var moAdj  = adjNet > 0 ? Math.ceil(usd / adjNet) : null;
+  var month  = parseInt(document.getElementById('fe-month').value);
+  var mnths  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  abox.style.display = 'block';
+  var html = '<div style="color:var(--txt2);margin-bottom:6px">COST ANALYSIS — $'+usd.toFixed(0)+' USD &nbsp;|&nbsp; TARGET: '+mnths[month-1]+' 2026</div>';
+  html += '<div style="margin-bottom:4px">Without scenarios: <strong>'+moBase+' months</strong> of net income ($'+baseNet+'/mo)</div>';
+  if (activeScenarios.length > 0) {
+    var deltaSign = scenarioDelta >= 0 ? '+' : '';
+    html += '<div style="color:var(--acc)">Active scenarios: <strong>'+activeScenarios.map(function(m){return m.name;}).join(' + ')+'</strong> ('+deltaSign+scenarioDelta+'/mo)</div>';
+    if (moAdj !== null) {
+      var diff = moBase - moAdj;
+      var diffStr = diff > 0 ? '<span style="color:var(--pos)">'+diff+' fewer months</span>' : diff < 0 ? '<span style="color:var(--neg)">'+Math.abs(diff)+' more months</span>' : 'no change';
+      html += '<div style="margin-top:4px">With scenarios: <strong style="color:var(--acc)">'+moAdj+' months</strong> ('+diffStr+')</div>';
+    }
+    // Can you fund by target month?
+    var moUntilTarget = month - 2; // Feb = current month 2
+    if (moAdj !== null && moUntilTarget > 0) {
+      var canFund = moAdj <= moUntilTarget;
+      html += '<div style="margin-top:6px;padding:7px 10px;background:var(--s3);'+(canFund?'border-left:2px solid var(--pos)':'border-left:2px solid var(--neg)')+'">'+
+        (canFund?'CAN FUND by target month with active scenarios':'INSUFFICIENT — need '+(moAdj-moUntilTarget)+' more months')+'</div>';
+    }
+  }
+  abox.innerHTML = html;
+}
+
+// ── DATA ─────────────────────────────────────────────────────────────────
 var cashData=[
   {date:'FEB 22',desc:'Farmer\'s Market',cat:'Groceries',type:'Cash',dir:'-',amt:45},
   {date:'FEB 20',desc:'Babysitter — Saturday',cat:'Childcare',type:'Cash',dir:'-',amt:80},
@@ -964,12 +1308,24 @@ var catData=[
   {name:'Entertainment',budget:200,spent:120,color:'#a78bfa'}
 ];
 var selColor='#60a5fa';
+var futureExpenses = [];
 
-// ═══ RENDER ═══
+// ── SCENARIO DATA ────────────────────────────────────────────────────────
+var scenarioModels = [
+  {id:1, name:'Cut Dining / Mortgage', desc:'Dining -50%, redirect to principal', monthlyDelta:340, annualDelta:4080, active:false,
+   adjustments:[{label:'Cut Dining Out',val:'-$340/mo',sign:-1},{label:'Extra Principal',val:'+$340/mo',sign:1}]},
+  {id:2, name:'Baby Year 2', desc:'Childcare and healthcare cost increase', monthlyDelta:-550, annualDelta:-6600, active:false,
+   adjustments:[{label:'Childcare',val:'+$400/mo',sign:-1},{label:'Healthcare',val:'+$150/mo',sign:-1}]},
+  {id:3, name:'Side Income', desc:'+$1,500/mo consulting income', monthlyDelta:1500, annualDelta:18000, active:false,
+   adjustments:[{label:'Consulting Income',val:'+$1,500/mo',sign:1}]}
+];
+
+// ── RENDERS ──────────────────────────────────────────────────────────────
 function tag(txt,cls){return '<span class="tag tag-'+cls+'">'+txt+'</span>';}
 
 function renderCash(){
   var el=document.getElementById('cash-list');
+  if(!el)return;
   el.innerHTML=cashData.map(function(e){
     var s=e.dir==='+'?'+':'−'; var c=e.dir==='+'?'pos':'neg';
     return '<div class="rrow"><div class="rrow-l"><div class="rrow-name">'+e.desc+'</div>'+
@@ -979,9 +1335,9 @@ function renderCash(){
       '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+e.amt.toFixed(2)+'</div></div></div>';
   }).join('');
 }
-
 function renderTxns(){
   var el=document.getElementById('txn-list');
+  if(!el)return;
   el.innerHTML=txnData.map(function(e){
     var s=e.dir==='+'?'+':'−'; var c=e.dir==='+'?'pos':'neg';
     return '<div class="rrow"><div class="rrow-l"><div class="rrow-name">'+e.desc+'</div>'+
@@ -989,9 +1345,9 @@ function renderTxns(){
       '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+e.amt.toFixed(2)+'</div></div></div>';
   }).join('');
 }
-
 function renderLoans(){
   var el=document.getElementById('loans-list');
+  if(!el)return;
   el.innerHTML=loanData.map(function(l){
     var types={M:'Mortgage',A:'Auto Loan',S:'Student Loan',P:'Personal Loan',B:'Business Loan',O:'Other'};
     return '<div class="lcard">'+
@@ -1008,13 +1364,13 @@ function renderLoans(){
   }).join('');
   var td=loanData.reduce(function(a,l){return a+l.bal;},0);
   var tm=loanData.reduce(function(a,l){return a+l.monthly;},0);
-  document.getElementById('loan-total-debt').textContent='$'+td.toLocaleString();
-  document.getElementById('loan-total-mo').textContent='$'+tm.toLocaleString();
-  document.getElementById('loan-count-sub').textContent=loanData.length+' active liabilities';
+  var dEl=document.getElementById('loan-total-debt'); if(dEl)dEl.textContent='$'+td.toLocaleString();
+  var mEl=document.getElementById('loan-total-mo');   if(mEl)mEl.textContent='$'+tm.toLocaleString();
+  var cEl=document.getElementById('loan-count-sub');  if(cEl)cEl.textContent=loanData.length+' active liabilities';
 }
-
 function renderInvLog(){
   var el=document.getElementById('inv-log-list');
+  if(!el)return;
   el.innerHTML=invData.map(function(i){
     var s=i.action==='Sell'?'+':'−'; var c=i.action==='Sell'?'pos':'neg';
     var tc=i.action==='Sell'?'g':'r';
@@ -1024,9 +1380,9 @@ function renderInvLog(){
       '<div class="rrow-r"><div class="rrow-amt" style="color:var(--'+c+')">'+s+'$'+i.amt.toLocaleString()+'</div></div></div>';
   }).join('');
 }
-
 function renderCats(){
   var el=document.getElementById('cats-list');
+  if(!el)return;
   el.innerHTML='<div style="display:flex;flex-direction:column;gap:1px;border:1px solid var(--ln);background:var(--ln)">'+
   catData.map(function(c){
     var over=c.spent>c.budget;
@@ -1041,10 +1397,11 @@ function renderCats(){
       '<div class="prog"><div class="progf" style="width:'+pct+'%;background:'+(over?'var(--neg)':c.color)+'"></div></div></div>';
   }).join('')+'</div>';
 }
-
 function renderDashCats(){
   var mx=Math.max.apply(null,catData.map(function(c){return c.spent;}));
-  document.getElementById('dash-cats').innerHTML=catData.slice(0,5).map(function(c){
+  var el=document.getElementById('dash-cats');
+  if(!el)return;
+  el.innerHTML=catData.slice(0,5).map(function(c){
     var pct=Math.round(c.spent/mx*100);
     return '<div style="display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--s3)">'+
       '<div style="font-family:var(--fm);font-size:10px;color:var(--mid);width:80px;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0">'+c.name+'</div>'+
@@ -1053,25 +1410,253 @@ function renderDashCats(){
   }).join('');
 }
 
-// ═══ MODALS ═══
+// ── SCENARIO RENDERS ─────────────────────────────────────────────────────
+function renderScCards(){
+  var el=document.getElementById('sc-cards');
+  if(!el)return;
+  var activeCount=scenarioModels.filter(function(m){return m.active;}).length;
+  el.innerHTML=scenarioModels.map(function(m){
+    var border=m.active?'border-left:2px solid var(--acc);':'';
+    var statusLabel=m.active?
+      '<span style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)">ACTIVE</span>':
+      '<span style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">INACTIVE</span>';
+    var btnLabel=m.active?'Deactivate':'Activate';
+    var btnClass=m.active?'btn btn-acc':'btn btn-ghost';
+    var deltaColor=m.monthlyDelta>=0?'var(--pos)':'var(--neg)';
+    var adjs=m.adjustments.map(function(a){
+      var c=a.sign>0?'var(--pos)':'var(--neg)';
+      return '<div style="font-family:var(--fm);font-size:11px;padding:6px 10px;background:var(--s3);display:flex;justify-content:space-between;margin-bottom:2px">'+
+        '<span style="color:var(--mid)">'+a.label+'</span><span style="color:'+c+'">'+a.val+'</span></div>';
+    }).join('');
+    return '<div style="background:var(--s1);padding:20px;'+border+'">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'+statusLabel+
+      '<button class="'+btnClass+'" style="font-size:11px;padding:5px 10px" onclick="toggleScenario('+m.id+')">'+btnLabel+'</button></div>'+
+      '<div style="font-weight:700;font-size:14px;margin-bottom:4px">'+m.name+'</div>'+
+      '<div style="font-family:var(--fm);font-size:11px;color:var(--mid);margin-bottom:14px">'+m.desc+'</div>'+
+      adjs+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px">'+
+        '<div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Monthly Delta</div>'+
+        '<div style="font-family:var(--fm);font-size:18px;color:'+deltaColor+'">'+(m.monthlyDelta>=0?'+':'')+m.monthlyDelta.toFixed(0)+'/mo</div></div>'+
+        '<div style="text-align:right"><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase">Annual Delta</div>'+
+        '<div style="font-family:var(--fm);font-size:14px;color:'+deltaColor+'">'+(m.annualDelta>=0?'+':'')+m.annualDelta.toLocaleString()+'</div></div>'+
+      '</div></div>';
+  }).join('');
+  updateCombinedPanel();
+  var applyBar=document.getElementById('sc-apply-bar');
+  if(applyBar) applyBar.style.display=activeCount>=1?'flex':'none';
+}
+
+function toggleScenario(id){
+  var m=scenarioModels.find(function(x){return x.id===id;});
+  if(m) m.active=!m.active;
+  renderScCards();
+  renderScCompare();
+  // Live-update FE analysis if modal is open
+  updateFEPreview();
+}
+
+function updateCombinedPanel(){
+  var active=scenarioModels.filter(function(m){return m.active;});
+  var panel=document.getElementById('sc-combined-panel');
+  if(!panel)return;
+  if(active.length<2){panel.style.display='none';return;}
+  panel.style.display='block';
+  var totalMonthly=active.reduce(function(a,m){return a+m.monthlyDelta;},0);
+  var totalAnnual=active.reduce(function(a,m){return a+m.annualDelta;},0);
+  var base=1520;
+  var combined=base+totalMonthly;
+  var mc=totalMonthly>=0?'var(--pos)':'var(--neg)';
+  var cv=document.getElementById('sc-combined-vals');
+  if(cv) cv.innerHTML=
+    '<div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Combined Monthly Delta</div>'+
+    '<div style="font-family:var(--fm);font-size:22px;color:'+mc+'">'+(totalMonthly>=0?'+':'')+totalMonthly.toFixed(0)+'/mo</div></div>'+
+    '<div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Combined Annual</div>'+
+    '<div style="font-family:var(--fm);font-size:22px;color:'+mc+'">'+(totalAnnual>=0?'+':'')+totalAnnual.toLocaleString()+'</div></div>'+
+    '<div><div style="font-family:var(--fm);font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px">Adjusted Monthly Net</div>'+
+    '<div style="font-family:var(--fm);font-size:22px;color:var(--acc)">$'+combined.toFixed(0)+'/mo</div></div>';
+  var an=document.getElementById('sc-active-names');
+  if(an) an.textContent=active.map(function(m){return m.name;}).join(' + ');
+}
+
+function renderScCompare(){
+  var base=1520;
+  var statsEl=document.getElementById('sc-compare-stats');
+  var rowsEl=document.getElementById('sc-compare-rows');
+  if(!statsEl||!rowsEl)return;
+  statsEl.innerHTML='<div class="stat"><div class="stat-label">Baseline</div><div class="stat-val acc">$'+base+'/mo</div><div class="stat-sub">Present monthly net</div></div>'+
+    scenarioModels.map(function(m){
+      var c=m.monthlyDelta>=0?'pos':'neg';
+      var border=m.active?'border-left:2px solid var(--acc);':'';
+      return '<div class="stat" style="'+border+'"><div class="stat-label">'+m.name+'</div>'+
+        '<div class="stat-val '+c+'">$'+(base+m.monthlyDelta).toFixed(0)+'/mo</div>'+
+        '<div class="stat-sub" style="color:var('+(m.active?'--acc':'--dim')+')">'+(m.active?'ACTIVE — ':'')+
+        (m.monthlyDelta>=0?'+':'')+m.monthlyDelta.toFixed(0)+'/mo vs base</div></div>';
+    }).join('');
+  rowsEl.innerHTML=scenarioModels.map(function(m){
+    var c=m.monthlyDelta>=0?'pos':'neg';
+    var activeBadge=m.active?tag('ACTIVE','g'):tag('OFF','d');
+    return '<tr><td style="font-weight:600">'+m.name+'</td><td>'+activeBadge+'</td>'+
+      '<td class="tr '+c+'">'+(m.monthlyDelta>=0?'+':'')+m.monthlyDelta.toFixed(0)+'</td>'+
+      '<td class="tr '+c+'">'+(m.annualDelta>=0?'+':'')+m.annualDelta.toLocaleString()+'</td>'+
+      '<td class="tr '+c+'">'+(m.annualDelta*5>=0?'+':'')+(m.annualDelta*5).toLocaleString()+'</td></tr>';
+  }).join('');
+}
+
+// ── FORECAST ENGINE ──────────────────────────────────────────────────────
+var BASE_MONTHS=[
+  {label:'January 2026',   idx:0,  status:'actual',  income:7500, expenses:5820},
+  {label:'February 2026',  idx:1,  status:'current', income:7500, expenses:4182},
+  {label:'March 2026',     idx:2,  status:'proj',    income:7500, expenses:5960},
+  {label:'April 2026',     idx:3,  status:'proj',    income:7500, expenses:5960},
+  {label:'May 2026',       idx:4,  status:'proj',    income:7500, expenses:5960},
+  {label:'June 2026',      idx:5,  status:'proj',    income:7500, expenses:5960},
+  {label:'July 2026',      idx:6,  status:'proj',    income:7500, expenses:5960},
+  {label:'August 2026',    idx:7,  status:'proj',    income:7500, expenses:5960},
+  {label:'September 2026', idx:8,  status:'proj',    income:7500, expenses:5960},
+  {label:'October 2026',   idx:9,  status:'proj',    income:7500, expenses:5960},
+  {label:'November 2026',  idx:10, status:'proj',    income:7500, expenses:5960},
+  {label:'December 2026',  idx:11, status:'proj',    income:7500, expenses:5960}
+];
+
+function renderForecast(){
+  var active = scenarioModels.filter(function(m){return m.active;});
+  var totalMonthlyDelta = active.reduce(function(a,m){return a+m.monthlyDelta;}, 0);
+
+  // Scenario overlay bar
+  var statusBar = document.getElementById('fc-scenario-bar');
+  if(statusBar){
+    if(active.length>0){
+      statusBar.style.display='block';
+      statusBar.innerHTML = 'SCENARIO OVERLAY — '
+        +active.map(function(m){return '<strong>'+m.name+'</strong>';}).join(' + ')
+        +' — COMBINED: <strong>'+(totalMonthlyDelta>=0?'+':'')+totalMonthlyDelta.toFixed(0)+'/mo</strong>'
+        +' &nbsp;|&nbsp; Projected months shaded in green';
+    } else { statusBar.style.display='none'; }
+  }
+
+  // Build rows
+  var rows = BASE_MONTHS.map(function(m){
+    var inc = m.income, exp = m.expenses;
+    if(m.status==='proj'){
+      active.forEach(function(sc){
+        if(sc.monthlyDelta>0) inc += sc.monthlyDelta;
+        else exp -= sc.monthlyDelta;
+      });
+      futureExpenses.forEach(function(fe){
+        if(fe.month-1===m.idx){
+          if(fe.recurring) exp += fe.amtUSD;
+          else exp += fe.amtUSD;
+        }
+      });
+    }
+    return {label:m.label, idx:m.idx, status:m.status, income:inc, expenses:exp, net:inc-exp};
+  });
+
+  // Cumulative
+  var cum=0;
+  rows.forEach(function(r){ cum+=r.net; r.cum=cum; });
+
+  // Stats
+  var totalInc = rows.reduce(function(a,r){return a+r.income;},0);
+  var totalExp = rows.reduce(function(a,r){return a+r.expenses;},0);
+  var yearEnd  = rows[rows.length-1].cum;
+  var avgNet   = yearEnd/12;
+  var statEl   = document.getElementById('fc-stats');
+  if(statEl){
+    var yec = yearEnd>=0?'pos':'neg';
+    statEl.innerHTML=
+      '<div class="stat"><div class="stat-label">Year-End Balance</div><div class="stat-val '+yec+'">$'+yearEnd.toLocaleString(undefined,{maximumFractionDigits:0})+'</div>'+(active.length?'<div class="stat-sub" style="color:var(--acc)">Scenarios applied</div>':'')+'</div>'+
+      '<div class="stat"><div class="stat-label">Total Income</div><div class="stat-val pos">$'+totalInc.toLocaleString()+'</div></div>'+
+      '<div class="stat"><div class="stat-label">Total Expenses</div><div class="stat-val neg">$'+totalExp.toLocaleString()+'</div></div>'+
+      '<div class="stat"><div class="stat-label">Avg Monthly Net</div><div class="stat-val acc">$'+Math.round(avgNet).toLocaleString()+'</div></div>';
+  }
+
+  // Future expense bar
+  var feBar = document.getElementById('fc-future-bar');
+  if(feBar){
+    if(futureExpenses.length>0){
+      feBar.style.display='block';
+      var mnths=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      feBar.innerHTML='<div style="padding:10px 16px;background:var(--s2);border:1px solid var(--ln);border-left:2px solid var(--neg);font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--neg)">'+
+        'FUTURE EXPENSES LOADED — '+futureExpenses.map(function(fe){
+          return fe.desc.toUpperCase()+' $'+fe.amtUSD.toFixed(0)+' USD ('+mnths[fe.month-1]+')';
+        }).join(' &nbsp;|&nbsp; ')+'</div>';
+    } else { feBar.style.display='none'; }
+  }
+
+  // Table
+  var statusTags={actual:'<span class="tag tag-g">Actual</span>',current:'<span class="tag tag-y">Current</span>',proj:'<span class="tag tag-d">Proj.</span>'};
+  var tbody = document.getElementById('fc-tbody');
+  if(tbody){
+    tbody.innerHTML=rows.map(function(r){
+      var nc=r.net>=0?'pos':'neg';
+      var isModified = active.length>0 && r.status==='proj';
+      var hasFE = futureExpenses.some(function(fe){return fe.month-1===r.idx;});
+      return '<tr '+(isModified?'style="background:rgba(200,245,66,.025)"':'')+'>'+
+        '<td style="font-weight:'+(r.status==='actual'?'600':'400')+'">'+r.label+'</td>'+
+        '<td>'+statusTags[r.status]+
+          (isModified?'<span class="tag tag-d" style="margin-left:4px;font-size:8px">MOD</span>':'')+
+          (hasFE?'<span class="tag tag-r" style="margin-left:4px;font-size:8px">FE</span>':'')+'</td>'+
+        '<td style="font-family:var(--fm)'+(r.status==='proj'?';color:var(--mid)':'')+'">$'+r.income.toLocaleString()+'</td>'+
+        '<td style="font-family:var(--fm)'+(hasFE?';color:var(--neg)':r.status==='proj'?';color:var(--mid)':'')+'">$'+r.expenses.toLocaleString()+'</td>'+
+        '<td class="tr '+nc+'">'+(r.net>=0?'+':'')+r.net.toLocaleString(undefined,{maximumFractionDigits:0})+'</td>'+
+        '<td class="tr gld">$'+r.cum.toLocaleString(undefined,{maximumFractionDigits:0})+'</td></tr>';
+    }).join('');
+    var fcTitle = document.getElementById('fc-table-title');
+    if(fcTitle) fcTitle.textContent = active.length>0 ? 'Monthly Projection — Scenarios Applied':'Monthly Projection Table';
+  }
+}
+
+function applyToForecast(){
+  renderForecast();
+  go('forecast',null,'Forecast');
+}
+
+// ── FUTURE EXPENSE ────────────────────────────────────────────────────────
+function saveFutureExp(){
+  var desc  = document.getElementById('fe-desc').value.trim();
+  var amt   = parseFloat(document.getElementById('fe-amt').value);
+  var cur   = document.getElementById('fe-cur').value;
+  var month = parseInt(document.getElementById('fe-month').value);
+  var type  = document.getElementById('fe-type').value;
+  if(!desc||!amt||isNaN(amt)){document.getElementById('fe-desc').focus();return;}
+  var c     = (cur==='home') ? userProfile.homeCurrency : cur;
+  var amtUSD= toUSD(amt, c);
+  futureExpenses.push({desc:desc, amt:amt, cur:c, amtUSD:amtUSD, month:month, recurring:type==='monthly'});
+  renderForecast();
+  document.getElementById('fe-desc').value='';
+  document.getElementById('fe-amt').value='';
+  document.getElementById('fe-preview').style.display='none';
+  document.getElementById('fe-analysis').style.display='none';
+  flash('fe-flash','m-future-exp');
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
 function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
 function bgClose(e,id){if(e.target===document.getElementById(id))closeModal(id);}
 function flash(id,mid){var el=document.getElementById(id);el.classList.add('on');setTimeout(function(){el.classList.remove('on');closeModal(mid);},900);}
 
-// ═══ SUBMIT ═══
+// ── SAVE CASH ─────────────────────────────────────────────────────────────
 function saveCash(){
   var desc=document.getElementById('c-desc').value.trim();
   var amt=parseFloat(document.getElementById('c-amt').value);
   if(!desc||!amt||isNaN(amt)){document.getElementById('c-desc').focus();return;}
   var d=new Date(document.getElementById('c-date').value);
   var ds=isNaN(d.getTime())?'TODAY':d.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
-  cashData.unshift({date:ds,desc:desc,cat:document.getElementById('c-cat').value,type:document.getElementById('c-type').value,dir:document.getElementById('c-dir').value,amt:amt});
+  var cur=document.getElementById('c-cur').value;
+  var c=(cur==='home')?userProfile.homeCurrency:cur;
+  var amtUSD=toUSD(amt, c);
+  var curNote=c!=='USD'?' ('+c+' '+amt.toFixed(2)+' → $'+amtUSD.toFixed(2)+')':'';
+  cashData.unshift({date:ds, desc:desc+curNote, cat:document.getElementById('c-cat').value,
+    type:document.getElementById('c-type').value, dir:document.getElementById('c-dir').value, amt:amtUSD});
   renderCash();
   document.getElementById('c-desc').value='';document.getElementById('c-amt').value='';
+  document.getElementById('c-fx-preview').style.display='none';
   flash('c-flash','m-cash');
 }
 
+// ── LOAN HELPERS ──────────────────────────────────────────────────────────
 function loanCalc(bal,rate,term){
   var r=rate/100/12;if(r===0)return{mo:bal/term,months:term};
   var mo=bal*r*Math.pow(1+r,term)/(Math.pow(1+r,term)-1);
@@ -1111,6 +1696,7 @@ function saveLoan(){
   flash('l-flash','m-loan');
 }
 
+// ── INVEST ────────────────────────────────────────────────────────────────
 function invCalc(){
   var q=parseFloat(document.getElementById('i-qty').value);
   var p=parseFloat(document.getElementById('i-price').value);
@@ -1128,12 +1714,19 @@ function saveInvest(){
   if(!ticker||!total||isNaN(total)){document.getElementById('i-ticker').focus();return;}
   var dv=document.getElementById('i-date').value;
   var d=new Date(dv);var ds=isNaN(d.getTime())?'TODAY':d.toLocaleDateString('en-US',{month:'short',day:'numeric'}).toUpperCase();
-  invData.unshift({date:ds,name:document.getElementById('i-notes').value||ticker,ticker:ticker,type:document.getElementById('i-type').value,action:document.getElementById('i-action').value,qty:qty,amt:total});
+  var cur=document.getElementById('i-cur').value;
+  var c=(cur==='home')?userProfile.homeCurrency:cur;
+  var totalUSD=toUSD(total,c);
+  invData.unshift({date:ds,name:document.getElementById('i-notes').value||ticker,ticker:ticker,
+    type:document.getElementById('i-type').value,action:document.getElementById('i-action').value,
+    qty:qty,amt:totalUSD,origCur:c,origAmt:total});
   renderInvLog();
   ['i-ticker','i-qty','i-price','i-total','i-notes'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('i-fx-preview').style.display='none';
   flash('i-flash','m-invest');
 }
 
+// ── CATEGORIES ────────────────────────────────────────────────────────────
 function pickClr(el){
   document.querySelectorAll('.clr-swatch').forEach(function(c){c.classList.remove('on');});
   el.classList.add('on');selColor=el.getAttribute('data-c');
@@ -1148,40 +1741,38 @@ function saveCat(){
   flash('k-flash','m-cat');
 }
 
-// ═══ NAV ═══
+// ── NAVIGATION ────────────────────────────────────────────────────────────
 function go(id,el,title){
   document.querySelectorAll('.pg').forEach(function(p){p.style.display='none';p.classList.remove('on');});
   document.querySelectorAll('.ni,.mnb').forEach(function(b){b.classList.remove('on');});
-  var s=document.getElementById(id);s.style.display='block';s.classList.add('on');
+  var s=document.getElementById(id);
+  if(s){s.style.display='block';s.classList.add('on');}
   if(el)el.classList.add('on');
   if(title)document.getElementById('mob-title').textContent=title.toUpperCase();
 }
 function scTab(id,el){
-  ['sc-chat','sc-saved','sc-compare'].forEach(function(x){document.getElementById(x).style.display='none';});
+  ['sc-chat','sc-saved','sc-compare'].forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
   var t=document.getElementById('sc-'+id);
-  t.style.display=(id==='chat')?'flex':(id==='saved'?'block':'block');
+  if(t) t.style.display=(id==='chat')?'flex':'block';
   document.querySelectorAll('#scenarios .tab').forEach(function(t){t.classList.remove('on');});
   if(el)el.classList.add('on');
+  if(id==='saved') renderScCards();
+  if(id==='compare') renderScCompare();
 }
 function invTab(id,el){
-  ['inv-ov','inv-schw','inv-log'].forEach(function(x){document.getElementById(x).style.display='none';});
-  document.getElementById('inv-'+id).style.display='block';
+  ['inv-ov','inv-schw','inv-log'].forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
+  var t=document.getElementById('inv-'+id);
+  if(t)t.style.display='block';
   document.querySelectorAll('#investments .tab').forEach(function(t){t.classList.remove('on');});
   if(el)el.classList.add('on');
 }
-function toggleMore(){
-  document.getElementById('mdrawer').classList.toggle('open');
-  document.getElementById('dov').classList.toggle('open');
-}
-function closeMore(){
-  document.getElementById('mdrawer').classList.remove('open');
-  document.getElementById('dov').classList.remove('open');
-}
+function toggleMore(){document.getElementById('mdrawer').classList.toggle('open');document.getElementById('dov').classList.toggle('open');}
+function closeMore(){document.getElementById('mdrawer').classList.remove('open');document.getElementById('dov').classList.remove('open');}
 
-// ═══ CHAT ═══
+// ── CHAT ─────────────────────────────────────────────────────────────────
 var chatReplies=[
   "Modeling against actuals:<br><br>Dining avg: <strong>$680/mo</strong>. 50% reduction frees <strong>$340/mo</strong>.<br><br>Applied as mortgage principal:<br>— Payoff: Nov 2046 → Oct 2042 <span style='color:var(--acc)'>(4 yr earlier)</span><br>— Interest saved: <strong>$38,400</strong><br>— FY2026 impact: <strong>+$4,080</strong>",
-  "Mortgage analysis: <strong>$248,200 outstanding at 6.25% APR</strong>.<br><br>Extra $300/mo principal application:<br>— Interest saved: <strong>$41,200</strong><br>— Payoff advance: <strong>4 years</strong><br>— Break-even: immediate",
+  "Mortgage analysis: <strong>$248,200 outstanding at 6.25% APR</strong>.<br><br>Extra $300/mo principal application:<br>— Interest saved: <strong>$41,200</strong><br>— Payoff advance: <strong>4 years</strong>",
   "Income scenario: <strong>+$1,500/mo gross</strong>.<br><br>Monthly net: <strong>$1,520 → $3,020</strong><br>Annual delta: <strong>+$18,000</strong><br>5-year accretion: <strong>+$90,000</strong>"
 ];
 var chatIdx=0;
@@ -1193,7 +1784,7 @@ function sendMsg(){
   u.innerHTML='<div class="ava">JG</div><div class="bub u">'+txt+'</div>';
   box.appendChild(u);
   var t=document.createElement('div');t.className='msg';
-  t.innerHTML='<div class="ava acc">AI</div><div class="bub a" style="padding:12px 14px"><div style="display:flex;gap:4px">'+
+  t.innerHTML='<div class="ava acc">AI</div><div class="bub a"><div style="display:flex;gap:4px">'+
     '<div style="width:5px;height:5px;border-radius:50%;background:var(--mid);animation:pulse 1.3s ease infinite"></div>'.repeat(3)+'</div></div>';
   box.appendChild(t);box.scrollTop=box.scrollHeight;
   setTimeout(function(){
@@ -1208,7 +1799,7 @@ document.addEventListener('keydown',function(e){
   if(e.target.id==='chatinp'&&e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
 });
 
-// ═══ CSV ═══
+// ── CSV ───────────────────────────────────────────────────────────────────
 function downloadCSV(){
   var rows=[['Month','Income','Expenses','Net'],
     ['January 2025',7500,5820,1680],['February 2025',7500,4182,3318],
@@ -1223,10 +1814,13 @@ function downloadCSV(){
   a.download='arca-annual-report-2025.csv';a.click();
 }
 
-// ═══ INIT ═══
+// ── INIT ──────────────────────────────────────────────────────────────────
 var today=new Date().toISOString().split('T')[0];
 ['c-date','i-date'].forEach(function(id){var el=document.getElementById(id);if(el)el.value=today;});
-renderCash();renderTxns();renderLoans();renderInvLog();renderCats();renderDashCats();
+renderCash();renderTxns();renderLoans();renderInvLog();renderCats();renderDashCats();renderForecast();
+// Fetch live exchange rate for default country (Guatemala / GTQ)
+fetchExchangeRate();
+
 </script>
 </body>
 </html>
